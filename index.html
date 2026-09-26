@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Salary Planner</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#12181B">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Salary">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  :root{
+    --bg:#12181B; --panel:#1B2327; --line:#2B363B;
+    --text:#EDEAE3; --dim:#9AA5A9; --accent:#C9A227; --bad:#C9645A; --good:#7FA66B;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-padding-top: env(safe-area-inset-top, 0px);}
+  html,body{background:var(--bg); color:var(--text); margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+  body{max-width:640px; margin:0 auto; padding:28px 20px 60px;}
+  h1{font-size:1.5rem; font-weight:600; letter-spacing:-0.01em; margin:0 0 4px;}
+  .sub{color:var(--dim); font-size:0.9rem; margin:0 0 24px;}
+  .summary{background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:20px; margin-bottom:28px;}
+  .row{display:flex; justify-content:space-between; align-items:baseline; padding:6px 0;}
+  .row .label{color:var(--dim); font-size:0.92rem;}
+  .row .val{font-weight:600; font-variant-numeric:tabular-nums;}
+  .row.total{border-top:1px solid var(--line); margin-top:8px; padding-top:14px;}
+  .row.total .label{color:var(--text); font-size:1rem;}
+  .row.total .val{font-size:1.4rem;}
+  .remaining-good .val{color:var(--good);}
+  .remaining-bad .val{color:var(--bad);}
+  section{margin-bottom:26px;}
+  section h2{font-size:0.95rem; font-weight:600; margin:0 0 10px; display:flex; justify-content:space-between; align-items:center;}
+  section h2 .subtotal{color:var(--dim); font-weight:500; font-size:0.85rem; font-variant-numeric:tabular-nums;}
+  .income-row{display:flex; gap:10px; align-items:center; background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:14px 16px;}
+  .income-row label{color:var(--dim); font-size:0.9rem; white-space:nowrap;}
+  .income-row input{flex:1;}
+  ul.items{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px;}
+  li.item{display:flex; gap:8px; background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:10px 12px; align-items:center;}
+  li.item input.name{flex:1; min-width:0;}
+  li.item input.amt{width:110px;}
+  li.item input.due{width:120px;}
+  input{background:transparent; border:none; color:var(--text); font-size:0.95rem; font-family:inherit; outline:none; padding:4px 2px;}
+  input::placeholder{color:#5C6669;}
+  input[type=number]{-moz-appearance:textfield;}
+  input[type=number]::-webkit-outer-spin-button, input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none; margin:0;}
+  .remove{background:none; border:none; color:var(--dim); font-size:1.1rem; cursor:pointer; line-height:1; padding:2px 4px;}
+  .remove:hover{color:var(--bad);}
+  .add-btn{background:none; border:1px dashed var(--line); color:var(--dim); border-radius:8px; padding:10px 12px; font-size:0.88rem; cursor:pointer; width:100%; text-align:left; margin-top:8px;}
+  .add-btn:hover{border-color:var(--accent); color:var(--accent);}
+  footer{display:flex; justify-content:space-between; align-items:center; margin-top:20px; padding-top:16px; border-top:1px solid var(--line);}
+  .reset{background:none; border:none; color:var(--dim); font-size:0.82rem; cursor:pointer; text-decoration:underline; padding:0;}
+  .reset:hover{color:var(--bad);}
+  .saved{color:var(--dim); font-size:0.78rem;}
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme="dark"]){
+      --bg:#F4F2EC; --panel:#FFFFFF; --line:#E2DFD4; --text:#20211F; --dim:#6B6F68;
+    }
+    input{color:var(--text);}
+  }
+</style>
+</head>
+<body>
+  <h1>Salary Planner</h1>
+  <p class="sub">Lay out what's coming in against what has to go out — expenses, upcoming costs, and repayments.</p>
+
+  <div class="summary">
+    <div class="row"><span class="label">Monthly income</span><span class="val" id="incomeDisplay">KSh 0</span></div>
+    <div class="row"><span class="label">Recurring expenses</span><span class="val" id="expDisplay">KSh 0</span></div>
+    <div class="row"><span class="label">Upcoming one-off costs</span><span class="val" id="oneoffDisplay">KSh 0</span></div>
+    <div class="row"><span class="label">Debts to repay</span><span class="val" id="debtDisplay">KSh 0</span></div>
+    <div class="row total" id="remainingRow"><span class="label">Remaining</span><span class="val" id="remainingDisplay">KSh 0</span></div>
+  </div>
+
+  <section>
+    <h2>Income</h2>
+    <div class="income-row">
+      <label for="income">Monthly take-home</label>
+      <input type="number" id="income" placeholder="0" min="0" />
+    </div>
+  </section>
+
+  <section>
+    <h2>Recurring expenses <span class="subtotal" id="expSub">KSh 0</span></h2>
+    <ul class="items" id="expList"></ul>
+    <button class="add-btn" onclick="addItem('exp')">+ Add expense (rent, subscriptions, transport...)</button>
+  </section>
+
+  <section>
+    <h2>Upcoming one-off costs <span class="subtotal" id="oneoffSub">KSh 0</span></h2>
+    <ul class="items" id="oneoffList"></ul>
+    <button class="add-btn" onclick="addItem('oneoff')">+ Add upcoming cost</button>
+  </section>
+
+  <section>
+    <h2>Debts to repay <span class="subtotal" id="debtSub">KSh 0</span></h2>
+    <ul class="items" id="debtList"></ul>
+    <button class="add-btn" onclick="addItem('debt')">+ Add debt (who you owe)</button>
+  </section>
+
+  <footer>
+    <button class="reset" onclick="resetAll()">Clear all data</button>
+    <span class="saved" id="savedNote"></span>
+  </footer>
+
+<script>
+const KEY = 'salary-planner-v1';
+let state = { income: 0, exp: [], oneoff: [], debt: [] };
+
+function load(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    if(raw) state = JSON.parse(raw);
+  }catch(e){ console.error('load failed', e); }
+}
+function save(){
+  try{
+    localStorage.setItem(KEY, JSON.stringify(state));
+    const note = document.getElementById('savedNote');
+    note.textContent = 'Saved';
+    clearTimeout(save._t);
+    save._t = setTimeout(()=> note.textContent = '', 1200);
+  }catch(e){ console.error('save failed', e); }
+}
+function fmt(n){
+  return 'KSh ' + (Math.round(n*100)/100).toLocaleString();
+}
+function addItem(kind){
+  state[kind].push({ name:'', amount:0, due:'' });
+  save(); render();
+}
+function removeItem(kind, idx){
+  state[kind].splice(idx,1);
+  save(); render();
+}
+function updateItem(kind, idx, field, value){
+  state[kind][idx][field] = field==='amount' ? (parseFloat(value)||0) : value;
+  save(); renderTotals();
+}
+function updateIncome(value){
+  state.income = parseFloat(value)||0;
+  save(); renderTotals();
+}
+function resetAll(){
+  if(confirm('Clear all entered data? This cannot be undone.')){
+    state = { income:0, exp:[], oneoff:[], debt:[] };
+    save(); render();
+  }
+}
+function sumOf(kind){
+  return state[kind].reduce((a,b)=>a+(b.amount||0),0);
+}
+function buildList(kind, container, showDue){
+  container.innerHTML = '';
+  state[kind].forEach((item, idx)=>{
+    const li = document.createElement('li');
+    li.className = 'item';
+    li.innerHTML = `
+      <input class="name" placeholder="Name" value="${escapeAttr(item.name)}" />
+      <input class="amt" type="number" min="0" placeholder="Amount" value="${item.amount||''}" />
+      ${showDue ? `<input class="due" type="text" placeholder="Due / notes" value="${escapeAttr(item.due||'')}" />` : ''}
+      <button class="remove" aria-label="Remove">&times;</button>
+    `;
+    const nameInput = li.querySelector('.name');
+    const amtInput = li.querySelector('.amt');
+    nameInput.addEventListener('input', e => updateItem(kind, idx, 'name', e.target.value));
+    amtInput.addEventListener('input', e => updateItem(kind, idx, 'amount', e.target.value));
+    if(showDue){
+      const dueInput = li.querySelector('.due');
+      dueInput.addEventListener('input', e => updateItem(kind, idx, 'due', e.target.value));
+    }
+    li.querySelector('.remove').addEventListener('click', ()=> removeItem(kind, idx));
+    container.appendChild(li);
+  });
+}
+function escapeAttr(s){
+  return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+}
+function renderTotals(){
+  const expTotal = sumOf('exp');
+  const oneoffTotal = sumOf('oneoff');
+  const debtTotal = sumOf('debt');
+  const outflow = expTotal + oneoffTotal + debtTotal;
+  const remaining = (state.income||0) - outflow;
+
+  document.getElementById('incomeDisplay').textContent = fmt(state.income||0);
+  document.getElementById('expDisplay').textContent = fmt(expTotal);
+  document.getElementById('oneoffDisplay').textContent = fmt(oneoffTotal);
+  document.getElementById('debtDisplay').textContent = fmt(debtTotal);
+  document.getElementById('expSub').textContent = fmt(expTotal);
+  document.getElementById('oneoffSub').textContent = fmt(oneoffTotal);
+  document.getElementById('debtSub').textContent = fmt(debtTotal);
+
+  const remDisplay = document.getElementById('remainingDisplay');
+  const remRow = document.getElementById('remainingRow');
+  remDisplay.textContent = fmt(remaining);
+  remRow.classList.remove('remaining-good','remaining-bad');
+  remRow.classList.add(remaining >= 0 ? 'remaining-good' : 'remaining-bad');
+}
+
+function render(){
+  // Full rebuild: only called on load, add, remove, and reset — never on keystrokes,
+  // so typing never gets interrupted by the list re-rendering underneath the cursor.
+  document.getElementById('income').value = state.income || '';
+  buildList('exp', document.getElementById('expList'), true);
+  buildList('oneoff', document.getElementById('oneoffList'), true);
+  buildList('debt', document.getElementById('debtList'), true);
+  renderTotals();
+}
+
+document.getElementById('income').addEventListener('input', e => updateIncome(e.target.value));
+
+load();
+render();
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(err => console.error('SW registration failed', err));
+  });
+}
+</script>
+</body>
+</html>
