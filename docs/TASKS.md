@@ -6,10 +6,10 @@ Status: `[ ]` todo, `[~]` in progress, `[x]` done
 
 ## Phase 0: Setup
 
-- [ ] **T0.1** Inspect the repo and correct every **[CONFIRM]** item in `PRD.md`, `ARCHITECTURE.md`, and `GEMINI.md`.
-- [ ] **T0.2** Move the docs into `/docs` and put `GEMINI.md` at the repo root.
-- [ ] **T0.3** Confirm the app runs locally and works offline. Record the commands in `GEMINI.md`.
-- [ ] **T0.4** Create a git branch per phase.
+- [x] **T0.1** Inspect the repo and correct every **[CONFIRM]** item in `PRD.md`, `ARCHITECTURE.md`, and `GEMINI.md`.
+- [x] **T0.2** Move the docs into `/docs` and put `GEMINI.md` at the repo root.
+- [x] **T0.3** Confirm the app runs locally and works offline. Record the commands in `GEMINI.md`.
+- [x] **T0.4** Create a git branch per phase.
 
 ## Phase 1: Safety net (before changing data)
 
