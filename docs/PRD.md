@@ -1,6 +1,6 @@
 # Salary Planner: Product Requirements Document
 
-Status: living document. Last checked against the repo on 2026-10-06.
+Status: living document. Items marked **[CONFIRM]** are unverified. Check them against the repo and fix this file.
 
 ## 1. Overview
 
@@ -8,7 +8,7 @@ Salary Planner is a personal budgeting web app, installed as a PWA on the owner'
 
 - Owner and sole user: Franklyn (Nairobi, Kenya)
 - Platform: mobile-first PWA, also usable in a desktop browser
-- Currency: KES, displayed as `KSh`
+- Currency: KES **[CONFIRM]**
 
 ## 2. Problem
 
@@ -36,12 +36,12 @@ Salary arrives once a month and gets spent in pieces. Franklyn wants one place t
 | Income | Enter monthly salary/income. |
 | Recurring expenses | Add, edit, delete fixed monthly expenses. |
 | Upcoming one-off costs | Add, edit, delete costs expected in the future. |
-| Debts | Add, edit, delete debts to repay. Each debt has name, amount, and a free-text due/notes field. |
+| Debts | Add, edit, delete debts to repay, with a way to track repayment **[CONFIRM exact fields]**. |
 | Summary | Income vs. commitments, with what remains. |
 | PWA | Installable, works offline (manifest + service worker + icons). |
 | Hosting | GitHub Pages. |
 
-Current calculations subtract all recurring expenses, all upcoming one-off costs, and all listed debts from monthly income. Due/notes text is informational only; it does not change calculations.
+**[CONFIRM]** the exact fields, calculations, and screens in the repo, and update this table.
 
 ## 6. Planned feature A: Daily spend tab
 

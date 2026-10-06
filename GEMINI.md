@@ -1,6 +1,6 @@
-# AGENTS.md
+# GEMINI.md
 
-Context and rules for AI coding agents working on Salary Planner.
+Context and rules for Gemini CLI (and any AI coding agent) working on Salary Planner.
 
 ## What this project is
 
@@ -13,20 +13,22 @@ Read these before changing anything:
 
 ## First step in any new session
 
-Before your first change:
+The docs were written without access to the code. Before your first change:
 1. Inspect the repo (file tree, entry HTML, scripts, service worker, manifest).
-2. Read `docs/PRD.md`, `docs/ARCHITECTURE.md`, and `docs/TASKS.md`.
-3. Tell the owner what task you are starting.
+2. Fix every **[CONFIRM]** item in `docs/PRD.md` and `docs/ARCHITECTURE.md` so they match reality.
+3. Fill in the commands section below.
+4. Tell the owner what you corrected.
 
 ## Commands
 
+Fill in after inspecting the repo.
+
 ```
-Install:  none
-Run dev:  python3 -m http.server 4173
-Build:    none
-Test:     node --check sw.js
-          node -e "const fs=require('fs'); const html=fs.readFileSync('index.html','utf8'); const js=html.match(/<script>([\s\S]*)<\/script>/)[1]; new Function(js); console.log('inline script parses')"
-Deploy:   push/merge to main; GitHub Pages serves the static files from this repo
+Install:  [CONFIRM]
+Run dev:  [CONFIRM]   # or open index.html / any static server
+Build:    [CONFIRM]   # if there is no build step, say so
+Test:     [CONFIRM]
+Deploy:   push to the main branch, served by GitHub Pages [CONFIRM branch]
 ```
 
 ## Rules
