@@ -6,14 +6,14 @@ Status: `[ ]` todo, `[~]` in progress, `[x]` done
 
 ## Phase 0: Setup
 
-- [ ] **T0.1** Inspect the repo and correct every **[CONFIRM]** item in `PRD.md`, `ARCHITECTURE.md`, and `AGENTS.md`.
-- [ ] **T0.2** Move the docs into `/docs` and put `AGENTS.md` at the repo root.
-- [ ] **T0.3** Confirm the app runs locally and works offline. Record the commands in `AGENTS.md`.
-- [ ] **T0.4** Create a git branch per phase.
+- [x] **T0.1** Inspect the repo and correct every confirmation placeholder in `PRD.md`, `ARCHITECTURE.md`, and `AGENTS.md`.
+- [x] **T0.2** Move the docs into `/docs` and put `AGENTS.md` at the repo root.
+- [~] **T0.3** Confirm the app runs locally and works offline. Record the commands in `AGENTS.md`.
+- [x] **T0.4** Create a git branch per phase.
 
 ## Phase 1: Safety net (before changing data)
 
-- [ ] **T1.1** Add `schemaVersion` to stored data, with a migration function that preserves existing data.
+- [x] **T1.1** Add `schemaVersion` to stored data, with a migration function that preserves existing data.
   - Done when: loading old data works and nothing is lost.
 - [ ] **T1.2** Isolate calculation code from UI code if it is mixed.
   - Done when: calculations live in one place and results are unchanged.
@@ -63,4 +63,4 @@ Decisions needed from the owner before starting T3.2. Ask and offer 2 to 3 optio
 
 ## Current task
 
-None selected. Start with **T0.1**.
+Finish **T0.3** with a browser offline/PWA smoke test, then start **T1.2**.

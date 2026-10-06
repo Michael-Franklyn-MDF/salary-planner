@@ -109,17 +109,51 @@
 
 <script>
 const KEY = 'salary-planner-v1';
-let state = { income: 0, exp: [], oneoff: [], debt: [] };
+const SCHEMA_VERSION = 1;
+let state = defaultState();
+
+function defaultState(){
+  return { schemaVersion: SCHEMA_VERSION, income: 0, exp: [], oneoff: [], debt: [] };
+}
+
+function normalizeItem(item){
+  return {
+    name: typeof item?.name === 'string' ? item.name : '',
+    amount: Number.isFinite(Number(item?.amount)) ? Number(item.amount) : 0,
+    due: typeof item?.due === 'string' ? item.due : ''
+  };
+}
+
+function migrateState(raw){
+  const next = defaultState();
+  if(!raw || typeof raw !== 'object') return { state: next, changed: true };
+
+  next.income = Number.isFinite(Number(raw.income)) ? Number(raw.income) : 0;
+  ['exp','oneoff','debt'].forEach(kind => {
+    next[kind] = Array.isArray(raw[kind]) ? raw[kind].map(normalizeItem) : [];
+  });
+
+  const changed = JSON.stringify(next) !== JSON.stringify(raw);
+
+  return { state: next, changed };
+}
 
 function load(){
   try{
     const raw = localStorage.getItem(KEY);
-    if(raw) state = JSON.parse(raw);
+    if(raw){
+      const migrated = migrateState(JSON.parse(raw));
+      state = migrated.state;
+      if(migrated.changed) persist();
+    }
   }catch(e){ console.error('load failed', e); }
+}
+function persist(){
+  localStorage.setItem(KEY, JSON.stringify(state));
 }
 function save(){
   try{
-    localStorage.setItem(KEY, JSON.stringify(state));
+    persist();
     const note = document.getElementById('savedNote');
     note.textContent = 'Saved';
     clearTimeout(save._t);
@@ -147,7 +181,7 @@ function updateIncome(value){
 }
 function resetAll(){
   if(confirm('Clear all entered data? This cannot be undone.')){
-    state = { income:0, exp:[], oneoff:[], debt:[] };
+    state = defaultState();
     save(); render();
   }
 }

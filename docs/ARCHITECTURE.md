@@ -1,6 +1,6 @@
 # Salary Planner: Architecture
 
-Items marked **[CONFIRM]** were written without access to the code. Verify and correct them.
+Last checked against the repo on 2026-10-06.
 
 ## 1. Summary
 
@@ -8,9 +8,9 @@ Static, client-only PWA. No server. All data lives on the device. Deployed as st
 
 ```
 Browser / installed PWA
- ├─ UI (HTML + CSS + JS)            [CONFIRM: vanilla or framework]
+ ├─ UI (vanilla HTML + inline CSS + inline JS)
  ├─ App state + calculations
- ├─ Local storage layer             [CONFIRM: localStorage or IndexedDB]
+ ├─ Local storage layer (localStorage)
  └─ Service worker (offline cache)
         ▲
         └── static files from GitHub Pages
@@ -20,60 +20,59 @@ Browser / installed PWA
 
 | Layer | Choice |
 |---|---|
-| Language | JavaScript **[CONFIRM]** |
-| UI | Single-page app **[CONFIRM: framework or none]** |
-| Styling | CSS **[CONFIRM]** |
-| Storage | Browser storage **[CONFIRM which]** |
+| Language | JavaScript |
+| UI | Single-page app, no framework |
+| Styling | Inline CSS in `index.html` |
+| Storage | `localStorage` under `salary-planner-v1` |
 | Offline | Service worker + web app manifest |
 | Hosting | GitHub Pages |
 
 ## 3. Expected file layout
 
-**[CONFIRM]** against the repo.
-
 ```
 /
 ├─ index.html
-├─ manifest.json (or .webmanifest)
+├─ manifest.json
 ├─ sw.js                  service worker
-├─ icons/                 PWA icons
-├─ css/ or inline styles
-├─ js/ or inline script
+├─ icon-192.png           PWA icon
+├─ icon-512.png           PWA icon
+├─ inline styles          in index.html
+├─ inline script          in index.html
 └─ docs/                  PRD, ARCHITECTURE, TASKS
 ```
 
 ## 4. Data model
 
-**[CONFIRM]** field names and shapes in the code. Intended model:
+Current stored state:
 
 ```
-income:        { monthlyAmount }
-recurring[]:   { id, name, amount }
-upcoming[]:    { id, name, amount, dueDate }
-debts[]:       { id, name, totalOwed, monthlyPayment?, paid? }
-dailySpend[]:  { id, amount, category, date (YYYY-MM-DD), note? }   // NEW
-categories[]:  { id, name }                                         // NEW
-meta:          { schemaVersion }
+{
+  schemaVersion: 1,
+  income: number,
+  exp:     [{ name: string, amount: number, due: string }],
+  oneoff:  [{ name: string, amount: number, due: string }],
+  debt:    [{ name: string, amount: number, due: string }]
+}
 ```
 
 Rules:
-- IDs are unique and stable.
-- Amounts are stored as numbers in whole currency units, or integers in minor units, whichever the app already uses. **[CONFIRM]** Do not mix.
-- Dates are stored as `YYYY-MM-DD`.
+- The current model has no IDs.
+- Amounts are stored as JavaScript numbers.
+- `due` is free text, not a parsed date.
+- Planned daily-spend work should add stable IDs where needed, migration, `dailySpend[]`, and `categories[]`.
 
 ## 5. Calculations
 
-**[CONFIRM]** the exact formulas in the code. Intended:
-
-- `committed = sum(recurring) + monthly debt payments + upcoming costs due this month`
+- `committed = sum(exp) + sum(oneoff) + sum(debt)`
 - `remaining = income - committed`
 - `remainingToSpend = remaining - sum(dailySpend this month)` (NEW)
 
-Keep calculation code in one place, separate from UI code, so the redesign cannot break it.
+Current calculation code lives in `index.html` inside `sumOf()` and `renderTotals()`. A future safety-net task should isolate it so the redesign cannot break it.
 
 ## 6. Persistence and migration
 
-- The whole state is saved under one versioned key, or one object store **[CONFIRM]**.
+- The whole state is saved as one JSON object in `localStorage` under `salary-planner-v1`.
+- The current object uses `schemaVersion: 1`; legacy objects without `schemaVersion` are normalized on load.
 - Adding `dailySpend` and `categories` changes the data shape. On load:
   1. Read stored data.
   2. If `schemaVersion` is missing or older, add the new fields with empty defaults.
@@ -82,14 +81,14 @@ Keep calculation code in one place, separate from UI code, so the redesign canno
 
 ## 7. PWA and offline
 
-- Service worker precaches the app shell and serves cache-first, with network fallback **[CONFIRM strategy]**.
+- Service worker precaches the app shell and serves cache-first, while refreshing the cache from the network in the background when online.
 - Every release that changes cached files must bump the cache version so installed copies update.
 - The manifest holds name, icons, `theme_color`, and `background_color`. The redesign must update these.
 - Test offline by loading the app, going offline in DevTools, and reloading.
 
 ## 8. UI structure
 
-Current screens **[CONFIRM]**: summary/home, income, recurring, upcoming, debts.
+Current screen: a single-page layout with summary/home, income, recurring expenses, upcoming one-off costs, and debts sections.
 
 Planned:
 - Add a **Daily Spend** tab.
@@ -103,7 +102,7 @@ Planned:
 
 ## 9. Deployment
 
-- Push to the main branch. GitHub Pages serves it **[CONFIRM branch and path]**.
+- Push or merge to the `main` branch. GitHub Pages serves the static files from this repo.
 - After deploy: open the live URL, hard refresh, confirm the new service worker version activates, and check the installed app updates.
 
 ## 10. Risks

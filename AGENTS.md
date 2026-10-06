@@ -13,22 +13,20 @@ Read these before changing anything:
 
 ## First step in any new session
 
-The docs were written without access to the code. Before your first change:
+Before your first change:
 1. Inspect the repo (file tree, entry HTML, scripts, service worker, manifest).
-2. Fix every **[CONFIRM]** item in `docs/PRD.md` and `docs/ARCHITECTURE.md` so they match reality.
-3. Fill in the commands section below.
-4. Tell the owner what you corrected.
+2. Read `docs/PRD.md`, `docs/ARCHITECTURE.md`, and `docs/TASKS.md`.
+3. Tell the owner what task you are starting.
 
 ## Commands
 
-Fill in after inspecting the repo.
-
 ```
-Install:  [CONFIRM]
-Run dev:  [CONFIRM]   # or open index.html / any static server
-Build:    [CONFIRM]   # if there is no build step, say so
-Test:     [CONFIRM]
-Deploy:   push to the main branch, served by GitHub Pages [CONFIRM branch]
+Install:  none
+Run dev:  python3 -m http.server 4173
+Build:    none
+Test:     node --check sw.js
+          node -e "const fs=require('fs'); const html=fs.readFileSync('index.html','utf8'); const js=html.match(/<script>([\s\S]*)<\/script>/)[1]; new Function(js); console.log('inline script parses')"
+Deploy:   push/merge to main; GitHub Pages serves the static files from this repo
 ```
 
 ## Rules
