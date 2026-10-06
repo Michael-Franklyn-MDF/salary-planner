@@ -15,7 +15,7 @@ Status: `[ ]` todo, `[~]` in progress, `[x]` done
 
 - [x] **T1.1** Add `schemaVersion` to stored data, with a migration function that preserves existing data.
   - Done when: loading old data works and nothing is lost.
-- [ ] **T1.2** Isolate calculation code from UI code if it is mixed.
+- [x] **T1.2** Isolate calculation code from UI code if it is mixed.
   - Done when: calculations live in one place and results are unchanged.
 - [ ] **T1.3** Add export/import of data as a JSON file (backup).
   - Done when: export, clear data, import restores everything.
@@ -63,4 +63,4 @@ Decisions needed from the owner before starting T3.2. Ask and offer 2 to 3 optio
 
 ## Current task
 
-Finish **T0.3** with a browser offline/PWA smoke test, then start **T1.2**.
+Finish **T0.3** with a browser offline/PWA smoke test, then start **T1.3**.

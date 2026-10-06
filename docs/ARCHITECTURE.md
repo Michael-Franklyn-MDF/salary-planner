@@ -67,7 +67,7 @@ Rules:
 - `remaining = income - committed`
 - `remainingToSpend = remaining - sum(dailySpend this month)` (NEW)
 
-Current calculation code lives in `index.html` inside `sumOf()` and `renderTotals()`. A future safety-net task should isolate it so the redesign cannot break it.
+Calculation code lives in `index.html` inside pure helpers: `sumItems()` and `calculateSummary()`. `renderTotals()` only writes the calculated values to the DOM.
 
 ## 6. Persistence and migration
 

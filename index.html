@@ -185,8 +185,25 @@ function resetAll(){
     save(); render();
   }
 }
-function sumOf(kind){
-  return state[kind].reduce((a,b)=>a+(b.amount||0),0);
+function sumItems(items){
+  return (Array.isArray(items) ? items : []).reduce((total, item) => total + (Number(item.amount) || 0), 0);
+}
+
+function calculateSummary(data){
+  const income = Number(data.income) || 0;
+  const expTotal = sumItems(data.exp);
+  const oneoffTotal = sumItems(data.oneoff);
+  const debtTotal = sumItems(data.debt);
+  const outflow = expTotal + oneoffTotal + debtTotal;
+
+  return {
+    income,
+    expTotal,
+    oneoffTotal,
+    debtTotal,
+    outflow,
+    remaining: income - outflow
+  };
 }
 function buildList(kind, container, showDue){
   container.innerHTML = '';
@@ -215,25 +232,21 @@ function escapeAttr(s){
   return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
 }
 function renderTotals(){
-  const expTotal = sumOf('exp');
-  const oneoffTotal = sumOf('oneoff');
-  const debtTotal = sumOf('debt');
-  const outflow = expTotal + oneoffTotal + debtTotal;
-  const remaining = (state.income||0) - outflow;
+  const summary = calculateSummary(state);
 
-  document.getElementById('incomeDisplay').textContent = fmt(state.income||0);
-  document.getElementById('expDisplay').textContent = fmt(expTotal);
-  document.getElementById('oneoffDisplay').textContent = fmt(oneoffTotal);
-  document.getElementById('debtDisplay').textContent = fmt(debtTotal);
-  document.getElementById('expSub').textContent = fmt(expTotal);
-  document.getElementById('oneoffSub').textContent = fmt(oneoffTotal);
-  document.getElementById('debtSub').textContent = fmt(debtTotal);
+  document.getElementById('incomeDisplay').textContent = fmt(summary.income);
+  document.getElementById('expDisplay').textContent = fmt(summary.expTotal);
+  document.getElementById('oneoffDisplay').textContent = fmt(summary.oneoffTotal);
+  document.getElementById('debtDisplay').textContent = fmt(summary.debtTotal);
+  document.getElementById('expSub').textContent = fmt(summary.expTotal);
+  document.getElementById('oneoffSub').textContent = fmt(summary.oneoffTotal);
+  document.getElementById('debtSub').textContent = fmt(summary.debtTotal);
 
   const remDisplay = document.getElementById('remainingDisplay');
   const remRow = document.getElementById('remainingRow');
-  remDisplay.textContent = fmt(remaining);
+  remDisplay.textContent = fmt(summary.remaining);
   remRow.classList.remove('remaining-good','remaining-bad');
-  remRow.classList.add(remaining >= 0 ? 'remaining-good' : 'remaining-bad');
+  remRow.classList.add(summary.remaining >= 0 ? 'remaining-good' : 'remaining-bad');
 }
 
 function render(){
