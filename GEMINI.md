@@ -21,14 +21,12 @@ The docs were written without access to the code. Before your first change:
 
 ## Commands
 
-Fill in after inspecting the repo.
-
 ```
-Install:  [CONFIRM]
-Run dev:  [CONFIRM]   # or open index.html / any static server
-Build:    [CONFIRM]   # if there is no build step, say so
-Test:     [CONFIRM]
-Deploy:   push to the main branch, served by GitHub Pages [CONFIRM branch]
+Install:  None (vanilla HTML/CSS/JS, no dependencies or package.json)
+Run dev:  open index.html in a browser or run any static file server (e.g., python3 -m http.server 8000)
+Build:    None (no build step; served directly)
+Test:     Manual verification in mobile and desktop browsers / DevTools
+Deploy:   push to the main branch, served by GitHub Pages
 ```
 
 ## Rules

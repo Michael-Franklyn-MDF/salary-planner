@@ -13,9 +13,9 @@ Status: `[ ]` todo, `[~]` in progress, `[x]` done
 
 ## Phase 1: Safety net (before changing data)
 
-- [ ] **T1.1** Add `schemaVersion` to stored data, with a migration function that preserves existing data.
+- [x] **T1.1** Add `schemaVersion` to stored data, with a migration function that preserves existing data.
   - Done when: loading old data works and nothing is lost.
-- [ ] **T1.2** Isolate calculation code from UI code if it is mixed.
+- [x] **T1.2** Isolate calculation code from UI code if it is mixed.
   - Done when: calculations live in one place and results are unchanged.
 - [ ] **T1.3** Add export/import of data as a JSON file (backup).
   - Done when: export, clear data, import restores everything.
@@ -74,4 +74,4 @@ Decisions needed from the owner before starting T3.2. Ask and offer 2 to 3 optio
 
 ## Current task
 
-None selected. Start with **T0.1**.
+Next up: **T1.3** (Add export/import of data as a JSON file).
