@@ -52,8 +52,10 @@
   .remove:hover{color:var(--bad);}
   .add-btn{background:none; border:1px dashed var(--line); color:var(--dim); border-radius:8px; padding:10px 12px; font-size:0.88rem; cursor:pointer; width:100%; text-align:left; margin-top:8px;}
   .add-btn:hover{border-color:var(--accent); color:var(--accent);}
-  footer{display:flex; justify-content:space-between; align-items:center; margin-top:20px; padding-top:16px; border-top:1px solid var(--line);}
-  .reset{background:none; border:none; color:var(--dim); font-size:0.82rem; cursor:pointer; text-decoration:underline; padding:0;}
+  footer{display:flex; justify-content:space-between; align-items:center; margin-top:20px; padding-top:16px; border-top:1px solid var(--line); flex-wrap:wrap; gap:12px;}
+  .footer-actions{display:flex; align-items:center; gap:14px; flex-wrap:wrap;}
+  .footer-btn, .reset{background:none; border:none; color:var(--dim); font-size:0.82rem; cursor:pointer; text-decoration:underline; padding:4px 0; font-family:inherit;}
+  .footer-btn:hover{color:var(--text);}
   .reset:hover{color:var(--bad);}
   .saved{color:var(--dim); font-size:0.78rem;}
   @media (prefers-color-scheme: light){
@@ -103,7 +105,12 @@
   </section>
 
   <footer>
-    <button class="reset" onclick="resetAll()">Clear all data</button>
+    <div class="footer-actions">
+      <button class="footer-btn" type="button" onclick="exportData()">Export data</button>
+      <button class="footer-btn" type="button" onclick="document.getElementById('importFile').click()">Import data</button>
+      <input type="file" id="importFile" accept=".json,application/json" style="display:none;" onchange="importData(event)" />
+      <button class="reset" type="button" onclick="resetAll()">Clear all data</button>
+    </div>
     <span class="saved" id="savedNote"></span>
   </footer>
 
@@ -184,6 +191,50 @@ function resetAll(){
     state = defaultState();
     save(); render();
   }
+}
+function exportData(){
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const dateStr = new Date().toISOString().slice(0, 10);
+  a.href = url;
+  a.download = `salary-planner-backup-${dateStr}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+function importData(event){
+  const file = event.target.files && event.target.files[0];
+  if(!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e){
+    try{
+      const parsed = JSON.parse(e.target.result);
+      if(!parsed || typeof parsed !== 'object'){
+        alert('Invalid backup file format.');
+        return;
+      }
+      if(!confirm('Import this backup? This will replace your current data.')){
+        return;
+      }
+      const migrated = migrateState(parsed);
+      state = migrated.state;
+      save();
+      render();
+    }catch(err){
+      alert('Failed to read or parse backup file.');
+      console.error(err);
+    }finally{
+      event.target.value = '';
+    }
+  };
+  reader.onerror = function(){
+    alert('Error reading file.');
+    event.target.value = '';
+  };
+  reader.readAsText(file);
 }
 function sumItems(items){
   return (Array.isArray(items) ? items : []).reduce((total, item) => total + (Number(item.amount) || 0), 0);
