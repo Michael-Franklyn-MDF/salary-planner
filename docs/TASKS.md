@@ -20,6 +20,8 @@ Status: `[ ]` todo, `[~]` in progress, `[x]` done
 - [ ] **T1.3** Add export/import of data as a JSON file (backup).
   - Done when: export, clear data, import restores everything.
 
+
+
 ## Phase 2: Daily spend tab
 
 - [ ] **T2.1** Extend the data model: `dailySpend[]` and `categories[]` with defaults. Migrate.
@@ -32,9 +34,12 @@ Status: `[ ]` todo, `[~]` in progress, `[x]` done
 - [ ] **T2.7** Manage categories (add, rename, delete with entries kept).
 - [ ] **T2.8** Bump service worker cache version and test offline.
 
+
+
 ## Phase 3: UI/UX redesign (visual only)
 
 Decisions needed from the owner before starting T3.2. Ask and offer 2 to 3 options each:
+
 - Color direction and dark mode
 - Logo concept
 - Navigation pattern
@@ -49,17 +54,23 @@ Decisions needed from the owner before starting T3.2. Ask and offer 2 to 3 optio
 - [ ] **T3.8** Accessibility pass: contrast, tap targets, labels, focus states.
 - [ ] **T3.9** Bump service worker cache version, test install and offline, run Lighthouse.
 
+
+
 ## Phase 4: Release
 
 - [ ] **T4.1** Test with real old data from the installed app (use export from T1.3 first).
 - [ ] **T4.2** Merge to main, deploy to GitHub Pages.
 - [ ] **T4.3** Confirm the installed PWA updates and data is intact.
 
+
+
 ## Later (not committed)
 
 - [ ] Monthly history and simple charts
 - [ ] Recurring daily-spend reminders
 - [ ] Debt payoff projection
+
+
 
 ## Current task
 
