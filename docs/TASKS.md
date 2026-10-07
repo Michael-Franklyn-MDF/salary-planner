@@ -24,7 +24,7 @@ Status: `[ ]` todo, `[~]` in progress, `[x]` done
 
 ## Phase 2: Daily spend tab
 
-- [ ] **T2.1** Extend the data model: `dailySpend[]` and `categories[]` with defaults. Migrate.
+- [x] **T2.1** Extend the data model: `dailySpend[]` and `categories[]` with defaults. Migrate.
 - [ ] **T2.2** Add the Daily Spend tab to navigation (empty state included).
 - [ ] **T2.3** Add-entry form: amount, category, date (default today), note. Validate amount.
   - Done when: an entry can be added in under 10 seconds.
@@ -74,4 +74,4 @@ Decisions needed from the owner before starting T3.2. Ask and offer 2 to 3 optio
 
 ## Current task
 
-Phase 1 complete. Next up: **T2.1** (Extend the data model: `dailySpend[]` and `categories[]` with defaults. Migrate).
+Next up: **T2.2** (Add the Daily Spend tab to navigation (empty state included)).

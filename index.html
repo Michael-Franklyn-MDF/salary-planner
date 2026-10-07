@@ -116,11 +116,29 @@
 
 <script>
 const KEY = 'salary-planner-v1';
-const SCHEMA_VERSION = 1;
+const SCHEMA_VERSION = 2;
+
+const DEFAULT_CATEGORIES = [
+  { id: 'cat-food', name: 'Food & Groceries' },
+  { id: 'cat-transport', name: 'Transport' },
+  { id: 'cat-bills', name: 'Bills & Utilities' },
+  { id: 'cat-shopping', name: 'Shopping' },
+  { id: 'cat-entertainment', name: 'Entertainment' },
+  { id: 'cat-other', name: 'Other' }
+];
+
 let state = defaultState();
 
 function defaultState(){
-  return { schemaVersion: SCHEMA_VERSION, income: 0, exp: [], oneoff: [], debt: [] };
+  return {
+    schemaVersion: SCHEMA_VERSION,
+    income: 0,
+    exp: [],
+    oneoff: [],
+    debt: [],
+    dailySpend: [],
+    categories: DEFAULT_CATEGORIES.map(c => ({ ...c }))
+  };
 }
 
 function normalizeItem(item){
@@ -131,14 +149,40 @@ function normalizeItem(item){
   };
 }
 
+function normalizeCategory(cat, index){
+  return {
+    id: typeof cat?.id === 'string' && cat.id ? cat.id : ('cat-' + (index != null ? index : Date.now().toString(36))),
+    name: typeof cat?.name === 'string' && cat.name.trim() ? cat.name.trim() : 'Unnamed'
+  };
+}
+
+function normalizeDailySpend(item){
+  return {
+    id: typeof item?.id === 'string' && item.id ? item.id : ('ds-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 6)),
+    amount: Number.isFinite(Number(item?.amount)) ? Math.max(0, Number(item.amount)) : 0,
+    category: typeof item?.category === 'string' && item.category ? item.category : 'cat-other',
+    date: typeof item?.date === 'string' && item.date ? item.date : new Date().toISOString().slice(0, 10),
+    note: typeof item?.note === 'string' ? item.note : ''
+  };
+}
+
 function migrateState(raw){
   const next = defaultState();
   if(!raw || typeof raw !== 'object') return { state: next, changed: true };
 
+  next.schemaVersion = SCHEMA_VERSION;
   next.income = Number.isFinite(Number(raw.income)) ? Number(raw.income) : 0;
   ['exp','oneoff','debt'].forEach(kind => {
     next[kind] = Array.isArray(raw[kind]) ? raw[kind].map(normalizeItem) : [];
   });
+
+  if(Array.isArray(raw.categories) && raw.categories.length > 0){
+    next.categories = raw.categories.map((cat, i) => normalizeCategory(cat, i));
+  } else {
+    next.categories = DEFAULT_CATEGORIES.map(c => ({ ...c }));
+  }
+
+  next.dailySpend = Array.isArray(raw.dailySpend) ? raw.dailySpend.map(normalizeDailySpend) : [];
 
   const changed = JSON.stringify(next) !== JSON.stringify(raw);
 

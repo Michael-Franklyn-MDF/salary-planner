@@ -33,7 +33,7 @@ Browser / installed PWA
 /
 ├─ index.html             UI, styles, scripts, and calculations
 ├─ manifest.json          web app manifest
-├─ sw.js                  service worker (cache name: salary-planner-v4)
+├─ sw.js                  service worker (cache name: salary-planner-v5)
 ├─ icon-192.png           PWA icon (192x192)
 ├─ icon-512.png           PWA icon (512x512)
 ├─ GEMINI.md              agent rules and commands
@@ -105,7 +105,7 @@ Calculations are encapsulated in `calculateSummary()` and `sumItems()`, isolated
 
 - Service worker precaches `['./index.html', './manifest.json', './icon-192.png', './icon-512.png']`.
 - Caching strategy: Cache-first with network update (serves from cache if present, fetches network in background to update cache).
-- Every release that changes cached files must bump `CACHE_NAME` in `sw.js` (currently `salary-planner-v4`).
+- Every release that changes cached files must bump `CACHE_NAME` in `sw.js` (currently `salary-planner-v5`).
 - Manifest holds `name`, `short_name`, `theme_color` (`#12181B`), `background_color` (`#12181B`), and maskable icons.
 - Test offline by loading the app, going offline in DevTools, and reloading.
 
