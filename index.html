@@ -75,6 +75,19 @@
   .spend-field input:focus, .spend-field select:focus{border-color:var(--accent); outline:2px solid color-mix(in srgb, var(--accent) 35%, transparent);}
   .spend-submit{background:var(--accent); border:1px solid var(--accent); border-radius:8px; color:#12181B; cursor:pointer; font:inherit; font-weight:600; min-height:44px; padding:10px 14px; width:100%;}
   .spend-submit:hover{filter:brightness(1.08);}
+  .spend-list{margin-top:24px;}
+  .spend-day{margin-bottom:22px;}
+  .spend-day h2{border-bottom:1px solid var(--line); color:var(--dim); font-size:0.85rem; font-weight:600; margin:0 0 8px; padding-bottom:8px;}
+  .spend-items{display:flex; flex-direction:column; gap:8px; list-style:none; margin:0; padding:0;}
+  .spend-item{background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:12px;}
+  .spend-item-fields{display:grid; gap:8px; grid-template-columns:1fr 1fr;}
+  .spend-item-fields label{color:var(--dim); display:flex; flex-direction:column; font-size:0.75rem; gap:3px;}
+  .spend-item-fields input, .spend-item-fields select{background:var(--bg); border:1px solid var(--line); border-radius:5px; color:var(--text); font:inherit; min-height:40px; min-width:0; padding:7px 8px;}
+  .spend-item-fields input:focus, .spend-item-fields select:focus{border-color:var(--accent); outline:2px solid color-mix(in srgb, var(--accent) 35%, transparent);}
+  .spend-item-fields .wide{grid-column:1 / -1;}
+  .spend-item-actions{display:flex; justify-content:flex-end; margin-top:8px;}
+  .spend-delete{background:none; border:none; color:var(--dim); cursor:pointer; font:inherit; padding:6px 0; text-decoration:underline;}
+  .spend-delete:hover{color:var(--bad);}
   @media (prefers-color-scheme: light){
     :root:not([data-theme="dark"]){
       --bg:#F4F2EC; --panel:#FFFFFF; --line:#E2DFD4; --text:#20211F; --dim:#6B6F68;
@@ -151,6 +164,7 @@
         <button class="spend-submit" type="submit">Add purchase</button>
       </div>
     </form>
+    <div class="spend-list" id="dailySpendList"></div>
   </div>
 
   <footer>
@@ -302,6 +316,91 @@ function addDailySpend(event){
   save();
   document.getElementById('dailySpendForm').reset();
   renderDailySpendForm();
+  renderDailySpendList();
+}
+function formatSpendDate(dateValue){
+  const parsed = new Date(dateValue + 'T00:00:00');
+  return Number.isNaN(parsed.getTime()) ? dateValue : parsed.toLocaleDateString(undefined, {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+}
+function updateDailySpend(id, field, value, rerender){
+  const item = state.dailySpend.find(entry => entry.id === id);
+  if(!item) return;
+  item[field] = field === 'amount' ? (parseFloat(value) || 0) : value;
+  save();
+  if(rerender) renderDailySpendList();
+}
+function removeDailySpend(id){
+  state.dailySpend = state.dailySpend.filter(item => item.id !== id);
+  save();
+  renderDailySpendList();
+}
+function renderDailySpendList(){
+  const container = document.getElementById('dailySpendList');
+  const groups = {};
+  state.dailySpend.forEach(item => {
+    if(!groups[item.date]) groups[item.date] = [];
+    groups[item.date].push(item);
+  });
+
+  const dates = Object.keys(groups).sort((a, b) => b.localeCompare(a));
+  if(!dates.length){
+    container.innerHTML = '<div class="empty-state"><h2>No purchases yet</h2><p>Your logged purchases will appear here, grouped by day.</p></div>';
+    return;
+  }
+
+  container.innerHTML = dates.map(date => `
+    <section class="spend-day">
+      <h2>${escapeAttr(formatSpendDate(date))}</h2>
+      <ul class="spend-items">
+        ${groups[date].map(item => `
+          <li class="spend-item" data-spend-id="${escapeAttr(item.id)}">
+            <div class="spend-item-fields">
+              <label>Amount (KSh)
+                <input class="spend-amount" type="number" min="0" step="0.01" value="${item.amount}" />
+              </label>
+              <label>Category
+                <select class="spend-category">${categoryOptions(item.category)}</select>
+              </label>
+              <label class="wide">Date
+                <input class="spend-date" type="date" value="${escapeAttr(item.date)}" />
+              </label>
+              <label class="wide">Note
+                <input class="spend-note" type="text" maxlength="120" value="${escapeAttr(item.note)}" />
+              </label>
+            </div>
+            <div class="spend-item-actions">
+              <button class="spend-delete" type="button">Delete</button>
+            </div>
+          </li>
+        `).join('')}
+      </ul>
+    </section>
+  `).join('');
+
+  container.querySelectorAll('.spend-item').forEach(itemElement => {
+    const id = itemElement.dataset.spendId;
+    itemElement.querySelector('.spend-amount').addEventListener('input', event =>
+      updateDailySpend(id, 'amount', event.target.value, false));
+    itemElement.querySelector('.spend-category').addEventListener('change', event =>
+      updateDailySpend(id, 'category', event.target.value, false));
+    itemElement.querySelector('.spend-date').addEventListener('change', event =>
+      updateDailySpend(id, 'date', event.target.value, true));
+    itemElement.querySelector('.spend-note').addEventListener('input', event =>
+      updateDailySpend(id, 'note', event.target.value, false));
+    itemElement.querySelector('.spend-delete').addEventListener('click', () => {
+      if(confirm('Delete this purchase?')) removeDailySpend(id);
+    });
+  });
+}
+function categoryOptions(selectedId){
+  return state.categories.map(category =>
+    `<option value="${escapeAttr(category.id)}"${category.id === selectedId ? ' selected' : ''}>${escapeAttr(category.name)}</option>`
+  ).join('');
 }
 function addItem(kind){
   state[kind].push({ name:'', amount:0, due:'' });
@@ -441,6 +540,7 @@ function render(){
   buildList('oneoff', document.getElementById('oneoffList'), true);
   buildList('debt', document.getElementById('debtList'), true);
   renderDailySpendForm();
+  renderDailySpendList();
   renderTotals();
 }
 

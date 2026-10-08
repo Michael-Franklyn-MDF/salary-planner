@@ -28,7 +28,7 @@ Status: `[ ]` todo, `[~]` in progress, `[x]` done
 - [x] **T2.2** Add the Daily Spend tab to navigation (empty state included).
 - [x] **T2.3** Add-entry form: amount, category, date (default today), note. Validate amount.
   - Done when: an entry can be added in under 10 seconds.
-- [ ] **T2.4** List entries grouped by day, newest first. Edit and delete.
+- [x] **T2.4** List entries grouped by day, newest first. Edit and delete.
 - [ ] **T2.5** Show today's total and month total.
 - [ ] **T2.6** Add `remainingToSpend` to the summary using the existing calculation.
 - [ ] **T2.7** Manage categories (add, rename, delete with entries kept).
@@ -74,4 +74,4 @@ Decisions needed from the owner before starting T3.2. Ask and offer 2 to 3 optio
 
 ## Current task
 
-Next up: **T2.4** (List entries grouped by day, newest first. Edit and delete).
+Next up: **T2.5** (Show today's total and month total).
