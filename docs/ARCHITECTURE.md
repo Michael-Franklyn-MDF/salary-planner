@@ -121,7 +121,7 @@ Current structure: Single-page vertical scroll with Overview and Daily Spend tab
 6. Debts to repay list with inline inputs and "+ Add debt" button
 7. Footer with "Clear all data" button and transient "Saved" status indicator
 
-The Daily Spend tab contains today and current-month totals, an entry form for amount, category, date, and optional note, followed by entries grouped by date descending. Each entry can be edited inline or deleted; entries are normalized and saved to `dailySpend`. Remaining-to-spend and category management remain in Phase 2.
+The Daily Spend tab contains today and current-month totals, an entry form for amount, category, date, and optional note, category management, and entries grouped by date descending. Categories can be added and renamed; deleting a category moves its existing entries to `Other`. Entries are normalized and saved to `dailySpend`.
 
 Planned:
 - Add a **Daily Spend** tab.

@@ -79,6 +79,19 @@
   .spend-field input:focus, .spend-field select:focus{border-color:var(--accent); outline:2px solid color-mix(in srgb, var(--accent) 35%, transparent);}
   .spend-submit{background:var(--accent); border:1px solid var(--accent); border-radius:8px; color:#12181B; cursor:pointer; font:inherit; font-weight:600; min-height:44px; padding:10px 14px; width:100%;}
   .spend-submit:hover{filter:brightness(1.08);}
+  .category-manager{margin-top:24px;}
+  .category-manager h2{font-size:1rem; margin:0 0 10px;}
+  .category-add{display:flex; gap:8px; margin-bottom:10px;}
+  .category-add input{background:var(--bg); border:1px solid var(--line); border-radius:6px; color:var(--text); flex:1; font:inherit; min-height:44px; min-width:0; padding:8px 10px;}
+  .category-add input:focus{border-color:var(--accent); outline:2px solid color-mix(in srgb, var(--accent) 35%, transparent);}
+  .category-add button{background:var(--panel); border:1px solid var(--line); border-radius:8px; color:var(--text); cursor:pointer; font:inherit; min-height:44px; padding:8px 12px;}
+  .category-add button:hover{border-color:var(--accent); color:var(--accent);}
+  .category-items{display:flex; flex-direction:column; gap:8px; list-style:none; margin:0; padding:0;}
+  .category-item{align-items:center; background:var(--panel); border:1px solid var(--line); border-radius:8px; display:flex; gap:8px; padding:8px 10px;}
+  .category-item input{background:transparent; border:none; color:var(--text); flex:1; font:inherit; min-width:0; outline:none; padding:6px 2px;}
+  .category-item input:focus{border-bottom:1px solid var(--accent);}
+  .category-delete{background:none; border:none; color:var(--dim); cursor:pointer; font:inherit; padding:6px 0; text-decoration:underline;}
+  .category-delete:hover{color:var(--bad);}
   .spend-list{margin-top:24px;}
   .spend-day{margin-bottom:22px;}
   .spend-day h2{border-bottom:1px solid var(--line); color:var(--dim); font-size:0.85rem; font-weight:600; margin:0 0 8px; padding-bottom:8px;}
@@ -179,6 +192,14 @@
         <button class="spend-submit" type="submit">Add purchase</button>
       </div>
     </form>
+    <section class="category-manager">
+      <h2>Categories</h2>
+      <form class="category-add" id="categoryForm">
+        <input id="categoryName" type="text" maxlength="40" placeholder="New category" required />
+        <button type="submit">Add</button>
+      </form>
+      <ul class="category-items" id="categoryList"></ul>
+    </section>
     <div class="spend-list" id="dailySpendList"></div>
   </div>
 
@@ -438,6 +459,72 @@ function categoryOptions(selectedId){
     `<option value="${escapeAttr(category.id)}"${category.id === selectedId ? ' selected' : ''}>${escapeAttr(category.name)}</option>`
   ).join('');
 }
+function categoryId(){
+  return 'cat-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 6);
+}
+function renderCategoryList(){
+  const container = document.getElementById('categoryList');
+  container.innerHTML = state.categories.map(category => `
+    <li class="category-item" data-category-id="${escapeAttr(category.id)}">
+      <input class="category-name" type="text" maxlength="40" value="${escapeAttr(category.name)}" aria-label="Category name" />
+      <button class="category-delete" type="button"${category.id === 'cat-other' ? ' disabled title="Other cannot be deleted"' : ''}>Delete</button>
+    </li>
+  `).join('');
+
+  container.querySelectorAll('.category-item').forEach(itemElement => {
+    const id = itemElement.dataset.categoryId;
+    const nameInput = itemElement.querySelector('.category-name');
+    nameInput.addEventListener('change', event => renameCategory(id, event.target.value));
+    itemElement.querySelector('.category-delete').addEventListener('click', () => deleteCategory(id));
+  });
+}
+function addCategory(event){
+  event.preventDefault();
+  const input = document.getElementById('categoryName');
+  const name = input.value.trim();
+  if(!name) return;
+  if(state.categories.some(category => category.name.toLowerCase() === name.toLowerCase())){
+    alert('That category already exists.');
+    return;
+  }
+  state.categories.push({ id: categoryId(), name });
+  save();
+  input.value = '';
+  renderCategoryList();
+  renderDailySpendForm();
+  renderDailySpendList();
+}
+function renameCategory(id, value){
+  const name = value.trim();
+  const category = state.categories.find(item => item.id === id);
+  if(!category) return;
+  if(!name){
+    renderCategoryList();
+    return;
+  }
+  if(state.categories.some(item => item.id !== id && item.name.toLowerCase() === name.toLowerCase())){
+    alert('That category already exists.');
+    renderCategoryList();
+    return;
+  }
+  category.name = name;
+  save();
+  renderDailySpendForm();
+  renderDailySpendList();
+}
+function deleteCategory(id){
+  if(id === 'cat-other') return;
+  const category = state.categories.find(item => item.id === id);
+  if(!category || !confirm(`Delete "${category.name}"? Existing purchases will move to Other.`)) return;
+  state.dailySpend.forEach(item => {
+    if(item.category === id) item.category = 'cat-other';
+  });
+  state.categories = state.categories.filter(item => item.id !== id);
+  save();
+  renderCategoryList();
+  renderDailySpendForm();
+  renderDailySpendList();
+}
 function addItem(kind){
   state[kind].push({ name:'', amount:0, due:'' });
   save(); render();
@@ -588,6 +675,7 @@ function render(){
   buildList('oneoff', document.getElementById('oneoffList'), true);
   buildList('debt', document.getElementById('debtList'), true);
   renderDailySpendForm();
+  renderCategoryList();
   renderDailySpendList();
   renderDailySpendTotals();
   renderTotals();
@@ -605,6 +693,7 @@ function selectTab(tabName){
 
 document.getElementById('income').addEventListener('input', e => updateIncome(e.target.value));
 document.getElementById('dailySpendForm').addEventListener('submit', addDailySpend);
+document.getElementById('categoryForm').addEventListener('submit', addCategory);
 document.querySelectorAll('[data-tab]').forEach(tab => {
   tab.addEventListener('click', () => selectTab(tab.dataset.tab));
 });
