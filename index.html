@@ -47,10 +47,14 @@
   .remaining-bad .val{color:var(--bad);}
   section{margin-bottom:26px;}
   section h2{font-size:0.95rem; font-weight:600; margin:0 0 10px; display:flex; justify-content:space-between; align-items:center;}
+  .overview-section{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius-lg); padding:var(--space-4);}
+  .overview-section h2{font-size:1rem; margin-bottom:var(--space-3);}
+  .overview-section .income-row{background:var(--bg); border:0; padding:0;}
+  .section-description{color:var(--dim); font-size:0.82rem; line-height:1.4; margin:-6px 0 var(--space-3);}
   section h2 .subtotal{color:var(--dim); font-weight:500; font-size:0.85rem; font-variant-numeric:tabular-nums;}
   .income-row{display:flex; gap:10px; align-items:center; background:var(--panel); border:1px solid var(--line); border-radius:var(--radius-lg); padding:14px var(--space-4);}
   .income-row label{color:var(--dim); font-size:0.9rem; white-space:nowrap;}
-  .income-row input{flex:1;}
+  .income-row input{background:transparent; border:0; flex:1; min-height:var(--control-size);}
   ul.items{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:var(--space-2);}
   li.item{display:flex; gap:var(--space-2); background:var(--panel); border:1px solid var(--line); border-radius:var(--radius-md); padding:10px var(--space-3); align-items:center;}
   li.item input.name{flex:1; min-width:0;}
@@ -155,28 +159,32 @@
       </div>
     </div>
 
-    <section>
+    <section class="overview-section">
       <h2>Income</h2>
+      <p class="section-description">Set your monthly take-home amount to see what remains after commitments.</p>
       <div class="income-row">
         <label for="income">Monthly take-home</label>
         <input type="number" id="income" placeholder="0" min="0" />
       </div>
     </section>
 
-    <section>
+    <section class="overview-section">
       <h2>Recurring expenses <span class="subtotal" id="expSub">KSh 0</span></h2>
+      <p class="section-description">Regular monthly costs such as rent, subscriptions, and transport.</p>
       <ul class="items" id="expList"></ul>
       <button class="add-btn" onclick="addItem('exp')">+ Add expense (rent, subscriptions, transport...)</button>
     </section>
 
-    <section>
+    <section class="overview-section">
       <h2>Upcoming one-off costs <span class="subtotal" id="oneoffSub">KSh 0</span></h2>
+      <p class="section-description">Known costs coming up outside your regular monthly expenses.</p>
       <ul class="items" id="oneoffList"></ul>
       <button class="add-btn" onclick="addItem('oneoff')">+ Add upcoming cost</button>
     </section>
 
-    <section>
+    <section class="overview-section">
       <h2>Debts to repay <span class="subtotal" id="debtSub">KSh 0</span></h2>
+      <p class="section-description">Amounts you owe and plan to repay from this income.</p>
       <ul class="items" id="debtList"></ul>
       <button class="add-btn" onclick="addItem('debt')">+ Add debt (who you owe)</button>
     </section>
