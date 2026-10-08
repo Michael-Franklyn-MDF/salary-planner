@@ -48,7 +48,7 @@ Decisions needed from the owner before starting T3.2. Ask and offer 2 to 3 optio
 - [x] **T3.2** Agree the direction with the owner: palette, type, logo, nav.
 - [x] **T3.3** Introduce design tokens (CSS variables) and replace hardcoded values.
 - [x] **T3.4** Redesign the home/summary screen with "what's left" as the hero.
-- [ ] **T3.5** Redesign the Daily Spend tab.
+- [x] **T3.5** Redesign the Daily Spend tab.
 - [ ] **T3.6** Redesign income, recurring, upcoming, and debts screens.
 - [ ] **T3.7** New logo and PWA icons (all sizes, maskable). Update manifest `theme_color` and `background_color`.
 - [ ] **T3.8** Accessibility pass: contrast, tap targets, labels, focus states.
@@ -74,4 +74,4 @@ Decisions needed from the owner before starting T3.2. Ask and offer 2 to 3 optio
 
 ## Current task
 
-Next up: **T3.5** (Redesign the Daily Spend tab).
+Next up: **T3.6** (Redesign income, recurring, upcoming, and debts screens).
