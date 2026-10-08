@@ -86,8 +86,9 @@ Formulas in code (`calculateSummary(data)`):
 - `outflow = expTotal + oneoffTotal + debtTotal`
 - `remaining = income - outflow`
 
-Planned addition:
-- `remainingToSpend = remaining - sum(dailySpend this month)`
+Current addition:
+- `dailySpendTotal = sum(dailySpend this month)`
+- `remainingToSpend = remaining - dailySpendTotal`
 
 Calculations are encapsulated in `calculateSummary()` and `sumItems()`, isolated from DOM manipulation.
 

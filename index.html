@@ -116,6 +116,7 @@
       <div class="row"><span class="label">Upcoming one-off costs</span><span class="val" id="oneoffDisplay">KSh 0</span></div>
       <div class="row"><span class="label">Debts to repay</span><span class="val" id="debtDisplay">KSh 0</span></div>
       <div class="row total" id="remainingRow"><span class="label">Remaining</span><span class="val" id="remainingDisplay">KSh 0</span></div>
+      <div class="row total" id="remainingToSpendRow"><span class="label">Remaining to spend</span><span class="val" id="remainingToSpendDisplay">KSh 0</span></div>
     </div>
 
     <section>
@@ -347,6 +348,7 @@ function addDailySpend(event){
   renderDailySpendForm();
   renderDailySpendList();
   renderDailySpendTotals();
+  renderTotals();
 }
 function formatSpendDate(dateValue){
   const parsed = new Date(dateValue + 'T00:00:00');
@@ -364,12 +366,14 @@ function updateDailySpend(id, field, value, rerender){
   save();
   if(rerender) renderDailySpendList();
   renderDailySpendTotals();
+  renderTotals();
 }
 function removeDailySpend(id){
   state.dailySpend = state.dailySpend.filter(item => item.id !== id);
   save();
   renderDailySpendList();
   renderDailySpendTotals();
+  renderTotals();
 }
 function renderDailySpendList(){
   const container = document.getElementById('dailySpendList');
@@ -510,6 +514,10 @@ function calculateSummary(data){
   const oneoffTotal = sumItems(data.oneoff);
   const debtTotal = sumItems(data.debt);
   const outflow = expTotal + oneoffTotal + debtTotal;
+  const currentMonth = localDateValue().slice(0, 7);
+  const dailySpendTotal = (Array.isArray(data.dailySpend) ? data.dailySpend : [])
+    .filter(item => typeof item.date === 'string' && item.date.slice(0, 7) === currentMonth)
+    .reduce((total, item) => total + (Number(item.amount) || 0), 0);
 
   return {
     income,
@@ -517,7 +525,9 @@ function calculateSummary(data){
     oneoffTotal,
     debtTotal,
     outflow,
-    remaining: income - outflow
+    remaining: income - outflow,
+    dailySpendTotal,
+    remainingToSpend: income - outflow - dailySpendTotal
   };
 }
 function buildList(kind, container, showDue){
@@ -562,6 +572,12 @@ function renderTotals(){
   remDisplay.textContent = fmt(summary.remaining);
   remRow.classList.remove('remaining-good','remaining-bad');
   remRow.classList.add(summary.remaining >= 0 ? 'remaining-good' : 'remaining-bad');
+
+  const spendRemDisplay = document.getElementById('remainingToSpendDisplay');
+  const spendRemRow = document.getElementById('remainingToSpendRow');
+  spendRemDisplay.textContent = fmt(summary.remainingToSpend);
+  spendRemRow.classList.remove('remaining-good','remaining-bad');
+  spendRemRow.classList.add(summary.remainingToSpend >= 0 ? 'remaining-good' : 'remaining-bad');
 }
 
 function render(){
