@@ -1,96 +1,119 @@
-# Salary Planner: Product Requirements Document
+# Salary Planner v2: Product Requirements
 
-Status: living document.
+Status: living document. v1 is shipped and frozen at tag `v1.0`.
 
 ## 1. Overview
 
-Salary Planner is a personal budgeting web app, installed as a PWA on the owner's phone and hosted on GitHub Pages. It shows how a monthly salary is allocated across recurring expenses, upcoming one-off costs, and debt repayments, and (planned) tracks day-to-day spending.
+v2 rebuilds the Salary Planner PWA in React + TypeScript with four tabs (Home, Spend, Calendar, Plan), an always-visible "left to spend" mini-player, and an Apple-style design.
 
-- Owner and sole user: Franklyn (Nairobi, Kenya)
-- Platform: mobile-first PWA, also usable in a desktop browser
-- Currency: KES (formatted as `KSh`)
+- Owner and only user: Franklyn (Nairobi, Kenya)
+- Currency: KES, displayed as `KSh`
+- Platform: mobile-first PWA on GitHub Pages, also usable in a desktop browser
+- Lives in the same repo on branch `v2`, served from the same URL, so the installed phone app and its saved data carry over
 
-## 2. Problem
+## 2. Goals
 
-Salary arrives once a month and gets spent in pieces. Franklyn wants one place to see what is committed, what is coming, what is owed, and what is actually left to spend, without a spreadsheet.
+1. "How much can I still spend?" is answered at a glance on every tab.
+2. Logging a purchase takes under 10 seconds, using a keypad.
+3. Bills, debts, and one-off costs are visible on a calendar.
+4. Existing v1 data survives migration untouched.
+5. Installable, works offline, feels native.
 
-## 3. Goals
+## 3. Non-goals
 
-1. Show clearly how much salary is left after commitments.
-2. Make debts and upcoming costs visible so nothing surprises him.
-3. Log daily spending in a few taps (planned).
-4. Work offline and feel like a native app on his phone.
-5. Look clean and minimal (planned redesign).
-
-## 4. Non-goals
-
+- No backend, accounts, sharing, or analytics.
 - No bank or M-PESA integration.
-- No multi-user, sharing, or accounts.
-- No backend or server. Data stays on the device.
 - No financial advice or investment features.
+- No network calls except loading the app's own files.
 
-## 5. Current features (v1, considered complete)
+## 4. Behaviour to preserve from v1
 
-| Area | Behaviour |
-|---|---|
-| Income | Enter monthly take-home salary/income (`income` input). |
-| Recurring expenses | Add, edit, delete fixed monthly expenses (`exp` items: `name`, `amount`, and `due` / notes). |
-| Upcoming one-off costs | Add, edit, delete costs expected in the future (`oneoff` items: `name`, `amount`, and `due` / notes). |
-| Debts | Add, edit, delete debts to repay (`debt` items: `name`, `amount`, and `due` / notes). Same structure as expenses/oneoff. |
-| Summary | Income vs. total commitments (recurring + upcoming + debt), showing net remaining amount with positive/negative color state. |
-| PWA | Installable, works offline (manifest + service worker + icons). |
-| Hosting | GitHub Pages (served from `main` branch). |
+Do not change these results. They are covered by tests (see `TASKS.md`).
 
-The current UI is a single scrollable view with all sections rendered on one page. Data persists in `localStorage` (`salary-planner-v1`) with automatic save on input.
+- `remaining = income - (recurring + one-offs + debts)`
+- `remainingToSpend = remaining - this month's daily spend`
+- Daily spend entries: amount, category, date, optional note. Add, edit, delete.
+- Categories: add, rename, delete. Deleting moves its entries to "Other".
+- JSON export and import as a backup.
+- Data stays in `localStorage` under the key `salary-planner-v1`.
 
-## 6. Planned feature A: Daily spend tab
+## 5. Navigation
 
-### User stories
-- As a user, I log a purchase (amount, category, optional note) in under 10 seconds.
-- As a user, I see today's spending and this month's total.
-- As a user, I see how daily spending compares to what remains after commitments.
-- As a user, I edit or delete a mistaken entry.
+Bottom tab bar with four tabs: **Home, Spend, Calendar, Plan**.
 
-### Requirements
-- New tab in the main navigation.
-- Entry fields: amount (required), category (required, from a short editable list), date (defaults to today), note (optional).
-- List grouped by day, newest first.
-- Month total and remaining-to-spend figure, tied to the existing summary calculation.
-- Persists locally, same storage mechanism as the rest of the app.
-- Works fully offline.
+### Mini-player
 
-### Open questions
-- Should unspent daily budget roll over? Default: show it, do not enforce it.
-- Fixed category list, or user-defined? Default: small default list, user can add.
+A slim bar docked above the tab bar showing **Left to spend** and the amount (green when 0 or more, red when negative).
 
-## 7. Planned feature B: UI/UX redesign
+- Visible on Spend, Calendar, and Plan.
+- Hidden on Home, where the same number is the hero.
+- Tapping it opens Home.
 
-Scope: logo, color scheme, layout, and general UI/UX polish. **No change to calculations or data.**
+## 6. Home
 
-### Direction
-- Clean, minimal, lots of whitespace (matches the owner's long-standing taste).
-- Mobile-first, thumb-reachable actions.
-- Clear hierarchy: the "what's left" number is the hero of the home screen.
-- Consistent spacing, type scale, and component styling via design tokens.
-- Accessible contrast (WCAG AA) and tap targets of at least 44px.
-- New logo and updated PWA icons, theme color, and splash/manifest values.
+- Hero: **Left to spend** (`remainingToSpend`), large, with a caption "after commitments and this month's spending".
+- Secondary line: **After commitments** (`remaining`).
+- Summary cards: Income, Recurring, Upcoming, Debts, Spent this month.
+- **Coming up**: the next three due items in the next 14 days (from the calendar logic), each with date and amount. Tapping one opens that day in Calendar.
 
-### Design decisions
+## 7. Spend
 
-- Color direction: deep slate foundation with a refined muted-gold accent and clearer semantic positive/negative colors.
-- Typography: modern sans-serif treatment while remaining dependency-free.
-- Logo concept: simple wallet/ledger symbol.
-- Navigation pattern: mobile-first bottom tab bar.
+- Today total and month total at the top.
+- Entry area: large amount display, keypad (1-9, `.`, 0, backspace), category chips, date (defaults to today, tap to change), optional note, **Add** button.
+- Entries listed below, grouped by day, newest first. Tap an entry to edit or delete in a bottom sheet.
+- Manage categories from a "Categories" row (add, rename, delete with entries moved to "Other").
+- Amount must be greater than 0. The keypad blocks more than 2 decimal places.
 
-## 8. Success criteria
+## 8. Calendar
 
-- Logging a daily purchase takes under 10 seconds.
-- Home screen answers "how much can I still spend?" at a glance.
-- App still installs, loads offline, and passes a Lighthouse PWA check after changes.
-- Existing user data survives every update (no data loss on release).
+- Week strip at the top (week starts Monday). Swipe or use arrows to change week. A toggle expands it to a full month grid.
+- Selecting a day shows two groups: **Due** (recurring expenses, debts, one-offs on that day) and **Spent** (that day's entries and total).
+- Day markers: accent dot = something is due, grey dot = spending logged.
+- Due-date rules:
+  - Recurring expenses and debts repeat monthly on `dayOfMonth` (1 to 31, or `last`).
+  - If the month is shorter than `dayOfMonth`, the item falls on the month's last day (31 in February becomes 28 or 29).
+  - One-off costs appear only on their `date`.
+  - Debts stop appearing after their optional `endDate`.
+  - Items with no date do not appear on the calendar. Plan shows a "No date" tag on them.
 
-## 9. Constraints
+## 9. Plan
 
-- Static hosting only (GitHub Pages). No server code.
-- Existing installed PWA must keep working after updates, so service worker versioning matters.
-- Keep dependencies minimal.
+Grouped lists, iOS inset style:
+
+- **Income** (monthly take-home)
+- **Recurring expenses**
+- **Upcoming one-off costs**
+- **Debts**
+- **Data**: export backup, import backup, clear all data
+
+Tap a row to edit in a bottom sheet (name, amount, day or date, note). Each group has an add row. Deleting asks for confirmation using an in-app dialog, not the browser `confirm()`.
+
+## 10. Data migration
+
+- v1 and v2 data are migrated to schema v3 on first load. Nothing is dropped.
+- A raw copy of the old data is saved before the first migration (see `ARCHITECTURE.md`).
+- The free-text `due` field is converted where obvious (see `ARCHITECTURE.md`), otherwise kept as a note. The owner can then assign real dates in Plan.
+
+## 11. Design
+
+Apple design language: see `UI_UX_SPEC.md`. Light and dark themes follow the system setting.
+
+## 12. Open questions (defaults apply until answered)
+
+1. Should a one-off cost dated in a future month count against this month? **Default: yes, same as v1.** Revisit after Calendar ships.
+2. Logo: keep the wallet/ledger shape, recolored for the new palette? **Default: yes.**
+3. Should unspent daily budget roll over? **Default: no, not tracked.**
+
+## 13. Success criteria
+
+- Logging a purchase takes under 10 seconds.
+- Left to spend is visible on all four tabs.
+- v1 backup file imports into v2 with every item present.
+- App installs, loads offline, and passes Lighthouse PWA checks.
+- The installed phone app updates to v2 with data intact.
+
+## 14. Constraints
+
+- Static hosting only (GitHub Pages).
+- Keep dependencies small. Ask before adding any beyond those in `ARCHITECTURE.md`.
+- The installed PWA must keep working through the update, so `start_url`, `scope`, and the service worker filename do not change.

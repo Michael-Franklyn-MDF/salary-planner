@@ -1,80 +1,91 @@
-# Copilot instructions for Salary Planner
+# Copilot instructions for Salary Planner v2
 
 ## Project context
 
-Salary Planner is a single-user, client-only budgeting PWA for GitHub Pages. It has no backend, accounts, analytics, or network-dependent application features. User data stays in the browser.
+Salary Planner is a single-user budgeting PWA for GitHub Pages. v2 is a React + TypeScript rebuild with four tabs (Home, Spend, Calendar, Plan), a mini-player showing "left to spend", and an Apple-style design. There is no backend, no accounts, no analytics. All data stays in the browser.
 
-Before making a change, read:
+Read these before changing anything:
 
-- `docs/PRD.md` for product scope and planned features
-- `docs/ARCHITECTURE.md` for the data model, calculations, persistence, and PWA behavior
-- `docs/TASKS.md` for the current backlog item
-- `GEMINI.md` for repository-specific working rules
+- `docs/PRD.md`: what to build and why
+- `docs/ARCHITECTURE.md`: structure, data model, migration, PWA
+- `docs/UI_UX_SPEC.md`: tokens, components, screens
+- `docs/TASKS.md`: the backlog and the current task
 
-Work on one task from `docs/TASKS.md` at a time and update that file when the task is complete. Preserve unrelated work already present in the working tree.
+v1 (vanilla JS) is archived at tag `v1.0` and in `docs/v1/`. Do not edit it.
+
+## How to work
+
+- Work on one task from `docs/TASKS.md` at a time. State the task before starting.
+- Write tests first for anything in `src/domain` and `src/storage`.
+- If a task has an open design or product choice, stop and ask the owner. Offer 2 or 3 concrete options.
+- After each task, summarize: what changed, which files, how to test it, what is next. Keep it short.
+- Update `docs/TASKS.md` when a task is done, and update the other docs if behaviour or structure changed.
+- Preserve unrelated work already in the working tree.
 
 ## Commands
 
-There is no dependency manifest, install step, build step, automated test suite, or lint configuration.
+Fill in and verify during T0.5. Expected:
 
-Run the app from the repository root with either:
-
-```sh
-open index.html
-python3 -m http.server 8000
-open http://localhost:8000
+```
+Install:    npm install
+Dev:        npm run dev
+Build:      npm run build
+Preview:    npm run preview     (use this to test the service worker)
+Lint:       npm run lint
+Typecheck:  npm run typecheck
+Test:       npm test
 ```
 
-The static-server option is the reliable way to test service-worker behavior; service workers generally require a secure context or localhost.
+## Code rules
 
-Validation is manual in a desktop and mobile-sized browser:
+- TypeScript strict. No `any`. No non-null assertions without a comment explaining why.
+- `src/domain` is pure: no React, no DOM, no `Date.now()` hidden inside (pass "today" in).
+- Do not add dependencies without asking. Allowed: React, Tailwind, shadcn/ui and its Radix/vaul parts, lucide-react, vite-plugin-pwa, Vitest, React Testing Library, Sonner.
+- No router library, no state library, no date library.
+- No backend, no network calls, no analytics.
+- Match the existing style. Do not reformat unrelated code.
+- Plain, readable code. Comment the why, not the what.
+- Never render user text as HTML. React escapes by default; do not use `dangerouslySetInnerHTML`.
 
-- Enter and edit income, recurring expenses, one-off costs, and debts; confirm totals and remaining balance update.
-- Reload and confirm data persists.
-- Use export, clear, and import to verify backup/restore.
-- In DevTools, load once online, switch offline, reload, and confirm the app still opens without console errors.
-- For a focused change, test the affected user flow rather than looking for a nonexistent test command. There is no single-test runner.
+## Data safety (most important)
 
-Deployment is static: push the intended changes to `main`; GitHub Pages serves the repository root.
+- Never delete or reset user data except through the explicit "Clear all data" flow with confirmation.
+- Never overwrite stored data if loading or migration fails. Show the error screen instead.
+- Keep the storage key `salary-planner-v1`. Do not rename it.
+- Any change to the data shape needs a new `schemaVersion`, a migration, and fixture tests.
+- Keep v1 calculation results identical (see `docs/PRD.md` section 4).
+- Never commit real financial figures, backups, or secrets. Use dummy data in tests and fixtures.
 
-## Architecture
+## Dates and money
 
-The runtime is intentionally small and contained:
+- Amounts are numbers in KES. Round to 2 decimals after summing.
+- Dates are `YYYY-MM-DD` in local time. Never use `toISOString()` to get today's date.
+- Week starts on Monday.
 
-- `index.html` contains the complete UI, embedded CSS, state management, persistence, calculations, and DOM rendering. It is a single scrollable page.
-- `manifest.json` defines the installable PWA metadata and icons.
-- `sw.js` precaches the app shell and uses cache-first reads with a background network update.
-- `icon-192.png` and `icon-512.png` are the PWA icons.
+## Design rules
 
-Application state is held in memory and persisted as JSON in `localStorage` under `salary-planner-v1`. The current schema is version 2:
+- Use design tokens only. No hardcoded colours, sizes, or radii in components.
+- Tap targets at least 44px. Contrast WCAG AA in both light and dark.
+- Mobile-first. Content is centred with a max width on desktop.
+- Respect safe-area insets and `prefers-reduced-motion`.
+- Follow `docs/UI_UX_SPEC.md`. If the spec does not cover something, ask.
 
-```js
-{
-  schemaVersion: 2,
-  income: 0,
-  exp: [],
-  oneoff: [],
-  debt: [],
-  dailySpend: [],
-  categories: []
-}
-```
+## PWA rules
 
-`migrateState(raw)` normalizes stored/imported data and supplies defaults. `calculateSummary(data)` and `sumItems(items)` are the calculation boundary: keep financial formulas separate from DOM code and preserve the existing summary behavior unless the active task explicitly changes it.
+- Keep `sw.js`, `manifest.json`, `scope: './'`, and `start_url: './index.html'` unchanged so the installed phone app updates in place.
+- Test the service worker with `npm run preview`, not `npm run dev`.
+- After PWA changes, verify: installs, loads offline, update prompt appears after a new build, old data still shows.
 
-The current UI renders the legacy income/expense/one-off/debt sections. Daily-spend data and category defaults already exist in the model, while the remaining Daily Spend UI work is tracked in `docs/TASKS.md`.
+## Git
 
-## Repository-specific conventions
+- Work on the `v2` branch. One focused commit per task or sub-step.
+- Prefixes: `feat:`, `fix:`, `style:`, `test:`, `refactor:`, `docs:`, `chore:`.
 
-- Keep the project dependency-free and static. Do not introduce a backend, build framework, package manager, account system, analytics, or runtime network API.
-- Use the existing plain JavaScript style and embedded CSS structure in `index.html`; avoid unrelated reformatting.
-- Amounts are stored as numbers in KES and displayed through `fmt()` as `KSh` values. Normalize untrusted local-storage or import data instead of trusting its shape.
-- Any data-shape change must be backward-compatible: preserve existing fields, update `schemaVersion`, extend `migrateState`, and never replace valid stored data with defaults.
-- The item lists currently use array indexes for editing/removal. Daily-spend records use IDs; do not silently change the existing item model without a migration.
-- Input handlers save immediately. Full list rebuilds are reserved for load/add/remove/reset so typing is not interrupted; totals can be updated without rebuilding active inputs.
-- Avoid interpolating user text into HTML without the existing escaping pattern (`escapeAttr`), or use DOM properties/APIs that avoid HTML injection.
-- Any change to a file in the service-worker precache must bump `CACHE_NAME` in `sw.js`, then verify installation, reload, and offline behavior.
-- Keep `manifest.json`, the document theme color, and PWA icons consistent when changing the visual identity.
-- During the UI redesign phase, change presentation only; do not alter calculations or stored data unless the task explicitly requires it.
-- Follow the documented UX direction for redesign work: mobile-first layout, at least 44px tap targets, accessible contrast, design tokens for shared visual values, and the remaining balance as the home-screen focal point.
-- Use focused commits with `feat:`, `fix:`, `style:`, or `docs:` prefixes when committing. Never include real personal financial figures or secrets.
+## Definition of done
+
+- Tests pass, `npm run lint` and `npm run typecheck` are clean, `npm run build` succeeds.
+- Works on a mobile viewport and a desktop browser, in light and dark.
+- Works offline.
+- Existing data still loads.
+- No console errors.
+- `docs/TASKS.md` updated.
