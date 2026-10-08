@@ -59,7 +59,7 @@ Decisions needed from the owner before starting T3.2. Ask and offer 2 to 3 optio
 ## Phase 4: Release
 
 - [x] **T4.1** Test legacy and current-schema data migration using representative backup fixtures.
-- [ ] **T4.2** Merge to main, deploy to GitHub Pages.
+- [x] **T4.2** Merge to main, deploy to GitHub Pages.
 - [ ] **T4.3** Confirm the installed PWA updates and data is intact.
 
 
@@ -74,4 +74,4 @@ Decisions needed from the owner before starting T3.2. Ask and offer 2 to 3 optio
 
 ## Current task
 
-Next up: **T4.2** (Merge to main, deploy to GitHub Pages).
+Next up: **T4.3** (Confirm the installed PWA updates and data is intact).
