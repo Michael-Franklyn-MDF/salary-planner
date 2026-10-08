@@ -44,7 +44,7 @@ Decisions needed from the owner before starting T3.2. Ask and offer 2 to 3 optio
 - Logo concept
 - Navigation pattern
 
-- [ ] **T3.1** Audit the current UI. List the problems in a short note (hierarchy, spacing, contrast, tap targets).
+- [x] **T3.1** Audit the current UI. List the problems in a short note (hierarchy, spacing, contrast, tap targets).
 - [ ] **T3.2** Agree the direction with the owner: palette, type, logo, nav.
 - [ ] **T3.3** Introduce design tokens (CSS variables) and replace hardcoded values.
 - [ ] **T3.4** Redesign the home/summary screen with "what's left" as the hero.
@@ -74,4 +74,4 @@ Decisions needed from the owner before starting T3.2. Ask and offer 2 to 3 optio
 
 ## Current task
 
-Next up: **T3.1** (Audit the current UI. List the problems in a short note).
+Next up: **T3.2** (Agree the direction with the owner: palette, type, logo, nav).
