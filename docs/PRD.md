@@ -1,6 +1,6 @@
 # Salary Planner: Product Requirements Document
 
-Status: living document. Items marked **[CONFIRM]** are unverified. Check them against the repo and fix this file.
+Status: living document.
 
 ## 1. Overview
 
@@ -8,7 +8,7 @@ Salary Planner is a personal budgeting web app, installed as a PWA on the owner'
 
 - Owner and sole user: Franklyn (Nairobi, Kenya)
 - Platform: mobile-first PWA, also usable in a desktop browser
-- Currency: KES **[CONFIRM]**
+- Currency: KES (formatted as `KSh`)
 
 ## 2. Problem
 
@@ -33,15 +33,15 @@ Salary arrives once a month and gets spent in pieces. Franklyn wants one place t
 
 | Area | Behaviour |
 |---|---|
-| Income | Enter monthly salary/income. |
-| Recurring expenses | Add, edit, delete fixed monthly expenses. |
-| Upcoming one-off costs | Add, edit, delete costs expected in the future. |
-| Debts | Add, edit, delete debts to repay, with a way to track repayment **[CONFIRM exact fields]**. |
-| Summary | Income vs. commitments, with what remains. |
+| Income | Enter monthly take-home salary/income (`income` input). |
+| Recurring expenses | Add, edit, delete fixed monthly expenses (`exp` items: `name`, `amount`, and `due` / notes). |
+| Upcoming one-off costs | Add, edit, delete costs expected in the future (`oneoff` items: `name`, `amount`, and `due` / notes). |
+| Debts | Add, edit, delete debts to repay (`debt` items: `name`, `amount`, and `due` / notes). Same structure as expenses/oneoff. |
+| Summary | Income vs. total commitments (recurring + upcoming + debt), showing net remaining amount with positive/negative color state. |
 | PWA | Installable, works offline (manifest + service worker + icons). |
-| Hosting | GitHub Pages. |
+| Hosting | GitHub Pages (served from `main` branch). |
 
-**[CONFIRM]** the exact fields, calculations, and screens in the repo, and update this table.
+The current UI is a single scrollable view with all sections rendered on one page. Data persists in `localStorage` (`salary-planner-v1`) with automatic save on input.
 
 ## 6. Planned feature A: Daily spend tab
 
@@ -75,10 +75,12 @@ Scope: logo, color scheme, layout, and general UI/UX polish. **No change to calc
 - Accessible contrast (WCAG AA) and tap targets of at least 44px.
 - New logo and updated PWA icons, theme color, and splash/manifest values.
 
-### Decisions still needed from the owner
-- Color direction (neutral with one accent? dark mode?).
-- Logo concept.
-- Navigation pattern (bottom tab bar is the default assumption).
+### Design decisions
+
+- Color direction: deep slate foundation with a refined muted-gold accent and clearer semantic positive/negative colors.
+- Typography: modern sans-serif treatment while remaining dependency-free.
+- Logo concept: simple wallet/ledger symbol.
+- Navigation pattern: mobile-first bottom tab bar.
 
 ## 8. Success criteria
 

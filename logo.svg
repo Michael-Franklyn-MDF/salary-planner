@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Salary Planner wallet mark</title>
+  <desc id="desc">A gold wallet with a ledger line on a deep slate background</desc>
+  <rect width="512" height="512" rx="112" fill="#12181B"/>
+  <path d="M112 176c0-22.1 17.9-40 40-40h208c22.1 0 40 17.9 40 40v160c0 22.1-17.9 40-40 40H152c-22.1 0-40-17.9-40-40V176Z" fill="#C9A227"/>
+  <path d="M112 192h248c22.1 0 40 17.9 40 40v32H296c-22.1 0-40-17.9-40-40v-8h-64c-44.2 0-80-35.8-80-80v56Z" fill="#EDEAE3" opacity=".95"/>
+  <path d="M256 216c0-22.1 17.9-40 40-40h104v88H296c-22.1 0-40-17.9-40-40v-8Z" fill="#1B2327"/>
+  <circle cx="320" cy="216" r="10" fill="#C9A227"/>
+  <path d="M168 312h144" stroke="#12181B" stroke-linecap="round" stroke-width="16"/>
+</svg>

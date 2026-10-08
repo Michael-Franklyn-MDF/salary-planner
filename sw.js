@@ -1,9 +1,10 @@
-const CACHE_NAME = 'salary-planner-v1';
+const CACHE_NAME = 'salary-planner-v17';
 const ASSETS = [
   './index.html',
   './manifest.json',
   './icon-192.png',
-  './icon-512.png'
+  './icon-512.png',
+  './logo.svg'
 ];
 
 self.addEventListener('install', (event) => {
