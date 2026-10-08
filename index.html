@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Salary Planner</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#12181B">
+<meta name="theme-color" content="#C9A227">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -27,6 +27,8 @@
   html{scroll-padding-top: env(safe-area-inset-top, 0px);}
   html,body{background:var(--bg); color:var(--text); margin:0; font-family:var(--font-sans);}
   body{max-width:var(--content-width); margin:0 auto; padding:28px var(--space-5) 60px;}
+  .app-header{align-items:flex-start; display:flex; gap:var(--space-3); margin-bottom:var(--space-6);}
+  .app-logo{border-radius:var(--radius-md); flex:0 0 auto;}
   h1{font-size:1.5rem; font-weight:600; letter-spacing:-0.01em; margin:0 0 var(--space-1);}
   .sub{color:var(--dim); font-size:0.9rem; margin:0 0 var(--space-6);}
   .summary{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius-lg); margin-bottom:28px; overflow:hidden;}
@@ -134,8 +136,13 @@
 </style>
 </head>
 <body>
-  <h1>Salary Planner</h1>
-  <p class="sub">Lay out what's coming in against what has to go out — expenses, upcoming costs, and repayments.</p>
+  <header class="app-header">
+    <img class="app-logo" src="logo.svg" alt="" width="44" height="44">
+    <div>
+      <h1>Salary Planner</h1>
+      <p class="sub">Lay out what's coming in against what has to go out — expenses, upcoming costs, and repayments.</p>
+    </div>
+  </header>
 
   <nav class="tabs" aria-label="Main navigation">
     <button class="tab" type="button" role="tab" aria-selected="true" aria-controls="homePanel" data-tab="home">Overview</button>

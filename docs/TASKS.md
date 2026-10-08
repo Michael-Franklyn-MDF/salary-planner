@@ -50,7 +50,7 @@ Decisions needed from the owner before starting T3.2. Ask and offer 2 to 3 optio
 - [x] **T3.4** Redesign the home/summary screen with "what's left" as the hero.
 - [x] **T3.5** Redesign the Daily Spend tab.
 - [x] **T3.6** Redesign income, recurring, upcoming, and debts screens.
-- [ ] **T3.7** New logo and PWA icons (all sizes, maskable). Update manifest `theme_color` and `background_color`.
+- [x] **T3.7** New logo and PWA icons (all sizes, maskable). Update manifest `theme_color` and `background_color`.
 - [ ] **T3.8** Accessibility pass: contrast, tap targets, labels, focus states.
 - [ ] **T3.9** Bump service worker cache version, test install and offline, run Lighthouse.
 
@@ -74,4 +74,4 @@ Decisions needed from the owner before starting T3.2. Ask and offer 2 to 3 optio
 
 ## Current task
 
-Next up: **T3.7** (New logo and PWA icons; update manifest theme and background colors).
+Next up: **T3.8** (Accessibility pass: contrast, tap targets, labels, focus states).
