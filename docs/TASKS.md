@@ -29,7 +29,7 @@ Status: `[ ]` todo, `[~]` in progress, `[x]` done
 - [x] **T2.3** Add-entry form: amount, category, date (default today), note. Validate amount.
   - Done when: an entry can be added in under 10 seconds.
 - [x] **T2.4** List entries grouped by day, newest first. Edit and delete.
-- [ ] **T2.5** Show today's total and month total.
+- [x] **T2.5** Show today's total and month total.
 - [ ] **T2.6** Add `remainingToSpend` to the summary using the existing calculation.
 - [ ] **T2.7** Manage categories (add, rename, delete with entries kept).
 - [ ] **T2.8** Bump service worker cache version and test offline.
@@ -74,4 +74,4 @@ Decisions needed from the owner before starting T3.2. Ask and offer 2 to 3 optio
 
 ## Current task
 
-Next up: **T2.5** (Show today's total and month total).
+Next up: **T2.6** (Add `remainingToSpend` to the summary using the existing calculation).

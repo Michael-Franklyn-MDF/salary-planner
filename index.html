@@ -68,6 +68,10 @@
   .empty-state p{margin:0; line-height:1.5;}
   .spend-form{background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:16px;}
   .spend-form h2{font-size:1rem; margin:0 0 14px;}
+  .spend-totals{display:grid; gap:8px; grid-template-columns:1fr 1fr; margin:0 0 16px;}
+  .spend-total{background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:12px;}
+  .spend-total .label{color:var(--dim); display:block; font-size:0.8rem; margin-bottom:4px;}
+  .spend-total .value{font-size:1.1rem; font-weight:600; font-variant-numeric:tabular-nums;}
   .spend-fields{display:grid; gap:12px;}
   .spend-field{display:flex; flex-direction:column; gap:5px;}
   .spend-field label{color:var(--dim); font-size:0.85rem;}
@@ -142,6 +146,16 @@
   </div>
 
   <div id="dailySpendPanel" class="tab-panel" role="tabpanel" hidden>
+    <div class="spend-totals" aria-live="polite">
+      <div class="spend-total">
+        <span class="label">Today</span>
+        <span class="value" id="dailySpendTodayTotal">KSh 0</span>
+      </div>
+      <div class="spend-total">
+        <span class="label">This month</span>
+        <span class="value" id="dailySpendMonthTotal">KSh 0</span>
+      </div>
+    </div>
     <form class="spend-form" id="dailySpendForm">
       <h2>Log a purchase</h2>
       <div class="spend-fields">
@@ -282,6 +296,21 @@ function localDateValue(){
   const offset = now.getTimezoneOffset() * 60000;
   return new Date(now.getTime() - offset).toISOString().slice(0, 10);
 }
+function monthValue(dateValue){
+  return dateValue.slice(0, 7);
+}
+function renderDailySpendTotals(){
+  const today = localDateValue();
+  const month = monthValue(today);
+  const todayTotal = state.dailySpend
+    .filter(item => item.date === today)
+    .reduce((total, item) => total + (Number(item.amount) || 0), 0);
+  const monthTotal = state.dailySpend
+    .filter(item => monthValue(item.date) === month)
+    .reduce((total, item) => total + (Number(item.amount) || 0), 0);
+  document.getElementById('dailySpendTodayTotal').textContent = fmt(todayTotal);
+  document.getElementById('dailySpendMonthTotal').textContent = fmt(monthTotal);
+}
 function renderDailySpendForm(){
   const category = document.getElementById('spendCategory');
   const currentCategory = category.value;
@@ -317,6 +346,7 @@ function addDailySpend(event){
   document.getElementById('dailySpendForm').reset();
   renderDailySpendForm();
   renderDailySpendList();
+  renderDailySpendTotals();
 }
 function formatSpendDate(dateValue){
   const parsed = new Date(dateValue + 'T00:00:00');
@@ -333,11 +363,13 @@ function updateDailySpend(id, field, value, rerender){
   item[field] = field === 'amount' ? (parseFloat(value) || 0) : value;
   save();
   if(rerender) renderDailySpendList();
+  renderDailySpendTotals();
 }
 function removeDailySpend(id){
   state.dailySpend = state.dailySpend.filter(item => item.id !== id);
   save();
   renderDailySpendList();
+  renderDailySpendTotals();
 }
 function renderDailySpendList(){
   const container = document.getElementById('dailySpendList');
@@ -541,6 +573,7 @@ function render(){
   buildList('debt', document.getElementById('debtList'), true);
   renderDailySpendForm();
   renderDailySpendList();
+  renderDailySpendTotals();
   renderTotals();
 }
 

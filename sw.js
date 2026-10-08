@@ -1,4 +1,4 @@
-const CACHE_NAME = 'salary-planner-v8';
+const CACHE_NAME = 'salary-planner-v9';
 const ASSETS = [
   './index.html',
   './manifest.json',
