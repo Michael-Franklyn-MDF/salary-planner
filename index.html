@@ -26,6 +26,7 @@
   *{box-sizing:border-box;}
   html{scroll-padding-top: env(safe-area-inset-top, 0px);}
   html,body{background:var(--bg); color:var(--text); margin:0; font-family:var(--font-sans);}
+  :focus-visible{outline:var(--focus-ring); outline-offset:2px;}
   body{max-width:var(--content-width); margin:0 auto; padding:28px var(--space-5) 60px;}
   .app-header{align-items:flex-start; display:flex; gap:var(--space-3); margin-bottom:var(--space-6);}
   .app-logo{border-radius:var(--radius-md); flex:0 0 auto;}
@@ -66,7 +67,7 @@
   input::placeholder{color:#5C6669;}
   input[type=number]{-moz-appearance:textfield;}
   input[type=number]::-webkit-outer-spin-button, input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none; margin:0;}
-  .remove{background:none; border:none; color:var(--dim); font-size:1.1rem; cursor:pointer; line-height:1; min-height:var(--control-size); min-width:var(--control-size); padding:2px 4px;}
+  .remove{background:none; border:none; color:var(--dim); cursor:pointer; font-size:1.1rem; line-height:1; min-height:var(--control-size); min-width:var(--control-size); padding:2px 4px;}
   .remove:hover{color:var(--bad);}
   .add-btn{background:none; border:1px dashed var(--line); color:var(--dim); border-radius:var(--radius-md); min-height:var(--control-size); padding:10px var(--space-3); font-size:0.88rem; cursor:pointer; width:100%; text-align:left; margin-top:var(--space-2);}
   .add-btn:hover{border-color:var(--accent); color:var(--accent);}
@@ -111,7 +112,7 @@
   .category-item{align-items:center; background:var(--panel); border:1px solid var(--line); border-radius:var(--radius-md); display:flex; gap:var(--space-2); padding:8px 10px;}
   .category-item input{background:transparent; border:none; color:var(--text); flex:1; font:inherit; min-width:0; outline:none; padding:6px 2px;}
   .category-item input:focus{border-bottom:1px solid var(--accent);}
-  .category-delete{background:none; border:none; color:var(--dim); cursor:pointer; font:inherit; min-height:var(--control-size); padding:6px 0; text-decoration:underline;}
+  .category-delete{background:none; border:none; color:var(--dim); cursor:pointer; font:inherit; min-height:var(--control-size); padding:6px 8px; text-decoration:underline;}
   .category-delete:hover{color:var(--bad);}
   .spend-list{border-top:1px solid var(--line); margin-top:var(--space-6); padding-top:var(--space-5);}
   .spend-list > .empty-state{margin-top:0;}
@@ -144,12 +145,12 @@
     </div>
   </header>
 
-  <nav class="tabs" aria-label="Main navigation">
-    <button class="tab" type="button" role="tab" aria-selected="true" aria-controls="homePanel" data-tab="home">Overview</button>
-    <button class="tab" type="button" role="tab" aria-selected="false" aria-controls="dailySpendPanel" data-tab="dailySpend">Daily Spend</button>
+  <nav class="tabs" aria-label="Main navigation" role="tablist">
+    <button class="tab" id="homeTab" type="button" role="tab" aria-selected="true" aria-controls="homePanel" tabindex="0" data-tab="home">Overview</button>
+    <button class="tab" id="dailySpendTab" type="button" role="tab" aria-selected="false" aria-controls="dailySpendPanel" tabindex="-1" data-tab="dailySpend">Daily Spend</button>
   </nav>
 
-  <div id="homePanel" class="tab-panel" role="tabpanel">
+  <div id="homePanel" class="tab-panel" role="tabpanel" aria-labelledby="homeTab" tabindex="0">
     <div class="summary">
       <div class="summary-hero">
         <p class="eyebrow">What's left to spend</p>
@@ -197,7 +198,7 @@
     </section>
   </div>
 
-  <div id="dailySpendPanel" class="tab-panel" role="tabpanel" hidden>
+  <div id="dailySpendPanel" class="tab-panel" role="tabpanel" aria-labelledby="dailySpendTab" tabindex="0" hidden>
     <div class="daily-header">
       <h2>Daily Spend</h2>
       <p>Keep a quick record of purchases and see how they affect what you can still spend this month.</p>
@@ -665,10 +666,10 @@ function buildList(kind, container, showDue){
     const li = document.createElement('li');
     li.className = 'item';
     li.innerHTML = `
-      <input class="name" placeholder="Name" value="${escapeAttr(item.name)}" />
-      <input class="amt" type="number" min="0" placeholder="Amount" value="${item.amount||''}" />
-      ${showDue ? `<input class="due" type="text" placeholder="Due / notes" value="${escapeAttr(item.due||'')}" />` : ''}
-      <button class="remove" aria-label="Remove">&times;</button>
+      <input class="name" aria-label="${kindLabel(kind)} name" placeholder="Name" value="${escapeAttr(item.name)}" />
+      <input class="amt" aria-label="${kindLabel(kind)} amount" type="number" min="0" placeholder="Amount" value="${item.amount||''}" />
+      ${showDue ? `<input class="due" aria-label="${kindLabel(kind)} due date or notes" type="text" placeholder="Due / notes" value="${escapeAttr(item.due||'')}" />` : ''}
+      <button class="remove" type="button" aria-label="Remove ${kindLabel(kind).toLowerCase()}">&times;</button>
     `;
     const nameInput = li.querySelector('.name');
     const amtInput = li.querySelector('.amt');
@@ -677,6 +678,9 @@ function buildList(kind, container, showDue){
     if(showDue){
       const dueInput = li.querySelector('.due');
       dueInput.addEventListener('input', e => updateItem(kind, idx, 'due', e.target.value));
+    }
+    function kindLabel(kind){
+      return kind === 'exp' ? 'Recurring expense' : kind === 'oneoff' ? 'Upcoming cost' : 'Debt';
     }
     li.querySelector('.remove').addEventListener('click', ()=> removeItem(kind, idx));
     container.appendChild(li);
@@ -731,10 +735,12 @@ function selectTab(tabName){
   document.querySelectorAll('[data-tab]').forEach(tab => {
     const selected = tab.dataset.tab === tabName;
     tab.setAttribute('aria-selected', selected ? 'true' : 'false');
+    tab.tabIndex = selected ? 0 : -1;
   });
   document.querySelectorAll('.tab-panel').forEach(panel => {
     panel.hidden = panel.id !== tabName + 'Panel';
   });
+  document.querySelector(`[data-tab="${tabName}"]`).focus();
 }
 
 document.getElementById('income').addEventListener('input', e => updateIncome(e.target.value));
@@ -742,6 +748,16 @@ document.getElementById('dailySpendForm').addEventListener('submit', addDailySpe
 document.getElementById('categoryForm').addEventListener('submit', addCategory);
 document.querySelectorAll('[data-tab]').forEach(tab => {
   tab.addEventListener('click', () => selectTab(tab.dataset.tab));
+  tab.addEventListener('keydown', event => {
+    if(event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+    const tabs = [...document.querySelectorAll('[data-tab]')];
+    const currentIndex = tabs.indexOf(tab);
+    const nextIndex = event.key === 'ArrowRight'
+      ? (currentIndex + 1) % tabs.length
+      : (currentIndex - 1 + tabs.length) % tabs.length;
+    event.preventDefault();
+    selectTab(tabs[nextIndex].dataset.tab);
+  });
 });
 
 load();
