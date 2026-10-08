@@ -6,11 +6,13 @@ Status: `[ ]` todo, `[~]` in progress, `[x]` done
 
 ## Phase 0: Setup
 
-- [ ] **T0.1** Tag the current `main` as `v1.0`. Create the branch `v2`. (Owner runs the git commands.)
-- [ ] **T0.2** Archive the v1 docs into `docs/v1/`. Put the v2 docs in `docs/`. Replace `.github/copilot-instructions.md`. Ask the owner before deleting `GEMINI.md` (superseded by Copilot).
+- [x] **T0.1** Tag the current `main` as `v1.0`. Create the branch `v2`. (Owner runs the git commands.)
+- [x] **T0.2** Archive the v1 docs into `docs/v1/`. Put the v2 docs in `docs/`. Replace `.github/copilot-instructions.md`. Ask the owner before deleting `GEMINI.md` (superseded by Copilot).
 - [ ] **T0.3** Scaffold Vite + React + TypeScript in the repo root. Remove the v1 root files on this branch (they remain at `v1.0`). Set `base` in `vite.config.ts` to match the live Pages path. Confirm the live URL first.
 - [ ] **T0.4** Add Tailwind and initialise shadcn/ui. Add ESLint, Vitest, and these scripts: `dev`, `build`, `preview`, `lint`, `typecheck`, `test`.
 - [ ] **T0.5** Fill in the real commands in `.github/copilot-instructions.md` and confirm each one runs.
+
+
 
 ## Phase 1: Domain core (no UI)
 
@@ -49,6 +51,8 @@ Write the tests first, then the code.
   - Corrupt JSON does not overwrite stored data and returns an error result.
 - [ ] **T1.7** `storage/backup.ts`: export to JSON file, import from file (v1, v2, v3). Tests for each version and for a rejected file.
 
+
+
 ## Phase 2: App shell and Plan tab
 
 - [ ] **T2.1** State: `AppStateProvider` and reducer (add, update, delete for each list, set income, replace all, clear). Reducer tests.
@@ -57,6 +61,8 @@ Write the tests first, then the code.
 - [ ] **T2.4** Plan tab: income row and the three grouped lists with the add/edit/delete bottom sheet. Show a "No date" tag on items without a day or date.
 - [ ] **T2.5** Plan tab "Data" group: export, import, clear all, with in-app confirmation dialogs.
 
+
+
 ## Phase 3: Spend tab
 
 - [ ] **T3.1** Keypad and amount display. Blocks a third decimal place and a second `.`. Backspace works. Add is disabled at 0.
@@ -64,11 +70,15 @@ Write the tests first, then the code.
 - [ ] **T3.3** Entry list grouped by day, newest first. Edit and delete in a bottom sheet.
 - [ ] **T3.4** Today and month totals. Categories management (add, rename, delete with entries moved to "Other").
 
+
+
 ## Phase 4: Home tab
 
 - [ ] **T4.1** Hero "Left to spend" with correct colour state and caption.
 - [ ] **T4.2** "After commitments" line and summary cards.
 - [ ] **T4.3** "Coming up" list (next three due items in 14 days). Tap opens that day in Calendar.
+
+
 
 ## Phase 5: Calendar tab
 
@@ -77,13 +87,17 @@ Write the tests first, then the code.
 - [ ] **T5.3** Month grid toggle with day markers.
 - [ ] **T5.4** Empty states (nothing due, nothing spent, no dated items yet).
 
+
+
 ## Phase 6: PWA and polish
 
 - [ ] **T6.1** `vite-plugin-pwa` with manifest parity (`sw.js`, `manifest.json`, `scope`, `start_url` unchanged).
-- [ ] **T6.2** Update prompt toast and legacy cache cleanup (`salary-planner-v*`).
+- [ ] **T6.2** Update prompt toast and legacy cache cleanup (`salary-planner-v`*).
 - [ ] **T6.3** New icons (any and maskable), logo, `theme_color`, `background_color`. Open design choices go to the owner first.
 - [ ] **T6.4** Accessibility pass: contrast in both themes, 44px targets, labels, focus states, screen reader order, reduced motion.
 - [ ] **T6.5** Lighthouse (PWA, accessibility) on the built app. Fix what it flags.
+
+
 
 ## Phase 7: Release
 
@@ -94,12 +108,16 @@ Write the tests first, then the code.
 - [ ] **T7.5** On the phone: open the installed app, accept the update, confirm data is intact and it loads offline.
 - [ ] **T7.6** Write the rollback steps in `README.md` and tag `v2.0`.
 
+
+
 ## Later (not committed)
 
 - [ ] Monthly history and simple charts
 - [ ] Recurring spend reminders
 - [ ] Debt payoff projection
 - [ ] Manual light/dark toggle
+
+
 
 ## Current task
 
