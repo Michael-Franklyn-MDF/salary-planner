@@ -133,6 +133,8 @@ Planned:
 --space-1..6, --radius, --font-sans, --text-sm/md/lg/xl
 ```
 
+The current token names are implemented in `index.html` as `--bg`, `--panel`, `--line`, `--text`, `--dim`, `--accent`, `--good`, `--bad`, `--space-1..6`, `--radius-sm/md/lg`, `--font-sans`, and `--control-size`.
+
 ## 9. Deployment
 
 - Push to the `main` branch. GitHub Pages serves static files directly from root.
