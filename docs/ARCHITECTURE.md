@@ -57,7 +57,7 @@ Current data model in code (`localStorage['salary-planner-v1']`):
 }
 ```
 
-Planned model for Daily Spend (Phase 2):
+Current model:
 
 ```javascript
 {
@@ -73,7 +73,7 @@ Planned model for Daily Spend (Phase 2):
 
 Rules:
 - Amounts are stored as decimal numbers in KES (`parseFloat` / `Number`), formatted for display via `fmt(n)` to 2 decimals with thousands separators.
-- In v1, item lists use index-based manipulation; unique IDs will be added in Phase 2.
+- Legacy item lists use index-based manipulation; daily spend records use unique IDs.
 - Due field in v1 is a free-text input for due date or notes. Daily spend dates will use strict `YYYY-MM-DD`.
 
 ## 5. Calculations
@@ -95,7 +95,7 @@ Calculations are encapsulated in `calculateSummary()` and `sumItems()`, isolated
 ## 6. Persistence and migration
 
 - State is saved in `localStorage` under key `'salary-planner-v1'`.
-- State has `schemaVersion: 1`. Migration function `migrateState(raw)` sanitizes input and assigns defaults.
+- State has `schemaVersion: 2`. Migration function `migrateState(raw)` sanitizes input and assigns defaults.
 - Adding `dailySpend` and `categories` changes the data shape:
   1. Read stored data.
   2. If `schemaVersion` is missing or older, add the new fields with empty defaults.
@@ -106,7 +106,7 @@ Calculations are encapsulated in `calculateSummary()` and `sumItems()`, isolated
 
 - Service worker precaches `['./index.html', './manifest.json', './icon-192.png', './icon-512.png']`.
 - Caching strategy: Cache-first with network update (serves from cache if present, fetches network in background to update cache).
-- Every release that changes cached files must bump `CACHE_NAME` in `sw.js` (currently `salary-planner-v5`).
+- Every release that changes cached files must bump `CACHE_NAME` in `sw.js` (currently `salary-planner-v10`).
 - Manifest holds `name`, `short_name`, `theme_color` (`#12181B`), `background_color` (`#12181B`), and maskable icons.
 - Test offline by loading the app, going offline in DevTools, and reloading.
 
