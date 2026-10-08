@@ -46,7 +46,7 @@ Write the tests first, then the code.
   - Debt with `endDate: 2026-12-15` appears on 15 Dec 2026 and not on 15 Jan 2027.
   - Item with `null` day or date never appears.
   - Range query across a month boundary returns items in date order.
-- [ ] **T1.6** `storage/storage.ts`: load, save, pre-migration raw backup, error path. Tests with a fake `localStorage`.
+- [x] **T1.6** `storage/storage.ts`: load, save, pre-migration raw backup, error path. Tests with a fake `localStorage`.
   - First load of v2 data creates `salary-planner-v1-pre-v3-backup` and does not overwrite it on the next load.
   - Corrupt JSON does not overwrite stored data and returns an error result.
 - [ ] **T1.7** `storage/backup.ts`: export to JSON file, import from file (v1, v2, v3). Tests for each version and for a rejected file.
@@ -121,4 +121,4 @@ Write the tests first, then the code.
 
 ## Current task
 
-Next up: **T1.6** (`storage/storage.ts`: load, save, pre-migration raw backup, error path).
+Next up: **T1.7** (`storage/backup.ts`: export to JSON file, import from file for v1, v2, and v3).
