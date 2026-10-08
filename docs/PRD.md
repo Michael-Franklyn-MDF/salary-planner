@@ -75,10 +75,12 @@ Scope: logo, color scheme, layout, and general UI/UX polish. **No change to calc
 - Accessible contrast (WCAG AA) and tap targets of at least 44px.
 - New logo and updated PWA icons, theme color, and splash/manifest values.
 
-### Decisions still needed from the owner
-- Color direction (neutral with one accent? dark mode?).
-- Logo concept.
-- Navigation pattern (bottom tab bar is the default assumption).
+### Design decisions
+
+- Color direction: deep slate foundation with a refined muted-gold accent and clearer semantic positive/negative colors.
+- Typography: modern sans-serif treatment while remaining dependency-free.
+- Logo concept: simple wallet/ledger symbol.
+- Navigation pattern: mobile-first bottom tab bar.
 
 ## 8. Success criteria
 

@@ -31,3 +31,9 @@
 - The app is mobile-first in width and uses safe-area padding, but the current layout is still closer to a desktop form compressed onto mobile than a thumb-oriented app.
 - The installed-app identity is minimal: the existing icons and manifest work, but the redesign has not yet established the logo, splash/background treatment, or final theme direction.
 
+## Agreed redesign direction
+
+- Palette: deep slate foundation with a muted-gold accent and explicit semantic positive/negative colors.
+- Typography: modern sans-serif while remaining dependency-free.
+- Logo: simple wallet/ledger symbol.
+- Navigation: mobile-first bottom tab bar for Overview and Daily Spend.
