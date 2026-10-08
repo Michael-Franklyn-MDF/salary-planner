@@ -78,4 +78,3 @@ The current UI renders the legacy income/expense/one-off/debt sections. Daily-sp
 - During the UI redesign phase, change presentation only; do not alter calculations or stored data unless the task explicitly requires it.
 - Follow the documented UX direction for redesign work: mobile-first layout, at least 44px tap targets, accessible contrast, design tokens for shared visual values, and the remaining balance as the home-screen focal point.
 - Use focused commits with `feat:`, `fix:`, `style:`, or `docs:` prefixes when committing. Never include real personal financial figures or secrets.
-
