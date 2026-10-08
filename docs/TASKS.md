@@ -26,7 +26,7 @@ Write the tests first, then the code.
   - A non-numeric amount counts as 0.
   - `0.1 + 0.2` style inputs return 0.3, not 0.30000000000000004.
   - Overspent state returns a negative `remainingToSpend`.
-- [ ] **T1.3** `domain/dates.ts` with tests: local `today()`, `daysInMonth`, `lastDayOfMonth`, `isValidDateString`.
+- [x] **T1.3** `domain/dates.ts` with tests: local `today()`, `daysInMonth`, `lastDayOfMonth`, `isValidDateString`.
   - February 2024 has 29 days, February 2025 has 28.
   - `today()` at 00:30 local time returns the local date, not the UTC date.
   - `2025-02-30` is invalid.
@@ -121,4 +121,4 @@ Write the tests first, then the code.
 
 ## Current task
 
-Next up: **T1.3** (`domain/dates.ts` with tests).
+Next up: **T1.4** (`domain/migrate.ts` with tests and fixtures).
