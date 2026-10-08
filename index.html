@@ -58,6 +58,23 @@
   .footer-btn:hover{color:var(--text);}
   .reset:hover{color:var(--bad);}
   .saved{color:var(--dim); font-size:0.78rem;}
+  .tabs{display:flex; gap:8px; margin:0 0 24px; border-bottom:1px solid var(--line); padding-bottom:8px;}
+  .tab{background:none; border:1px solid transparent; border-radius:8px; color:var(--dim); cursor:pointer; font:inherit; padding:10px 14px;}
+  .tab:hover{color:var(--text);}
+  .tab[aria-selected="true"]{background:var(--panel); border-color:var(--line); color:var(--text);}
+  .tab-panel[hidden]{display:none;}
+  .empty-state{background:var(--panel); border:1px solid var(--line); border-radius:10px; color:var(--dim); padding:32px 20px; text-align:center;}
+  .empty-state h2{color:var(--text); font-size:1.1rem; margin:0 0 8px;}
+  .empty-state p{margin:0; line-height:1.5;}
+  .spend-form{background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:16px;}
+  .spend-form h2{font-size:1rem; margin:0 0 14px;}
+  .spend-fields{display:grid; gap:12px;}
+  .spend-field{display:flex; flex-direction:column; gap:5px;}
+  .spend-field label{color:var(--dim); font-size:0.85rem;}
+  .spend-field input, .spend-field select{background:var(--bg); border:1px solid var(--line); border-radius:6px; color:var(--text); font:inherit; min-height:44px; padding:8px 10px;}
+  .spend-field input:focus, .spend-field select:focus{border-color:var(--accent); outline:2px solid color-mix(in srgb, var(--accent) 35%, transparent);}
+  .spend-submit{background:var(--accent); border:1px solid var(--accent); border-radius:8px; color:#12181B; cursor:pointer; font:inherit; font-weight:600; min-height:44px; padding:10px 14px; width:100%;}
+  .spend-submit:hover{filter:brightness(1.08);}
   @media (prefers-color-scheme: light){
     :root:not([data-theme="dark"]){
       --bg:#F4F2EC; --panel:#FFFFFF; --line:#E2DFD4; --text:#20211F; --dim:#6B6F68;
@@ -70,39 +87,71 @@
   <h1>Salary Planner</h1>
   <p class="sub">Lay out what's coming in against what has to go out — expenses, upcoming costs, and repayments.</p>
 
-  <div class="summary">
-    <div class="row"><span class="label">Monthly income</span><span class="val" id="incomeDisplay">KSh 0</span></div>
-    <div class="row"><span class="label">Recurring expenses</span><span class="val" id="expDisplay">KSh 0</span></div>
-    <div class="row"><span class="label">Upcoming one-off costs</span><span class="val" id="oneoffDisplay">KSh 0</span></div>
-    <div class="row"><span class="label">Debts to repay</span><span class="val" id="debtDisplay">KSh 0</span></div>
-    <div class="row total" id="remainingRow"><span class="label">Remaining</span><span class="val" id="remainingDisplay">KSh 0</span></div>
+  <nav class="tabs" aria-label="Main navigation">
+    <button class="tab" type="button" role="tab" aria-selected="true" aria-controls="homePanel" data-tab="home">Overview</button>
+    <button class="tab" type="button" role="tab" aria-selected="false" aria-controls="dailySpendPanel" data-tab="dailySpend">Daily Spend</button>
+  </nav>
+
+  <div id="homePanel" class="tab-panel" role="tabpanel">
+    <div class="summary">
+      <div class="row"><span class="label">Monthly income</span><span class="val" id="incomeDisplay">KSh 0</span></div>
+      <div class="row"><span class="label">Recurring expenses</span><span class="val" id="expDisplay">KSh 0</span></div>
+      <div class="row"><span class="label">Upcoming one-off costs</span><span class="val" id="oneoffDisplay">KSh 0</span></div>
+      <div class="row"><span class="label">Debts to repay</span><span class="val" id="debtDisplay">KSh 0</span></div>
+      <div class="row total" id="remainingRow"><span class="label">Remaining</span><span class="val" id="remainingDisplay">KSh 0</span></div>
+    </div>
+
+    <section>
+      <h2>Income</h2>
+      <div class="income-row">
+        <label for="income">Monthly take-home</label>
+        <input type="number" id="income" placeholder="0" min="0" />
+      </div>
+    </section>
+
+    <section>
+      <h2>Recurring expenses <span class="subtotal" id="expSub">KSh 0</span></h2>
+      <ul class="items" id="expList"></ul>
+      <button class="add-btn" onclick="addItem('exp')">+ Add expense (rent, subscriptions, transport...)</button>
+    </section>
+
+    <section>
+      <h2>Upcoming one-off costs <span class="subtotal" id="oneoffSub">KSh 0</span></h2>
+      <ul class="items" id="oneoffList"></ul>
+      <button class="add-btn" onclick="addItem('oneoff')">+ Add upcoming cost</button>
+    </section>
+
+    <section>
+      <h2>Debts to repay <span class="subtotal" id="debtSub">KSh 0</span></h2>
+      <ul class="items" id="debtList"></ul>
+      <button class="add-btn" onclick="addItem('debt')">+ Add debt (who you owe)</button>
+    </section>
   </div>
 
-  <section>
-    <h2>Income</h2>
-    <div class="income-row">
-      <label for="income">Monthly take-home</label>
-      <input type="number" id="income" placeholder="0" min="0" />
-    </div>
-  </section>
-
-  <section>
-    <h2>Recurring expenses <span class="subtotal" id="expSub">KSh 0</span></h2>
-    <ul class="items" id="expList"></ul>
-    <button class="add-btn" onclick="addItem('exp')">+ Add expense (rent, subscriptions, transport...)</button>
-  </section>
-
-  <section>
-    <h2>Upcoming one-off costs <span class="subtotal" id="oneoffSub">KSh 0</span></h2>
-    <ul class="items" id="oneoffList"></ul>
-    <button class="add-btn" onclick="addItem('oneoff')">+ Add upcoming cost</button>
-  </section>
-
-  <section>
-    <h2>Debts to repay <span class="subtotal" id="debtSub">KSh 0</span></h2>
-    <ul class="items" id="debtList"></ul>
-    <button class="add-btn" onclick="addItem('debt')">+ Add debt (who you owe)</button>
-  </section>
+  <div id="dailySpendPanel" class="tab-panel" role="tabpanel" hidden>
+    <form class="spend-form" id="dailySpendForm">
+      <h2>Log a purchase</h2>
+      <div class="spend-fields">
+        <div class="spend-field">
+          <label for="spendAmount">Amount (KSh)</label>
+          <input type="number" id="spendAmount" min="0.01" step="0.01" placeholder="0" required />
+        </div>
+        <div class="spend-field">
+          <label for="spendCategory">Category</label>
+          <select id="spendCategory" required></select>
+        </div>
+        <div class="spend-field">
+          <label for="spendDate">Date</label>
+          <input type="date" id="spendDate" required />
+        </div>
+        <div class="spend-field">
+          <label for="spendNote">Note (optional)</label>
+          <input type="text" id="spendNote" maxlength="120" placeholder="What was it for?" />
+        </div>
+        <button class="spend-submit" type="submit">Add purchase</button>
+      </div>
+    </form>
+  </div>
 
   <footer>
     <div class="footer-actions">
@@ -213,6 +262,46 @@ function save(){
 }
 function fmt(n){
   return 'KSh ' + (Math.round(n*100)/100).toLocaleString();
+}
+function localDateValue(){
+  const now = new Date();
+  const offset = now.getTimezoneOffset() * 60000;
+  return new Date(now.getTime() - offset).toISOString().slice(0, 10);
+}
+function renderDailySpendForm(){
+  const category = document.getElementById('spendCategory');
+  const currentCategory = category.value;
+  category.innerHTML = state.categories.map(cat =>
+    `<option value="${escapeAttr(cat.id)}">${escapeAttr(cat.name)}</option>`
+  ).join('');
+  if(state.categories.some(cat => cat.id === currentCategory)){
+    category.value = currentCategory;
+  }
+  const date = document.getElementById('spendDate');
+  if(!date.value) date.value = localDateValue();
+}
+function addDailySpend(event){
+  event.preventDefault();
+  const amount = Number(document.getElementById('spendAmount').value);
+  const category = document.getElementById('spendCategory').value;
+  const date = document.getElementById('spendDate').value;
+  const note = document.getElementById('spendNote').value.trim();
+
+  if(!Number.isFinite(amount) || amount <= 0 || !category || !date){
+    alert('Enter an amount greater than zero, choose a category, and select a date.');
+    return;
+  }
+
+  state.dailySpend.push({
+    id: 'ds-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 6),
+    amount,
+    category,
+    date,
+    note
+  });
+  save();
+  document.getElementById('dailySpendForm').reset();
+  renderDailySpendForm();
 }
 function addItem(kind){
   state[kind].push({ name:'', amount:0, due:'' });
@@ -351,10 +440,25 @@ function render(){
   buildList('exp', document.getElementById('expList'), true);
   buildList('oneoff', document.getElementById('oneoffList'), true);
   buildList('debt', document.getElementById('debtList'), true);
+  renderDailySpendForm();
   renderTotals();
 }
 
+function selectTab(tabName){
+  document.querySelectorAll('[data-tab]').forEach(tab => {
+    const selected = tab.dataset.tab === tabName;
+    tab.setAttribute('aria-selected', selected ? 'true' : 'false');
+  });
+  document.querySelectorAll('.tab-panel').forEach(panel => {
+    panel.hidden = panel.id !== tabName + 'Panel';
+  });
+}
+
 document.getElementById('income').addEventListener('input', e => updateIncome(e.target.value));
+document.getElementById('dailySpendForm').addEventListener('submit', addDailySpend);
+document.querySelectorAll('[data-tab]').forEach(tab => {
+  tab.addEventListener('click', () => selectTab(tab.dataset.tab));
+});
 
 load();
 render();

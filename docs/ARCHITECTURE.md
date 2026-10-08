@@ -111,7 +111,7 @@ Calculations are encapsulated in `calculateSummary()` and `sumItems()`, isolated
 
 ## 8. UI structure
 
-Current structure: Single-page vertical scroll containing:
+Current structure: Single-page vertical scroll with Overview and Daily Spend tabs. The Overview tab contains:
 1. Header & description
 2. Summary card (income, recurring, upcoming, debts, remaining balance)
 3. Income input section
@@ -119,6 +119,8 @@ Current structure: Single-page vertical scroll containing:
 5. Upcoming one-off costs list with inline inputs and "+ Add upcoming cost" button
 6. Debts to repay list with inline inputs and "+ Add debt" button
 7. Footer with "Clear all data" button and transient "Saved" status indicator
+
+The Daily Spend tab currently contains an entry form for amount, category, date, and optional note. Entries are normalized and saved to `dailySpend`; listing, totals, and category management are planned in the remaining Phase 2 tasks.
 
 Planned:
 - Add a **Daily Spend** tab.
