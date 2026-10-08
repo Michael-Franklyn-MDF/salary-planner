@@ -39,7 +39,7 @@ Write the tests first, then the code.
   - Garbage input (`null`, a string, an array) returns a valid default state without throwing.
   - Running `migrateState` twice gives the same result.
   - `schemaVersion: 4` is rejected.
-- [ ] **T1.5** `domain/calendar.ts` with tests.
+- [x] **T1.5** `domain/calendar.ts` with tests.
   - Recurring on day 31 appears on 28 Feb 2025, 29 Feb 2024, 30 Apr, 31 May.
   - `'last'` appears on the last day of every month.
   - One-off appears only on its date.
@@ -121,4 +121,4 @@ Write the tests first, then the code.
 
 ## Current task
 
-Next up: **T1.5** (`domain/calendar.ts` with tests).
+Next up: **T1.6** (`storage/storage.ts`: load, save, pre-migration raw backup, error path).
