@@ -30,7 +30,7 @@ Write the tests first, then the code.
   - February 2024 has 29 days, February 2025 has 28.
   - `today()` at 00:30 local time returns the local date, not the UTC date.
   - `2025-02-30` is invalid.
-- [ ] **T1.4** `domain/migrate.ts` with tests and fixtures (dummy data only).
+- [x] **T1.4** `domain/migrate.ts` with tests and fixtures (dummy data only).
   - v1 fixture (no `schemaVersion`, only `income`, `exp`, `oneoff`, `debt`) migrates with no item lost.
   - v2 fixture (with `dailySpend` and `categories`) migrates with entries and categories intact.
   - `due: "5th"` becomes `dayOfMonth: 5`, note empty. `due: "end of month"` becomes `'last'`.
@@ -121,4 +121,4 @@ Write the tests first, then the code.
 
 ## Current task
 
-Next up: **T1.4** (`domain/migrate.ts` with tests and fixtures).
+Next up: **T1.5** (`domain/calendar.ts` with tests).
