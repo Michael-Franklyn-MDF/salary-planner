@@ -29,13 +29,20 @@
   body{max-width:var(--content-width); margin:0 auto; padding:28px var(--space-5) 60px;}
   h1{font-size:1.5rem; font-weight:600; letter-spacing:-0.01em; margin:0 0 var(--space-1);}
   .sub{color:var(--dim); font-size:0.9rem; margin:0 0 var(--space-6);}
-  .summary{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius-lg); padding:var(--space-5); margin-bottom:28px;}
+  .summary{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius-lg); margin-bottom:28px; overflow:hidden;}
+  .summary-hero{background:linear-gradient(135deg, #202D32, var(--panel)); border-bottom:1px solid var(--line); padding:var(--space-6) var(--space-5);}
+  .summary-hero .eyebrow{color:var(--dim); font-size:0.78rem; letter-spacing:0.08em; margin:0 0 var(--space-2); text-transform:uppercase;}
+  .summary-hero .hero-value{font-size:clamp(2.25rem, 12vw, 3.5rem); font-weight:700; letter-spacing:-0.04em; line-height:1; margin:0;}
+  .summary-hero .hero-value.remaining-good{color:var(--good);}
+  .summary-hero .hero-value.remaining-bad{color:var(--bad);}
+  .summary-hero .hero-caption{color:var(--dim); font-size:0.86rem; margin:var(--space-3) 0 0;}
+  .summary-breakdown{padding:var(--space-4) var(--space-5);}
   .row{display:flex; justify-content:space-between; align-items:baseline; padding:6px 0;}
   .row .label{color:var(--dim); font-size:0.92rem;}
   .row .val{font-weight:600; font-variant-numeric:tabular-nums;}
-  .row.total{border-top:1px solid var(--line); margin-top:8px; padding-top:14px;}
+  .row.total{border-top:1px solid var(--line); margin-top:var(--space-2); padding-top:14px;}
   .row.total .label{color:var(--text); font-size:1rem;}
-  .row.total .val{font-size:1.4rem;}
+  .row.total .val{font-size:1.15rem;}
   .remaining-good .val{color:var(--good);}
   .remaining-bad .val{color:var(--bad);}
   section{margin-bottom:26px;}
@@ -129,12 +136,19 @@
 
   <div id="homePanel" class="tab-panel" role="tabpanel">
     <div class="summary">
-      <div class="row"><span class="label">Monthly income</span><span class="val" id="incomeDisplay">KSh 0</span></div>
-      <div class="row"><span class="label">Recurring expenses</span><span class="val" id="expDisplay">KSh 0</span></div>
-      <div class="row"><span class="label">Upcoming one-off costs</span><span class="val" id="oneoffDisplay">KSh 0</span></div>
-      <div class="row"><span class="label">Debts to repay</span><span class="val" id="debtDisplay">KSh 0</span></div>
-      <div class="row total" id="remainingRow"><span class="label">Remaining</span><span class="val" id="remainingDisplay">KSh 0</span></div>
-      <div class="row total" id="remainingToSpendRow"><span class="label">Remaining to spend</span><span class="val" id="remainingToSpendDisplay">KSh 0</span></div>
+      <div class="summary-hero">
+        <p class="eyebrow">What's left to spend</p>
+        <p class="hero-value remaining-good" id="remainingToSpendHero">KSh 0</p>
+        <p class="hero-caption">After commitments and this month's daily spending</p>
+      </div>
+      <div class="summary-breakdown">
+        <div class="row"><span class="label">Monthly income</span><span class="val" id="incomeDisplay">KSh 0</span></div>
+        <div class="row"><span class="label">Recurring expenses</span><span class="val" id="expDisplay">KSh 0</span></div>
+        <div class="row"><span class="label">Upcoming one-off costs</span><span class="val" id="oneoffDisplay">KSh 0</span></div>
+        <div class="row"><span class="label">Debts to repay</span><span class="val" id="debtDisplay">KSh 0</span></div>
+        <div class="row total" id="remainingRow"><span class="label">Remaining after commitments</span><span class="val" id="remainingDisplay">KSh 0</span></div>
+        <div class="row total" id="remainingToSpendRow"><span class="label">Remaining to spend</span><span class="val" id="remainingToSpendDisplay">KSh 0</span></div>
+      </div>
     </div>
 
     <section>
@@ -667,9 +681,13 @@ function renderTotals(){
 
   const spendRemDisplay = document.getElementById('remainingToSpendDisplay');
   const spendRemRow = document.getElementById('remainingToSpendRow');
+  const spendRemHero = document.getElementById('remainingToSpendHero');
   spendRemDisplay.textContent = fmt(summary.remainingToSpend);
   spendRemRow.classList.remove('remaining-good','remaining-bad');
   spendRemRow.classList.add(summary.remainingToSpend >= 0 ? 'remaining-good' : 'remaining-bad');
+  spendRemHero.textContent = fmt(summary.remainingToSpend);
+  spendRemHero.classList.remove('remaining-good','remaining-bad');
+  spendRemHero.classList.add(summary.remainingToSpend >= 0 ? 'remaining-good' : 'remaining-bad');
 }
 
 function render(){
