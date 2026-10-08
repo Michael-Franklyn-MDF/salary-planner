@@ -10,7 +10,7 @@ Status: `[ ]` todo, `[~]` in progress, `[x]` done
 - [x] **T0.2** Archive the v1 docs into `docs/v1/`. Put the v2 docs in `docs/`. Replace `.github/copilot-instructions.md`. Ask the owner before deleting `GEMINI.md` (superseded by Copilot).
 - [x] **T0.3** Scaffold Vite + React + TypeScript in the repo root. Remove the v1 root files on this branch (they remain at `v1.0`). Set `base` in `vite.config.ts` to match the live Pages path. Confirm the live URL first.
 - [x] **T0.4** Add Tailwind and initialise shadcn/ui. Add ESLint, Vitest, and these scripts: `dev`, `build`, `preview`, `lint`, `typecheck`, `test`.
-- [ ] **T0.5** Fill in the real commands in `.github/copilot-instructions.md` and confirm each one runs.
+- [x] **T0.5** Fill in the real commands in `.github/copilot-instructions.md` and confirm each one runs.
 
 
 
@@ -121,4 +121,4 @@ Write the tests first, then the code.
 
 ## Current task
 
-Next up: **T0.5** (Fill in the real commands in `.github/copilot-instructions.md` and confirm each one runs).
+Next up: **T1.1** (`domain/types.ts`: the v3 types from `ARCHITECTURE.md`).

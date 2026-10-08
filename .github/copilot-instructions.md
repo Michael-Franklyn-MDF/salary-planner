@@ -24,7 +24,7 @@ v1 (vanilla JS) is archived at tag `v1.0` and in `docs/v1/`. Do not edit it.
 
 ## Commands
 
-Fill in and verify during T0.5. Expected:
+Run from the repository root:
 
 ```
 Install:    npm install
@@ -35,6 +35,8 @@ Lint:       npm run lint
 Typecheck:  npm run typecheck
 Test:       npm test
 ```
+
+There is no single-test script. Run one Vitest file with `npx vitest run path/to/file.test.ts` or filter a test name with `npx vitest run -t "test name"`.
 
 ## Code rules
 
