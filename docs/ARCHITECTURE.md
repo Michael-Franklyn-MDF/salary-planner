@@ -106,7 +106,7 @@ Calculations are encapsulated in `calculateSummary()` and `sumItems()`, isolated
 
 - Service worker precaches `['./index.html', './manifest.json', './icon-192.png', './icon-512.png']`.
 - Caching strategy: Cache-first with network update (serves from cache if present, fetches network in background to update cache).
-- Every release that changes cached files must bump `CACHE_NAME` in `sw.js` (currently `salary-planner-v10`).
+- Every release that changes cached files must bump `CACHE_NAME` in `sw.js` (currently `salary-planner-v11`).
 - Manifest holds `name`, `short_name`, `theme_color` (`#12181B`), `background_color` (`#12181B`), and maskable icons.
 - Test offline by loading the app, going offline in DevTools, and reloading.
 

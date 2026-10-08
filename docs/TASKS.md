@@ -32,7 +32,7 @@ Status: `[ ]` todo, `[~]` in progress, `[x]` done
 - [x] **T2.5** Show today's total and month total.
 - [x] **T2.6** Add `remainingToSpend` to the summary using the existing calculation.
 - [x] **T2.7** Manage categories (add, rename, delete with entries kept).
-- [ ] **T2.8** Bump service worker cache version and test offline.
+- [x] **T2.8** Bump service worker cache version and test offline.
 
 
 
@@ -74,4 +74,4 @@ Decisions needed from the owner before starting T3.2. Ask and offer 2 to 3 optio
 
 ## Current task
 
-Next up: **T2.8** (Bump service worker cache version and test offline).
+Next up: **T3.1** (Audit the current UI. List the problems in a short note).
