@@ -18,7 +18,7 @@ Status: `[ ]` todo, `[~]` in progress, `[x]` done
 
 Write the tests first, then the code.
 
-- [ ] **T1.1** `domain/types.ts`: the v3 types from `ARCHITECTURE.md`.
+- [x] **T1.1** `domain/types.ts`: the v3 types from `ARCHITECTURE.md`.
 - [ ] **T1.2** `domain/calc.ts` with tests.
   - Income 100000, recurring 30000, one-off 10000, debt 20000, spend this month 5000: remaining 40000, remainingToSpend 35000.
   - Empty state: everything 0.
@@ -121,4 +121,4 @@ Write the tests first, then the code.
 
 ## Current task
 
-Next up: **T1.1** (`domain/types.ts`: the v3 types from `ARCHITECTURE.md`).
+Next up: **T1.2** (`domain/calc.ts` with tests).
