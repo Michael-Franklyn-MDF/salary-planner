@@ -55,7 +55,7 @@ Write the tests first, then the code.
 
 ## Phase 2: App shell and Plan tab
 
-- [ ] **T2.1** State: `AppStateProvider` and reducer (add, update, delete for each list, set income, replace all, clear). Reducer tests.
+- [x] **T2.1** State: `AppStateProvider` and reducer (add, update, delete for each list, set income, replace all, clear). Reducer tests.
 - [ ] **T2.2** Design tokens in `styles/index.css`, light and dark, from `UI_UX_SPEC.md`. Theme the shadcn components to match.
 - [ ] **T2.3** `TabBar` (four tabs, bottom, translucent) and `MiniPlayer` (hidden on Home, tap opens Home).
 - [ ] **T2.4** Plan tab: income row and the three grouped lists with the add/edit/delete bottom sheet. Show a "No date" tag on items without a day or date.
@@ -121,4 +121,4 @@ Write the tests first, then the code.
 
 ## Current task
 
-Next up: **T2.1** (`AppStateProvider` and reducer: add, update, delete for each list, set income, replace all, clear).
+Next up: **T2.2** (design tokens in `styles/index.css`, light and dark, from `UI_UX_SPEC.md`).
