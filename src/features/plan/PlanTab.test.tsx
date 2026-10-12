@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import type { AppState } from '@/domain/types'
 import { AppStateProvider } from '@/state/AppStateProvider'
@@ -56,5 +56,24 @@ describe('PlanTab', () => {
 
     fireEvent.click(within(screen.getByRole('alertdialog')).getByRole('button', { name: /^Delete$/ }))
     expect(screen.queryByText('Rent')).not.toBeInTheDocument()
+  })
+
+  it('requires in-app confirmation before clearing all data', () => {
+    renderPlan()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Clear all data' }))
+    expect(screen.getByRole('alertdialog', { name: 'Clear all data?' })).toBeInTheDocument()
+
+    fireEvent.click(within(screen.getByRole('alertdialog', { name: 'Clear all data?' })).getByRole('button', { name: 'Clear all data' }))
+    expect(screen.getByText('KSh 0')).toBeInTheDocument()
+  })
+
+  it('imports a backup and replaces the current state', async () => {
+    renderPlan()
+    const file = new File([JSON.stringify({ income: 2000 })], 'backup.json', { type: 'application/json' })
+
+    fireEvent.change(screen.getByLabelText('Import backup'), { target: { files: [file] } })
+
+    await waitFor(() => expect(screen.getByText('KSh 2,000')).toBeInTheDocument())
   })
 })

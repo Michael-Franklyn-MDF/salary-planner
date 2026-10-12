@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { AppState, Debt, OneOffCost, RecurringExpense } from '@/domain/types'
 import { useAppState } from '@/state/useAppState'
+import { exportBackup, importBackup } from '@/storage/backup'
 
 type ItemKind = 'recurring' | 'oneOff' | 'debt'
 type Editor = { kind: 'income' } | { kind: ItemKind; id?: string }
@@ -106,6 +107,8 @@ export function PlanTab() {
   const [editor, setEditor] = useState<Editor | null>(null)
   const [form, setForm] = useState<FormState>(emptyForm)
   const [confirmDelete, setConfirmDelete] = useState(false)
+  const [confirmClear, setConfirmClear] = useState(false)
+  const [importError, setImportError] = useState<string | null>(null)
 
   function openEditor(nextEditor: Editor) {
     setEditor(nextEditor)
@@ -171,6 +174,26 @@ export function PlanTab() {
     closeEditor()
   }
 
+  function downloadBackup() {
+    const url = URL.createObjectURL(exportBackup(state))
+    const link = document.createElement('a')
+    link.href = url
+    link.download = 'salary-planner-backup.json'
+    link.click()
+    URL.revokeObjectURL(url)
+  }
+
+  async function handleImport(file: Blob | undefined) {
+    if (!file) return
+    try {
+      const imported = await importBackup(file)
+      dispatch({ type: 'replaceAll', state: imported })
+      setImportError(null)
+    } catch (error) {
+      setImportError(error instanceof Error ? error.message : String(error))
+    }
+  }
+
   return (
     <main className="mx-auto max-w-[480px] space-y-7 px-4 pb-32 pt-8">
       <h1 className="text-[34px] font-bold leading-[41px] tracking-tight">Plan</h1>
@@ -188,6 +211,41 @@ export function PlanTab() {
       <PlanGroup title="Recurring expenses" items={state.recurring} kind="recurring" onAdd={(kind) => openEditor({ kind })} onEdit={(kind, id) => openEditor({ kind, id })} />
       <PlanGroup title="Upcoming costs" items={state.oneOffs} kind="oneOff" onAdd={(kind) => openEditor({ kind })} onEdit={(kind, id) => openEditor({ kind, id })} />
       <PlanGroup title="Debts" items={state.debts} kind="debt" onAdd={(kind) => openEditor({ kind })} onEdit={(kind, id) => openEditor({ kind, id })} />
+
+      <section aria-labelledby="data-heading" className="space-y-2">
+        <h2 id="data-heading" className="px-4 text-[13px] font-medium uppercase tracking-wide text-[color:var(--text-muted)]">Data</h2>
+        <div className="overflow-hidden rounded-xl bg-[color:var(--surface)]">
+          <button type="button" className="min-h-12 w-full border-b border-[color:var(--separator)] px-4 text-left text-[color:var(--accent)]" onClick={downloadBackup}>Export backup</button>
+          <label className="block min-h-12 cursor-pointer border-b border-[color:var(--separator)] px-4 leading-[48px] text-[color:var(--accent)]">
+            Import backup
+            <input
+              type="file"
+              accept="application/json,.json"
+              className="sr-only"
+              onChange={(event) => {
+                const file = event.target.files?.[0]
+                void handleImport(file)
+                event.target.value = ''
+              }}
+            />
+          </label>
+          <button type="button" className="min-h-12 w-full px-4 text-left text-[color:var(--bad)]" onClick={() => setConfirmClear(true)}>Clear all data</button>
+        </div>
+        {importError && <p role="alert" className="px-4 text-[13px] text-[color:var(--bad)]">{importError}</p>}
+      </section>
+
+      {confirmClear && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-5" role="presentation">
+          <section role="alertdialog" aria-modal="true" aria-labelledby="clear-title" className="w-full max-w-sm rounded-2xl bg-[color:var(--surface)] p-5">
+            <h2 id="clear-title" className="text-[20px] font-semibold">Clear all data?</h2>
+            <p className="mt-2 text-[15px] text-[color:var(--text-muted)]">This cannot be undone. Export a backup first if you may need this data.</p>
+            <div className="mt-5 flex gap-2">
+              <button type="button" className="min-h-11 flex-1 rounded-lg bg-[color:var(--surface-2)]" onClick={() => setConfirmClear(false)}>Cancel</button>
+              <button type="button" className="min-h-11 flex-1 rounded-lg bg-[color:var(--bad)] font-semibold text-white" onClick={() => { dispatch({ type: 'clear' }); setConfirmClear(false) }}>Clear all data</button>
+            </div>
+          </section>
+        </div>
+      )}
 
       {editor && (
         <div className="fixed inset-0 z-50 flex items-end bg-black/40" role="presentation" onMouseDown={(event) => {
