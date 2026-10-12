@@ -1,0 +1,174 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --bg: #f2f2f7;
+  --surface: #ffffff;
+  --surface-2: #f2f2f7;
+  --text: #000000;
+  --text-muted: rgba(60, 60, 67, 0.6);
+  --separator: rgba(60, 60, 67, 0.29);
+  --accent: #0071e3;
+  --good: #248a3d;
+  --bad: #d70015;
+  --bar-bg: rgba(249, 249, 249, 0.94);
+
+  --font-system: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display',
+    system-ui, 'Segoe UI', Roboto, sans-serif;
+  --text-hero-size: 52px;
+  --text-hero-leading: 56px;
+  --text-large-title-size: 34px;
+  --text-large-title-leading: 41px;
+  --text-title-size: 28px;
+  --text-title-leading: 34px;
+  --text-headline-size: 17px;
+  --text-headline-leading: 22px;
+  --text-body-size: 17px;
+  --text-body-leading: 22px;
+  --text-subhead-size: 15px;
+  --text-subhead-leading: 20px;
+  --text-footnote-size: 13px;
+  --text-footnote-leading: 18px;
+  --text-caption-size: 12px;
+  --text-caption-leading: 16px;
+
+  --background: var(--bg);
+  --foreground: var(--text);
+  --card: var(--surface);
+  --card-foreground: var(--text);
+  --popover: var(--surface);
+  --popover-foreground: var(--text);
+  --primary: var(--accent);
+  --primary-foreground: #ffffff;
+  --secondary: var(--surface-2);
+  --secondary-foreground: var(--text);
+  --muted: var(--surface-2);
+  --muted-foreground: var(--text-muted);
+  --accent-foreground: #ffffff;
+  --destructive: var(--bad);
+  --border: var(--separator);
+  --input: var(--separator);
+  --ring: var(--accent);
+  --radius: 12px;
+  --sidebar: var(--surface);
+  --sidebar-foreground: var(--text);
+  --sidebar-primary: var(--accent);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--surface-2);
+  --sidebar-accent-foreground: var(--text);
+  --sidebar-border: var(--separator);
+  --sidebar-ring: var(--accent);
+
+  color: var(--text);
+  background: var(--bg);
+  color-scheme: light;
+  font-family: var(--font-system);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #000000;
+    --surface: #1c1c1e;
+    --surface-2: #2c2c2e;
+    --text: #ffffff;
+    --text-muted: rgba(235, 235, 245, 0.6);
+    --separator: rgba(84, 84, 88, 0.65);
+    --accent: #0a84ff;
+    --good: #30d158;
+    --bad: #ff453a;
+    --bar-bg: rgba(30, 30, 30, 0.94);
+    --primary-foreground: #000000;
+    --accent-foreground: #ffffff;
+    color-scheme: dark;
+  }
+}
+
+.dark {
+  --bg: #000000;
+  --surface: #1c1c1e;
+  --surface-2: #2c2c2e;
+  --text: #ffffff;
+  --text-muted: rgba(235, 235, 245, 0.6);
+  --separator: rgba(84, 84, 88, 0.65);
+  --accent: #0a84ff;
+  --good: #30d158;
+  --bad: #ff453a;
+  --bar-bg: rgba(30, 30, 30, 0.94);
+  --primary-foreground: #000000;
+  --accent-foreground: #ffffff;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --font-sans: var(--font-system);
+  --font-heading: var(--font-system);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply font-sans;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    margin: 0;
+    min-width: 320px;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+
+  button,
+  [role='button'] {
+    min-height: 44px;
+  }
+}
+
+#root {
+  min-height: 100svh;
+}
