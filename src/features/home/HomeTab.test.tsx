@@ -27,4 +27,15 @@ describe('HomeTab', () => {
     expect(screen.getByText('Over by this month')).toBeInTheDocument()
     expect(screen.getByLabelText('Left to spend, KSh -10,000')).toHaveClass('text-[color:var(--bad)]')
   })
+
+  it('shows after commitments and summary cards', () => {
+    render(<AppStateProvider initialState={state}><HomeTab /></AppStateProvider>)
+    expect(screen.getByText('After commitments')).toBeInTheDocument()
+    expect(screen.getByText('KSh 70,000')).toBeInTheDocument()
+    expect(screen.getByText('Income')).toBeInTheDocument()
+    expect(screen.getByText('Recurring')).toBeInTheDocument()
+    expect(screen.getByText('Upcoming')).toBeInTheDocument()
+    expect(screen.getByText('Debts')).toBeInTheDocument()
+    expect(screen.getByText('Spent this month')).toBeInTheDocument()
+  })
 })
