@@ -86,4 +86,37 @@ describe('SpendTab', () => {
 
     expect(screen.getByLabelText('Spend date')).toHaveValue(today())
   })
+
+  it('groups entries by date and edits or deletes them', () => {
+    const initialState: AppState = {
+      schemaVersion: 3,
+      income: 0,
+      recurring: [],
+      oneOffs: [],
+      debts: [],
+      dailySpend: [
+        { id: 'old', amount: 5, category: 'cat-food', date: '2026-10-10', note: '' },
+        { id: 'new', amount: 8, category: 'cat-other', date: '2026-10-12', note: 'Tea' },
+      ],
+      categories: [{ id: 'cat-food', name: 'Food' }, { id: 'cat-other', name: 'Other' }],
+    }
+
+    render(
+      <AppStateProvider initialState={initialState}>
+        <SpendTab />
+      </AppStateProvider>,
+    )
+
+    expect(screen.getByText('Monday, 12 Oct')).toBeInTheDocument()
+    expect(screen.getByText('Saturday, 10 Oct')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: /OtherTeaKSh 8/ }))
+    fireEvent.change(screen.getByLabelText('Edit amount'), { target: { value: '9' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Save' }))
+    expect(screen.getAllByText('KSh 9')).toHaveLength(2)
+
+    fireEvent.click(screen.getByRole('button', { name: /OtherTeaKSh 9/ }))
+    fireEvent.click(screen.getByRole('button', { name: 'Delete' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Delete' }))
+    expect(screen.queryByText('Tea')).not.toBeInTheDocument()
+  })
 })
