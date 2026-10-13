@@ -67,7 +67,13 @@ export function appReducer(state: AppState, action: AppAction): AppState {
     case 'updateCategory':
       return { ...state, categories: replaceItem(state.categories, action.item) }
     case 'deleteCategory':
-      return { ...state, categories: removeItem(state.categories, action.id) }
+      return {
+        ...state,
+        categories: action.id === 'cat-other' ? state.categories : removeItem(state.categories, action.id),
+        dailySpend: action.id === 'cat-other'
+          ? state.dailySpend
+          : state.dailySpend.map((item) => item.category === action.id ? { ...item, category: 'cat-other' } : item),
+      }
     case 'setIncome':
       return { ...state, income: action.income }
     case 'replaceAll':

@@ -119,4 +119,34 @@ describe('SpendTab', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Delete' }))
     expect(screen.queryByText('Tea')).not.toBeInTheDocument()
   })
+
+  it('shows totals and manages categories', () => {
+    const initialState: AppState = {
+      schemaVersion: 3,
+      income: 0,
+      recurring: [],
+      oneOffs: [],
+      debts: [],
+      dailySpend: [
+        { id: 'today', amount: 12, category: 'cat-food', date: today(), note: '' },
+        { id: 'month', amount: 8, category: 'cat-food', date: `${today().slice(0, 7)}-01`, note: '' },
+      ],
+      categories: [{ id: 'cat-food', name: 'Food' }, { id: 'cat-other', name: 'Other' }],
+    }
+
+    render(
+      <AppStateProvider initialState={initialState}>
+        <SpendTab />
+      </AppStateProvider>,
+    )
+
+    expect(screen.getAllByText('KSh 12').length).toBeGreaterThan(0)
+    expect(screen.getByText('KSh 20')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Manage categories' }))
+    fireEvent.change(screen.getByLabelText('New category'), { target: { value: 'Travel' } })
+    fireEvent.click(screen.getAllByRole('button', { name: 'Add' })[1])
+    expect(screen.getAllByText('Travel')).toHaveLength(2)
+    fireEvent.click(screen.getAllByRole('button', { name: /^Delete$/ })[1])
+    expect(screen.getByText('Delete this category? Its entries will move to Other.')).toBeInTheDocument()
+  })
 })

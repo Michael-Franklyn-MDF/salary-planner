@@ -44,7 +44,14 @@ export function SpendTab() {
   const [editDate, setEditDate] = useState('')
   const [editNote, setEditNote] = useState('')
   const [confirmDelete, setConfirmDelete] = useState(false)
+  const [categoriesOpen, setCategoriesOpen] = useState(false)
+  const [categoryName, setCategoryName] = useState('')
+  const [editingCategoryId, setEditingCategoryId] = useState<string | null>(null)
+  const [categoryDeleteId, setCategoryDeleteId] = useState<string | null>(null)
   const numericAmount = Number(amount)
+  const currentDate = today()
+  const todayTotal = state.dailySpend.filter((item) => item.date === currentDate).reduce((sum, item) => sum + item.amount, 0)
+  const monthTotal = state.dailySpend.filter((item) => item.date.startsWith(currentDate.slice(0, 7))).reduce((sum, item) => sum + item.amount, 0)
 
   function addSpend() {
     if (!Number.isFinite(numericAmount) || numericAmount <= 0) return
@@ -100,6 +107,27 @@ export function SpendTab() {
     closeEdit()
   }
 
+  function openCategories() {
+    setCategoriesOpen(true)
+    setCategoryName('')
+    setEditingCategoryId(null)
+    setCategoryDeleteId(null)
+  }
+
+  function saveCategory() {
+    const name = categoryName.trim()
+    if (!name) return
+    if (editingCategoryId) {
+      dispatch({ type: 'updateCategory', item: { id: editingCategoryId, name } })
+    } else {
+      const id = createId()
+      dispatch({ type: 'addCategory', item: { id, name } })
+      setCategory(id)
+    }
+    setCategoryName('')
+    setEditingCategoryId(null)
+  }
+
   const groupedEntries = [...state.dailySpend]
     .sort((left, right) => right.date.localeCompare(left.date) || right.id.localeCompare(left.id))
     .reduce<Record<string, DailySpend[]>>((groups, item) => {
@@ -112,6 +140,17 @@ export function SpendTab() {
       <h1 className="text-[34px] font-bold leading-[41px] tracking-tight">Spend</h1>
 
       <div className="flex flex-1 flex-col justify-end gap-6">
+        <div className="grid grid-cols-2 gap-3">
+          <div className="rounded-xl bg-[color:var(--surface)] p-4">
+            <p className="text-[13px] text-[color:var(--text-muted)]">Today</p>
+            <p className="mt-1 text-[20px] font-semibold tabular-nums">{formatAmount(todayTotal)}</p>
+          </div>
+          <div className="rounded-xl bg-[color:var(--surface)] p-4">
+            <p className="text-[13px] text-[color:var(--text-muted)]">This month</p>
+            <p className="mt-1 text-[20px] font-semibold tabular-nums">{formatAmount(monthTotal)}</p>
+          </div>
+        </div>
+
         <div
           role="status"
           aria-label={`Amount KSh ${amount || '0'}`}
@@ -138,6 +177,7 @@ export function SpendTab() {
             </button>
           ))}
         </div>
+        <button type="button" className="min-h-11 text-left text-[15px] text-[color:var(--accent)]" onClick={openCategories}>Manage categories</button>
 
         <div className="grid gap-3">
           <label className="flex min-h-12 items-center justify-between rounded-xl bg-[color:var(--surface)] px-4">
@@ -251,6 +291,54 @@ export function SpendTab() {
                 </div>
               )}
             </form>
+          </section>
+        </div>
+      )}
+
+      {categoriesOpen && (
+        <div className="fixed inset-0 z-50 flex items-end bg-black/40" role="presentation" onMouseDown={(event) => {
+          if (event.target === event.currentTarget) setCategoriesOpen(false)
+        }}>
+          <section role="dialog" aria-modal="true" aria-labelledby="categories-title" className="w-full rounded-t-2xl bg-[color:var(--surface)] p-5 pb-[calc(20px+env(safe-area-inset-bottom))]">
+            <div className="mx-auto mb-4 h-1 w-9 rounded-full bg-[color:var(--separator)]" />
+            <div className="mb-5 flex items-center justify-between">
+              <h2 id="categories-title" className="text-[20px] font-semibold">Categories</h2>
+              <button type="button" className="text-[color:var(--accent)]" onClick={() => setCategoriesOpen(false)}>Done</button>
+            </div>
+            <div className="space-y-2">
+              {state.categories.map((item) => (
+                <div key={item.id} className="flex min-h-12 items-center gap-2 rounded-xl bg-[color:var(--surface-2)] px-3">
+                  {editingCategoryId === item.id ? (
+                    <input aria-label={`Rename ${item.name}`} autoFocus value={categoryName} onChange={(event) => setCategoryName(event.target.value)} className="min-w-0 flex-1 bg-transparent" />
+                  ) : (
+                    <span className="min-w-0 flex-1 truncate">{item.name}</span>
+                  )}
+                  {item.id !== 'cat-other' && (
+                    editingCategoryId === item.id ? (
+                      <button type="button" className="text-[color:var(--accent)]" onClick={saveCategory}>Save</button>
+                    ) : (
+                      <>
+                        <button type="button" className="text-[color:var(--accent)]" onClick={() => { setEditingCategoryId(item.id); setCategoryName(item.name) }}>Rename</button>
+                        <button type="button" className="text-[color:var(--bad)]" onClick={() => setCategoryDeleteId(item.id)}>Delete</button>
+                      </>
+                    )
+                  )}
+                </div>
+              ))}
+              {categoryDeleteId && (
+                <div className="rounded-xl bg-[color:var(--surface-2)] p-3" role="alertdialog" aria-label="Confirm category deletion">
+                  <p>Delete this category? Its entries will move to Other.</p>
+                  <div className="mt-2 flex gap-2">
+                    <button type="button" className="min-h-11 flex-1 rounded-lg bg-[color:var(--surface)]" onClick={() => setCategoryDeleteId(null)}>Cancel</button>
+                    <button type="button" className="min-h-11 flex-1 rounded-lg bg-[color:var(--bad)] font-semibold text-white" onClick={() => { dispatch({ type: 'deleteCategory', id: categoryDeleteId }); if (category === categoryDeleteId) setCategory('cat-other'); setCategoryDeleteId(null) }}>Delete</button>
+                  </div>
+                </div>
+              )}
+              <div className="flex gap-2 pt-2">
+                <input aria-label="New category" value={editingCategoryId ? '' : categoryName} onChange={(event) => setCategoryName(event.target.value)} placeholder="New category" className="min-h-11 min-w-0 flex-1 rounded-lg bg-[color:var(--surface-2)] px-3" />
+                <button type="button" className="min-h-11 rounded-lg bg-[color:var(--accent)] px-4 font-semibold text-white" onClick={saveCategory}>Add</button>
+              </div>
+            </div>
           </section>
         </div>
       )}
