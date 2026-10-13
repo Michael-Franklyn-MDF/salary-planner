@@ -17,7 +17,7 @@ const state: AppState = {
 describe('CalendarTab', () => {
   it('starts on Monday and selects days in the week', () => {
     render(<AppStateProvider initialState={state}><CalendarTab initialDate="2026-10-13" /></AppStateProvider>)
-    expect(screen.getByRole('button', { name: /Mo/ })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Mo12/ })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /13/ })).toHaveAttribute('aria-pressed', 'true')
     fireEvent.click(screen.getByRole('button', { name: /14/ }))
     expect(screen.getByRole('button', { name: /14/ })).toHaveAttribute('aria-pressed', 'true')
@@ -35,5 +35,14 @@ describe('CalendarTab', () => {
     expect(screen.getByText('Rent')).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Spent' })).toBeInTheDocument()
     expect(screen.getAllByText('KSh 500')).toHaveLength(2)
+  })
+
+  it('toggles to a month grid with markers', () => {
+    render(<AppStateProvider initialState={state}><CalendarTab initialDate="2026-10-13" /></AppStateProvider>)
+    fireEvent.click(screen.getByRole('button', { name: 'Month' }))
+    expect(screen.getByRole('region', { name: 'Month grid' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /13/ })).toHaveAttribute('aria-pressed', 'true')
+    fireEvent.click(screen.getByRole('button', { name: /14/ }))
+    expect(screen.getByRole('button', { name: /14/ })).toHaveAttribute('aria-pressed', 'true')
   })
 })
