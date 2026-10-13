@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react'
 import { today } from '@/domain/dates'
+import { dueItemsForDate } from '@/domain/calendar'
+import { useAppState } from '@/state/useAppState'
 
 function dateString(date: Date): string {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
@@ -28,6 +30,7 @@ interface CalendarTabProps {
 }
 
 export function CalendarTab({ initialDate = today() }: CalendarTabProps) {
+  const { state } = useAppState()
   const [selectedDate, setSelectedDate] = useState(initialDate)
   const weekStart = useMemo(() => startOfWeek(selectedDate), [selectedDate])
   const days = Array.from({ length: 7 }, (_, index) => {
@@ -35,6 +38,9 @@ export function CalendarTab({ initialDate = today() }: CalendarTabProps) {
     date.setDate(date.getDate() + index)
     return dateString(date)
   })
+  const dueItems = dueItemsForDate(state, selectedDate)
+  const spentItems = state.dailySpend.filter((item) => item.date === selectedDate)
+  const formatAmount = (amount: number) => `KSh ${amount.toLocaleString('en-KE', { maximumFractionDigits: 2 })}`
 
   return (
     <main id="calendar-panel" role="tabpanel" aria-labelledby="calendar-tab" className="mx-auto max-w-[480px] space-y-6 px-4 pb-32 pt-8">
@@ -58,6 +64,31 @@ export function CalendarTab({ initialDate = today() }: CalendarTabProps) {
         })}
       </section>
       <h2 className="text-[20px] font-semibold">{parseDate(selectedDate).toLocaleDateString('en-KE', { weekday: 'long', day: 'numeric', month: 'long' })}</h2>
+      <section aria-labelledby="due-heading" className="space-y-2">
+        <h2 id="due-heading" className="px-1 text-[13px] font-medium uppercase tracking-wide text-[color:var(--text-muted)]">Due</h2>
+        <div className="overflow-hidden rounded-xl bg-[color:var(--surface)]">
+          {dueItems.map((entry) => (
+            <div key={`${entry.kind}-${entry.item.id}`} className="flex min-h-14 items-center justify-between border-b border-[color:var(--separator)] px-4 last:border-b-0">
+              <span>{entry.item.name || 'Unnamed'}</span>
+              <span className="tabular-nums">{formatAmount(entry.item.amount)}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+      <section aria-labelledby="spent-heading" className="space-y-2">
+        <div className="flex items-center justify-between px-1">
+          <h2 id="spent-heading" className="text-[13px] font-medium uppercase tracking-wide text-[color:var(--text-muted)]">Spent</h2>
+          <span className="text-[13px] text-[color:var(--text-muted)]">{formatAmount(spentItems.reduce((sum, item) => sum + item.amount, 0))}</span>
+        </div>
+        <div className="overflow-hidden rounded-xl bg-[color:var(--surface)]">
+          {spentItems.map((item) => (
+            <div key={item.id} className="flex min-h-14 items-center justify-between border-b border-[color:var(--separator)] px-4 last:border-b-0">
+              <span>{state.categories.find((category) => category.id === item.category)?.name ?? 'Other'}</span>
+              <span className="tabular-nums">{formatAmount(item.amount)}</span>
+            </div>
+          ))}
+        </div>
+      </section>
     </main>
   )
 }
