@@ -34,6 +34,7 @@ export function TabBar({ activeTab, onTabChange }: TabBarProps) {
             <button
               key={id}
               type="button"
+              id={`${id}-tab`}
               role="tab"
               aria-selected={selected}
               aria-controls={`${id}-panel`}

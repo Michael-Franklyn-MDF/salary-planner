@@ -65,7 +65,7 @@ Write the tests first, then the code.
 
 ## Phase 3: Spend tab
 
-- [ ] **T3.1** Keypad and amount display. Blocks a third decimal place and a second `.`. Backspace works. Add is disabled at 0.
+- [x] **T3.1** Keypad and amount display. Blocks a third decimal place and a second `.`. Backspace works. Add is disabled at 0.
 - [ ] **T3.2** Category chips, date picker (default today), optional note. Adding an entry takes under 10 seconds.
 - [ ] **T3.3** Entry list grouped by day, newest first. Edit and delete in a bottom sheet.
 - [ ] **T3.4** Today and month totals. Categories management (add, rename, delete with entries moved to "Other").
@@ -121,4 +121,4 @@ Write the tests first, then the code.
 
 ## Current task
 
-Next up: **T3.1** (keypad and amount display; block a third decimal and second period).
+Next up: **T3.2** (category chips, date picker, and optional note).
