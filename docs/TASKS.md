@@ -82,7 +82,7 @@ Write the tests first, then the code.
 
 ## Phase 5: Calendar tab
 
-- [ ] **T5.1** Week strip (Monday start) with day selection and week navigation.
+- [x] **T5.1** Week strip (Monday start) with day selection and week navigation.
 - [ ] **T5.2** Day view with **Due** and **Spent** groups.
 - [ ] **T5.3** Month grid toggle with day markers.
 - [ ] **T5.4** Empty states (nothing due, nothing spent, no dated items yet).
@@ -121,4 +121,4 @@ Write the tests first, then the code.
 
 ## Current task
 
-Next up: **T5.1** (Week strip with Monday start, day selection, and week navigation).
+Next up: **T5.2** (Day view with Due and Spent groups).
