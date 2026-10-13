@@ -27,9 +27,10 @@ function shiftDays(value: string, amount: number): string {
 
 interface CalendarTabProps {
   initialDate?: string
+  onOpenPlan?: () => void
 }
 
-export function CalendarTab({ initialDate = today() }: CalendarTabProps) {
+export function CalendarTab({ initialDate = today(), onOpenPlan }: CalendarTabProps) {
   const { state } = useAppState()
   const [selectedDate, setSelectedDate] = useState(initialDate)
   const [monthView, setMonthView] = useState(false)
@@ -45,6 +46,9 @@ export function CalendarTab({ initialDate = today() }: CalendarTabProps) {
   const monthDays = Array.from({ length: 42 }, (_, index) => shiftDays(dateString(monthGridStart), index))
   const dueItems = dueItemsForDate(state, selectedDate)
   const spentItems = state.dailySpend.filter((item) => item.date === selectedDate)
+  const hasDatedItems = state.recurring.some((item) => item.dayOfMonth !== null)
+    || state.debts.some((item) => item.dayOfMonth !== null)
+    || state.oneOffs.some((item) => item.date !== null)
   const formatAmount = (amount: number) => `KSh ${amount.toLocaleString('en-KE', { maximumFractionDigits: 2 })}`
 
   return (
@@ -93,7 +97,9 @@ export function CalendarTab({ initialDate = today() }: CalendarTabProps) {
       <section aria-labelledby="due-heading" className="space-y-2">
         <h2 id="due-heading" className="px-1 text-[13px] font-medium uppercase tracking-wide text-[color:var(--text-muted)]">Due</h2>
         <div className="overflow-hidden rounded-xl bg-[color:var(--surface)]">
-          {dueItems.map((entry) => (
+          {dueItems.length === 0 ? (
+            <p className="px-4 py-5 text-[15px] text-[color:var(--text-muted)]">Nothing due</p>
+          ) : dueItems.map((entry) => (
             <div key={`${entry.kind}-${entry.item.id}`} className="flex min-h-14 items-center justify-between border-b border-[color:var(--separator)] px-4 last:border-b-0">
               <span>{entry.item.name || 'Unnamed'}</span>
               <span className="tabular-nums">{formatAmount(entry.item.amount)}</span>
@@ -101,13 +107,22 @@ export function CalendarTab({ initialDate = today() }: CalendarTabProps) {
           ))}
         </div>
       </section>
+      {!hasDatedItems && (
+        <section className="rounded-xl bg-[color:var(--surface)] p-4">
+          <p className="text-[17px] font-semibold">No dated items yet</p>
+          <p className="mt-1 text-[15px] text-[color:var(--text-muted)]">Add dates to bills and costs in Plan to see them here.</p>
+          <button type="button" className="mt-3 min-h-11 text-[color:var(--accent)]" onClick={onOpenPlan}>Open Plan</button>
+        </section>
+      )}
       <section aria-labelledby="spent-heading" className="space-y-2">
         <div className="flex items-center justify-between px-1">
           <h2 id="spent-heading" className="text-[13px] font-medium uppercase tracking-wide text-[color:var(--text-muted)]">Spent</h2>
           <span className="text-[13px] text-[color:var(--text-muted)]">{formatAmount(spentItems.reduce((sum, item) => sum + item.amount, 0))}</span>
         </div>
         <div className="overflow-hidden rounded-xl bg-[color:var(--surface)]">
-          {spentItems.map((item) => (
+          {spentItems.length === 0 ? (
+            <p className="px-4 py-5 text-[15px] text-[color:var(--text-muted)]">No spending this day</p>
+          ) : spentItems.map((item) => (
             <div key={item.id} className="flex min-h-14 items-center justify-between border-b border-[color:var(--separator)] px-4 last:border-b-0">
               <span>{state.categories.find((category) => category.id === item.category)?.name ?? 'Other'}</span>
               <span className="tabular-nums">{formatAmount(item.amount)}</span>

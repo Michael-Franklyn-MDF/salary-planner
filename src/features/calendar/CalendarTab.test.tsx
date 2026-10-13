@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import type { AppState } from '@/domain/types'
 import { AppStateProvider } from '@/state/AppStateProvider'
 import { CalendarTab } from './CalendarTab'
@@ -44,5 +44,19 @@ describe('CalendarTab', () => {
     expect(screen.getByRole('button', { name: /13/ })).toHaveAttribute('aria-pressed', 'true')
     fireEvent.click(screen.getByRole('button', { name: /14/ }))
     expect(screen.getByRole('button', { name: /14/ })).toHaveAttribute('aria-pressed', 'true')
+  })
+
+  it('shows empty states and links to Plan when there are no dated items', () => {
+    const onOpenPlan = vi.fn()
+    render(
+      <AppStateProvider initialState={{ ...state, recurring: [], dailySpend: [] }}>
+        <CalendarTab initialDate="2026-10-13" onOpenPlan={onOpenPlan} />
+      </AppStateProvider>,
+    )
+    expect(screen.getByText('Nothing due')).toBeInTheDocument()
+    expect(screen.getByText('No spending this day')).toBeInTheDocument()
+    expect(screen.getByText('No dated items yet')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Open Plan' }))
+    expect(onOpenPlan).toHaveBeenCalledOnce()
   })
 })
