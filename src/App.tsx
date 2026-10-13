@@ -16,7 +16,7 @@ function AppContent() {
 
   return (
     <>
-      {activeTab === 'spend' ? <SpendTab /> : activeTab === 'home' ? <HomeTab /> : <PlanTab />}
+      {activeTab === 'spend' ? <SpendTab /> : activeTab === 'home' ? <HomeTab onOpenCalendar={() => setActiveTab('calendar')} /> : <PlanTab />}
       {activeTab !== 'home' && <MiniPlayer amount={remainingToSpend} onOpenHome={() => setActiveTab('home')} />}
       <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
     </>

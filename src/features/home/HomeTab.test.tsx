@@ -1,5 +1,5 @@
-import { render, screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { fireEvent, render, screen } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
 import { AppStateProvider } from '@/state/AppStateProvider'
 import type { AppState } from '@/domain/types'
 import { HomeTab } from './HomeTab'
@@ -37,5 +37,19 @@ describe('HomeTab', () => {
     expect(screen.getByText('Upcoming')).toBeInTheDocument()
     expect(screen.getByText('Debts')).toBeInTheDocument()
     expect(screen.getByText('Spent this month')).toBeInTheDocument()
+  })
+
+  it('shows the next due item and opens its calendar date', () => {
+    const date = new Date()
+    date.setDate(date.getDate() + 1)
+    const dueDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+    const onOpenCalendar = vi.fn()
+    render(
+      <AppStateProvider initialState={{ ...state, oneOffs: [{ id: 'o', name: 'Insurance', amount: 1200, date: dueDate, note: '' }] }}>
+        <HomeTab onOpenCalendar={onOpenCalendar} />
+      </AppStateProvider>,
+    )
+    fireEvent.click(screen.getByRole('button', { name: /Insurance/ }))
+    expect(onOpenCalendar).toHaveBeenCalledWith(dueDate)
   })
 })

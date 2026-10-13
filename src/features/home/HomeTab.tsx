@@ -1,12 +1,26 @@
 import { calculateSummary } from '@/domain/calc'
 import { today } from '@/domain/dates'
+import { dueItemsForRange, type CalendarDueItem } from '@/domain/calendar'
 import { useAppState } from '@/state/useAppState'
 
 function formatAmount(amount: number): string {
   return `KSh ${amount.toLocaleString('en-KE', { maximumFractionDigits: 2 })}`
 }
 
-export function HomeTab() {
+export function HomeTab({ onOpenCalendar }: HomeTabProps = {}) {
+  const { state } = useAppState()
+  const [year, month, day] = today().split('-').map(Number)
+  const rangeEnd = new Date(year, month - 1, day + 14)
+  const rangeEndString = `${rangeEnd.getFullYear()}-${String(rangeEnd.getMonth() + 1).padStart(2, '0')}-${String(rangeEnd.getDate()).padStart(2, '0')}`
+  const upcoming = dueItemsForRange(state, today(), rangeEndString).slice(0, 3)
+  return <HomeContent upcoming={upcoming} onOpenCalendar={onOpenCalendar} />
+}
+
+interface HomeTabProps {
+  onOpenCalendar?: (date: string) => void
+}
+
+function HomeContent({ onOpenCalendar, upcoming }: HomeTabProps & { upcoming: Array<CalendarDueItem & { date: string }> }) {
   const { state } = useAppState()
   const summary = calculateSummary(state, today())
   const overspent = summary.remainingToSpend < 0
@@ -44,6 +58,25 @@ export function HomeTab() {
               <p className="mt-1 text-[17px] font-semibold tabular-nums">{formatAmount(amount)}</p>
             </div>
           ))}
+        </div>
+      </section>
+      <section aria-labelledby="coming-up-heading" className="space-y-2">
+        <h2 id="coming-up-heading" className="px-1 text-[13px] font-medium uppercase tracking-wide text-[color:var(--text-muted)]">Coming up</h2>
+        <div className="overflow-hidden rounded-xl bg-[color:var(--surface)]">
+          {upcoming.length === 0 ? (
+            <p className="px-4 py-5 text-[15px] text-[color:var(--text-muted)]">Nothing due in the next 14 days.</p>
+          ) : upcoming.map((entry) => {
+            const name = entry.item.name || 'Unnamed'
+            return (
+              <button key={`${entry.kind}-${entry.item.id}-${entry.date}`} type="button" className="flex min-h-16 w-full items-center justify-between border-b border-[color:var(--separator)] px-4 text-left last:border-b-0" onClick={() => onOpenCalendar?.(entry.date)}>
+                <span>
+                  <span className="block text-[17px]">{name}</span>
+                  <span className="block text-[13px] text-[color:var(--text-muted)]">{entry.date}</span>
+                </span>
+                <span className="ml-4 shrink-0 tabular-nums">{formatAmount(entry.item.amount)}</span>
+              </button>
+            )
+          })}
         </div>
       </section>
     </main>

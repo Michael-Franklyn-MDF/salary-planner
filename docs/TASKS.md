@@ -76,7 +76,7 @@ Write the tests first, then the code.
 
 - [x] **T4.1** Hero "Left to spend" with correct colour state and caption.
 - [x] **T4.2** "After commitments" line and summary cards.
-- [ ] **T4.3** "Coming up" list (next three due items in 14 days). Tap opens that day in Calendar.
+- [x] **T4.3** "Coming up" list (next three due items in 14 days). Tap opens that day in Calendar.
 
 
 
@@ -121,4 +121,4 @@ Write the tests first, then the code.
 
 ## Current task
 
-Next up: **T4.3** (Coming up list for the next 14 days).
+Next up: **T5.1** (Week strip with Monday start, day selection, and week navigation).
