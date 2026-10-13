@@ -74,7 +74,7 @@ Write the tests first, then the code.
 
 ## Phase 4: Home tab
 
-- [ ] **T4.1** Hero "Left to spend" with correct colour state and caption.
+- [x] **T4.1** Hero "Left to spend" with correct colour state and caption.
 - [ ] **T4.2** "After commitments" line and summary cards.
 - [ ] **T4.3** "Coming up" list (next three due items in 14 days). Tap opens that day in Calendar.
 
@@ -121,4 +121,4 @@ Write the tests first, then the code.
 
 ## Current task
 
-Next up: **T4.1** (Home hero and left-to-spend colour state).
+Next up: **T4.2** (After commitments line and summary cards).
