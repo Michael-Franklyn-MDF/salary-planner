@@ -103,7 +103,7 @@ Write the tests first, then the code.
 
 - [~] **T7.1** Owner exports a backup from the live v1 app on the phone and keeps it safe. Do not commit it. (Owner action required.)
 - [~] **T7.2** Import that real backup into the v2 build locally. Check every item, total, and entry against v1. (Blocked until T7.1 backup is provided.)
-- [x] **T7.3** Add `deploy.yml`. Switch the Pages source to "GitHub Actions".
+- [~] **T7.3** Add `deploy.yml`. Switch the Pages source to "GitHub Actions". (Workflow added and build passed; repository Pages source still needs to be changed in Settings.)
 - [ ] **T7.4** Merge `v2` into `main`. Confirm the deploy succeeds.
 - [ ] **T7.5** On the phone: open the installed app, accept the update, confirm data is intact and it loads offline.
 - [ ] **T7.6** Write the rollback steps in `README.md` and tag `v2.0`.
@@ -121,4 +121,4 @@ Write the tests first, then the code.
 
 ## Current task
 
-Current release checkpoint: **T7.1/T7.2** require the owner’s real v1 backup; T7.3 workflow is ready.
+Current release checkpoint: **T7.1/T7.2** require the owner’s real v1 backup; T7.3 needs the repository Pages source switched to GitHub Actions.
