@@ -91,7 +91,7 @@ Write the tests first, then the code.
 
 ## Phase 6: PWA and polish
 
-- [ ] **T6.1** `vite-plugin-pwa` with manifest parity (`sw.js`, `manifest.json`, `scope`, `start_url` unchanged).
+- [x] **T6.1** `vite-plugin-pwa` with manifest parity (`sw.js`, `manifest.json`, `scope`, `start_url` unchanged).
 - [ ] **T6.2** Update prompt toast and legacy cache cleanup (`salary-planner-v`*).
 - [ ] **T6.3** New icons (any and maskable), logo, `theme_color`, `background_color`. Open design choices go to the owner first.
 - [ ] **T6.4** Accessibility pass: contrast in both themes, 44px targets, labels, focus states, screen reader order, reduced motion.

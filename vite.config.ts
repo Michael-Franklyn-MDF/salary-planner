@@ -1,12 +1,32 @@
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'vite'
+import { VitePWA } from 'vite-plugin-pwa'
 import path from 'node:path'
 
 // https://vite.dev/config/
 export default defineConfig({
   base: '/salary-planner/',
-  plugins: [react(), tailwindcss()],
+  plugins: [
+    react(),
+    tailwindcss(),
+    VitePWA({
+      registerType: 'prompt',
+      filename: 'sw.js',
+      manifestFilename: 'manifest.json',
+      manifest: {
+        name: 'Salary Planner',
+        short_name: 'Salary Planner',
+        description: 'A calm, private budget planner for your salary.',
+        start_url: './index.html',
+        scope: './',
+        display: 'standalone',
+        theme_color: '#0071E3',
+        background_color: '#F2F2F7',
+        lang: 'en',
+      },
+    }),
+  ],
   resolve: {
     alias: {
       '@': path.resolve(import.meta.dirname, './src'),
