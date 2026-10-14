@@ -95,7 +95,7 @@ Write the tests first, then the code.
 - [x] **T6.2** Update prompt toast and legacy cache cleanup (`salary-planner-v`*).
 - [x] **T6.3** New icons (any and maskable), logo, `theme_color`, `background_color`. Open design choices go to the owner first.
 - [x] **T6.4** Accessibility pass: contrast in both themes, 44px targets, labels, focus states, screen reader order, reduced motion.
-- [ ] **T6.5** Lighthouse (PWA, accessibility) on the built app. Fix what it flags.
+- [x] **T6.5** Lighthouse (PWA, accessibility) on the built app. Fix what it flags.
 
 
 
