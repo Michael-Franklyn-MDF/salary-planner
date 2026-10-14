@@ -154,6 +154,7 @@
     @apply bg-background text-foreground;
     margin: 0;
     min-width: 320px;
+    min-height: 100svh;
   }
 
   button,
@@ -167,8 +168,30 @@
   [role='button'] {
     min-height: 44px;
   }
+
+  :focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  input,
+  textarea,
+  select {
+    outline-color: var(--accent);
+  }
 }
 
 #root {
   min-height: 100svh;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }

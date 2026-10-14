@@ -16,7 +16,7 @@ interface AppProps {
 }
 
 function AppContent({ update }: AppProps) {
-  const [activeTab, setActiveTab] = useState<AppTab>('plan')
+  const [activeTab, setActiveTab] = useState<AppTab>('home')
   const [calendarDate, setCalendarDate] = useState<string>(today())
   const { state } = useAppState()
   const remainingToSpend = calculateSummary(state, today()).remainingToSpend

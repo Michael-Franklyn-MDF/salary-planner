@@ -52,8 +52,8 @@ function HomeContent({ onOpenCalendar, upcoming }: HomeTabProps & { upcoming: Ar
       <section aria-labelledby="summary-heading" className="space-y-2">
         <h2 id="summary-heading" className="px-1 text-[13px] font-medium uppercase tracking-wide text-[color:var(--text-muted)]">Summary</h2>
         <div className="grid grid-cols-2 gap-3">
-          {summaryCards.map(([label, amount]) => (
-            <div key={label} className="rounded-xl bg-[color:var(--surface)] p-4">
+          {summaryCards.map(([label, amount], index) => (
+            <div key={label} className={`rounded-xl bg-[color:var(--surface)] p-4 ${index === summaryCards.length - 1 ? 'col-span-2' : ''}`}>
               <p className="text-[13px] text-[color:var(--text-muted)]">{label}</p>
               <p className="mt-1 text-[17px] font-semibold tabular-nums">{formatAmount(amount)}</p>
             </div>

@@ -1,5 +1,5 @@
 import { CalendarDays, ClipboardList, Home, WalletCards } from 'lucide-react'
-import type { ComponentType } from 'react'
+import { useRef, type ComponentType, type KeyboardEvent } from 'react'
 
 export type AppTab = 'home' | 'spend' | 'calendar' | 'plan'
 
@@ -22,13 +22,24 @@ interface TabBarProps {
 }
 
 export function TabBar({ activeTab, onTabChange }: TabBarProps) {
+  const tabRefs = useRef<Array<HTMLButtonElement | null>>([])
+
+  function handleKeyDown(event: KeyboardEvent<HTMLButtonElement>, index: number) {
+    const direction = event.key === 'ArrowRight' ? 1 : event.key === 'ArrowLeft' ? -1 : 0
+    if (!direction) return
+    event.preventDefault()
+    const nextIndex = (index + direction + tabs.length) % tabs.length
+    tabRefs.current[nextIndex]?.focus()
+    onTabChange(tabs[nextIndex].id)
+  }
+
   return (
     <nav
       aria-label="Primary navigation"
       className="fixed inset-x-0 bottom-0 z-40 border-t border-[color:var(--separator)] bg-[color:var(--bar-bg)] pb-[env(safe-area-inset-bottom)] shadow-[0_-1px_0_rgba(0,0,0,0.04)] backdrop-blur-xl"
     >
       <div className="mx-auto flex h-[49px] max-w-[480px] items-stretch justify-around" role="tablist">
-        {tabs.map(({ id, label, icon: Icon }) => {
+        {tabs.map(({ id, label, icon: Icon }, index) => {
           const selected = activeTab === id
           return (
             <button
@@ -37,7 +48,11 @@ export function TabBar({ activeTab, onTabChange }: TabBarProps) {
               id={`${id}-tab`}
               role="tab"
               aria-selected={selected}
+              aria-current={selected ? 'page' : undefined}
               aria-controls={`${id}-panel`}
+              tabIndex={selected ? 0 : -1}
+              ref={(element) => { tabRefs.current[index] = element }}
+              onKeyDown={(event) => handleKeyDown(event, index)}
               className={`flex min-w-16 flex-1 flex-col items-center justify-center gap-0.5 text-[11px] leading-4 transition-colors motion-reduce:transition-none ${
                 selected ? 'text-[color:var(--accent)]' : 'text-[color:var(--text-muted)]'
               }`}

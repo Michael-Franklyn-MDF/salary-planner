@@ -50,6 +50,7 @@ export function CalendarTab({ initialDate = today(), onOpenPlan }: CalendarTabPr
     || state.debts.some((item) => item.dayOfMonth !== null)
     || state.oneOffs.some((item) => item.date !== null)
   const formatAmount = (amount: number) => `KSh ${amount.toLocaleString('en-KE', { maximumFractionDigits: 2 })}`
+  const currentDate = today()
 
   return (
     <main id="calendar-panel" role="tabpanel" aria-labelledby="calendar-tab" className="mx-auto max-w-[480px] space-y-6 px-4 pb-32 pt-8">
@@ -69,7 +70,7 @@ export function CalendarTab({ initialDate = today(), onOpenPlan }: CalendarTabPr
             const hasSpent = state.dailySpend.some((item) => item.date === date)
             const selected = date === selectedDate
             return (
-              <button key={date} type="button" aria-pressed={selected} className={`relative flex min-h-12 flex-col items-center justify-center rounded-xl text-[13px] ${selected ? 'bg-[color:var(--accent)] text-white' : ''}`} onClick={() => setSelectedDate(date)}>
+              <button key={date} type="button" aria-pressed={selected} aria-label={`${parsed.getDate()}${date === currentDate ? ', today' : ''}`} className={`relative flex min-h-12 flex-col items-center justify-center rounded-xl text-[13px] ${date === currentDate && !selected ? 'ring-2 ring-[color:var(--accent)] ring-inset' : ''} ${selected ? 'bg-[color:var(--accent)] text-white' : ''}`} onClick={() => setSelectedDate(date)}>
                 <span>{parsed.getDate()}</span>
                 <span className="mt-1 flex h-1 gap-1">
                   {hasDue && <span className={`h-1 w-1 rounded-full ${selected ? 'bg-white' : 'bg-[color:var(--accent)]'}`} />}
@@ -84,10 +85,16 @@ export function CalendarTab({ initialDate = today(), onOpenPlan }: CalendarTabPr
           {days.map((date) => {
           const parsed = parseDate(date)
           const selected = date === selectedDate
+          const hasDue = dueItemsForDate(state, date).length > 0
+          const hasSpent = state.dailySpend.some((item) => item.date === date)
           return (
-            <button key={date} type="button" aria-pressed={selected} className={`flex min-h-16 flex-col items-center justify-center rounded-xl text-[13px] ${selected ? 'bg-[color:var(--accent)] text-white' : ''}`} onClick={() => setSelectedDate(date)}>
+            <button key={date} type="button" aria-pressed={selected} aria-label={`${parsed.toLocaleDateString('en-KE', { weekday: 'short' }).slice(0, 2)}${parsed.getDate()}${date === currentDate ? ', today' : ''}`} className={`flex min-h-16 flex-col items-center justify-center rounded-xl text-[13px] ${date === currentDate && !selected ? 'ring-2 ring-[color:var(--accent)] ring-inset' : ''} ${selected ? 'bg-[color:var(--accent)] text-white' : ''}`} onClick={() => setSelectedDate(date)}>
               <span>{parsed.toLocaleDateString('en-KE', { weekday: 'short' }).slice(0, 2)}</span>
               <span className="mt-1 text-[17px] font-semibold">{parsed.getDate()}</span>
+              <span className="mt-1 flex h-1 gap-1" aria-hidden="true">
+                {hasDue && <span className={`h-1 w-1 rounded-full ${selected ? 'bg-white' : 'bg-[color:var(--accent)]'}`} />}
+                {hasSpent && <span className={`h-1 w-1 rounded-full ${selected ? 'bg-white/70' : 'bg-[color:var(--text-muted)]'}`} />}
+              </span>
             </button>
           )
           })}

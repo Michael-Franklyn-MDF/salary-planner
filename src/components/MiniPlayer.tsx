@@ -17,7 +17,7 @@ export function MiniPlayer({ amount, onOpenHome }: MiniPlayerProps) {
     <button
       type="button"
       aria-label={`Left to spend, ${amountLabel}`}
-      className="fixed inset-x-0 bottom-[49px] z-40 flex h-[52px] items-center justify-between border-t border-[color:var(--separator)] bg-[color:var(--bar-bg)] px-4 text-left backdrop-blur-xl"
+      className="fixed inset-x-0 bottom-[calc(49px+env(safe-area-inset-bottom))] z-40 flex h-[52px] items-center justify-between border-t border-[color:var(--separator)] bg-[color:var(--bar-bg)] px-4 text-left backdrop-blur-xl"
       onClick={onOpenHome}
     >
       <span className="text-[13px] leading-[18px] text-[color:var(--text-muted)]">Left to spend</span>
