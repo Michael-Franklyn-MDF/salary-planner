@@ -102,7 +102,7 @@ Write the tests first, then the code.
 ## Phase 7: Release
 
 - [x] **T7.1** Owner exports a backup from the live v1 app on the phone and keeps it safe. Do not commit it. (Backup provided at a local Downloads path; not committed.)
-- [x] **T7.2** Import that real backup into the v2 build locally. Check every item, total, and entry against v1. (Validated through the v2 migration/import path: 2 recurring, 2 one-offs, 1 debt, 2 spending entries, 7 categories; totals preserved and v3 summary calculated.)
+- [x] **T7.2** Import that real backup into the v2 build locally. Check every item, total, and entry against v1. (Validated through the v2 migration/import path; temporary validation test passed and was removed without adding the backup to the repository.)
 - [~] **T7.3** Add `deploy.yml`. Switch the Pages source to "GitHub Actions". (Workflow added and build passed; repository Pages source still needs to be changed in Settings.)
 - [ ] **T7.4** Merge `v2` into `main`. Confirm the deploy succeeds.
 - [ ] **T7.5** On the phone: open the installed app, accept the update, confirm data is intact and it loads offline.
