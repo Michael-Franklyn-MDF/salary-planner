@@ -9,8 +9,13 @@ import { CalendarTab } from './features/calendar/CalendarTab'
 import { AppStateProvider } from './state/AppStateProvider'
 import { PlanTab } from './features/plan/PlanTab'
 import { useAppState } from './state/useAppState'
+import { UpdatePrompt } from './pwa/UpdatePrompt'
 
-function AppContent() {
+interface AppProps {
+  update?: () => Promise<void>
+}
+
+function AppContent({ update }: AppProps) {
   const [activeTab, setActiveTab] = useState<AppTab>('plan')
   const [calendarDate, setCalendarDate] = useState<string>(today())
   const { state } = useAppState()
@@ -21,14 +26,15 @@ function AppContent() {
       {activeTab === 'spend' ? <SpendTab /> : activeTab === 'home' ? <HomeTab onOpenCalendar={(date) => { setCalendarDate(date); setActiveTab('calendar') }} /> : activeTab === 'calendar' ? <CalendarTab initialDate={calendarDate} onOpenPlan={() => setActiveTab('plan')} /> : <PlanTab />}
       {activeTab !== 'home' && <MiniPlayer amount={remainingToSpend} onOpenHome={() => setActiveTab('home')} />}
       <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
+      {update && <UpdatePrompt onUpdate={update} />}
     </>
   )
 }
 
-function App() {
+function App({ update }: AppProps) {
   return (
     <AppStateProvider>
-      <AppContent />
+      <AppContent update={update} />
     </AppStateProvider>
   )
 }
