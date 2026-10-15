@@ -1,32 +1,30 @@
-# React + TypeScript + Vite
+# Salary Planner
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Salary Planner is a private, single-user budgeting PWA. It runs entirely in the browser and stores data locally under `salary-planner-v1`.
 
-Currently, two official plugins are available:
+## Development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```sh
+npm install
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Run the release checks with:
+
+```sh
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+The production app is deployed to GitHub Pages from `main` by `.github/workflows/deploy.yml`. Set the repository Pages source to **GitHub Actions** before the first release deployment.
+
+## Rollback
+
+If a release must be reverted:
+
+1. Revert the release merge commit on `main` and push the revert.
+2. Wait for the GitHub Actions Pages deployment from `main` to complete.
+3. If the Actions deployment cannot be used, change the repository Pages source back to **Deploy from a branch**, selecting `main` and the repository root.
+4. The v1 implementation is preserved at the `v1.0` tag.

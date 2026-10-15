@@ -138,7 +138,7 @@ Migration must be idempotent: running it on v3 data returns the same data.
 
 - `.github/workflows/deploy.yml` builds with `npm ci && npm run build` and publishes `dist/` with the official Pages actions.
 - The repo's Pages source must be switched from "Deploy from a branch" to "GitHub Actions". Do this only at release (task T7.3), because it takes effect immediately.
-- Until release, `main` still serves v1 unchanged.
+- Releases deploy from `main`; before the v2 release, `main` served v1 unchanged.
 - Rollback: revert the merge on `main` and set the Pages source back to "Deploy from a branch" (`main`, root). v1 is also at tag `v1.0`.
 
 ## 10. Testing
