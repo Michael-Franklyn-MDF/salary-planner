@@ -103,10 +103,10 @@ Write the tests first, then the code.
 
 - [x] **T7.1** Owner exports a backup from the live v1 app on the phone and keeps it safe. Do not commit it. (Backup provided at a local Downloads path; not committed.)
 - [x] **T7.2** Import that real backup into the v2 build locally. Check every item, total, and entry against v1. (Validated through the v2 migration/import path; temporary validation test passed and was removed without adding the backup to the repository.)
-- [x] **T7.3** Add `deploy.yml`. Switch the Pages source to "GitHub Actions". (Workflow publishes `main`; the repository Pages source must be set to GitHub Actions in Settings before the first release deploy.)
-- [ ] **T7.4** Merge `v2` into `main`. Confirm the deploy succeeds.
+- [x] **T7.3** Add `deploy.yml`. Switch the Pages source to "GitHub Actions". (Workflow publishes `main`; the first `main` deployment completed successfully.)
+- [x] **T7.4** Merge `v2` into `main`. Confirm the deploy succeeds. (Merge commit `7f94429`; GitHub Actions run `38723055119` completed successfully.)
 - [ ] **T7.5** On the phone: open the installed app, accept the update, confirm data is intact and it loads offline.
-- [ ] **T7.6** Write the rollback steps in `README.md` and tag `v2.0`.
+- [x] **T7.6** Write the rollback steps in `README.md` and tag `v2.0`. (Tag `v2.0` pushed.)
 
 
 
@@ -121,4 +121,4 @@ Write the tests first, then the code.
 
 ## Current task
 
-Current release checkpoint: **T7.4** needs `v2` merged into `main` and the deployment confirmed.
+Current release checkpoint: **T7.5** is the remaining manual phone validation.
