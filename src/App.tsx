@@ -18,12 +18,13 @@ interface AppProps {
 function AppContent({ update }: AppProps) {
   const [activeTab, setActiveTab] = useState<AppTab>('home')
   const [calendarDate, setCalendarDate] = useState<string>(today())
+  const [spendAmount, setSpendAmount] = useState('')
   const { state } = useAppState()
   const remainingToSpend = calculateSummary(state, today()).remainingToSpend
 
   return (
     <>
-      {activeTab === 'spend' ? <SpendTab /> : activeTab === 'home' ? <HomeTab onOpenCalendar={(date) => { setCalendarDate(date); setActiveTab('calendar') }} /> : activeTab === 'calendar' ? <CalendarTab initialDate={calendarDate} onOpenPlan={() => setActiveTab('plan')} /> : <PlanTab />}
+      {activeTab === 'spend' ? <SpendTab draftAmount={spendAmount} onDraftAmountChange={setSpendAmount} /> : activeTab === 'home' ? <HomeTab onOpenCalendar={(date) => { setCalendarDate(date); setActiveTab('calendar') }} /> : activeTab === 'calendar' ? <CalendarTab initialDate={calendarDate} onOpenPlan={() => setActiveTab('plan')} /> : <PlanTab />}
       {activeTab !== 'home' && <MiniPlayer amount={remainingToSpend} onOpenHome={() => setActiveTab('home')} />}
       <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
       {update && <UpdatePrompt onUpdate={update} />}

@@ -10,6 +10,11 @@ import { Keypad } from './Keypad'
 
 type KeypadKey = Parameters<ComponentProps<typeof Keypad>['onKeyPress']>[0]
 
+interface SpendTabProps {
+  draftAmount?: string
+  onDraftAmountChange?: (amount: string) => void
+}
+
 function updateAmount(current: string, key: KeypadKey): string {
   if (key === 'backspace') return current.slice(0, -1)
   if (key === '.') {
@@ -27,9 +32,10 @@ function createId(): string {
   return `spend-${Date.now()}`
 }
 
-export function SpendTab() {
+export function SpendTab({ draftAmount, onDraftAmountChange }: SpendTabProps = {}) {
   const { state, dispatch } = useAppState()
-  const [amount, setAmount] = useState('')
+  const [localAmount, setLocalAmount] = useState('')
+  const amount = draftAmount ?? localAmount
   const [category, setCategory] = useState(state.categories[0]?.id ?? 'cat-other')
   const [date, setDate] = useState(today())
   const [note, setNote] = useState('')
@@ -47,6 +53,12 @@ export function SpendTab() {
   const currentDate = today()
   const todayTotal = state.dailySpend.filter((item) => item.date === currentDate).reduce((sum, item) => sum + item.amount, 0)
   const monthTotal = state.dailySpend.filter((item) => item.date.startsWith(currentDate.slice(0, 7))).reduce((sum, item) => sum + item.amount, 0)
+
+  function setAmount(next: string | ((current: string) => string)) {
+    const nextAmount = typeof next === 'function' ? next(amount) : next
+    onDraftAmountChange?.(nextAmount)
+    if (!onDraftAmountChange) setLocalAmount(nextAmount)
+  }
 
   function addSpend() {
     if (!Number.isFinite(numericAmount) || numericAmount <= 0) return
