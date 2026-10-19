@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { AppState, Debt, OneOffCost, RecurringExpense } from '@/domain/types'
+import { formatMoney, formatShortDate } from '@/lib/format'
 import { useAppState } from '@/state/useAppState'
 import { exportBackup, importBackup } from '@/storage/backup'
 
@@ -16,10 +17,6 @@ interface FormState {
 }
 
 const emptyForm: FormState = { name: '', amount: '', day: '', date: '', endDate: '', note: '' }
-
-function formatAmount(amount: number): string {
-  return `KSh ${amount.toLocaleString('en-KE', { maximumFractionDigits: 2 })}`
-}
 
 function itemDate(item: RecurringExpense | OneOffCost | Debt): string | null {
   if ('date' in item) return item.date
@@ -83,10 +80,10 @@ function PlanGroup<T extends RecurringExpense | OneOffCost | Debt>({
               <span className="min-w-0">
                 <span className="block truncate text-[17px] leading-[22px]">{item.name || 'Unnamed'}</span>
                 <span className="block text-[13px] leading-[18px] text-[color:var(--text-muted)]">
-                  {date ? (kind === 'oneOff' ? date : `Day ${date}`) : 'No date'}
+                  {date ? (kind === 'oneOff' ? formatShortDate(date) : `Day ${date}`) : 'No date'}
                 </span>
               </span>
-              <span className="ml-4 shrink-0 tabular-nums">{formatAmount(item.amount)}</span>
+              <span className="ml-4 shrink-0 tabular-nums">{formatMoney(item.amount)}</span>
             </button>
           )
         })}
@@ -203,7 +200,7 @@ export function PlanTab() {
         <div className="overflow-hidden rounded-xl bg-[color:var(--surface)]">
           <button type="button" className="flex min-h-16 w-full items-center justify-between px-4 text-left" onClick={() => openEditor({ kind: 'income' })}>
             <span className="text-[17px] leading-[22px]">Monthly take-home</span>
-            <span className="tabular-nums">{formatAmount(state.income)}</span>
+            <span className="tabular-nums">{formatMoney(state.income)}</span>
           </button>
         </div>
       </section>

@@ -1,5 +1,6 @@
 import { useState, type ComponentProps } from 'react'
 import { today } from '@/domain/dates'
+import { formatMoney, formatShortDate } from '@/lib/format'
 import type { DailySpend } from '@/domain/types'
 import { useAppState } from '@/state/useAppState'
 import { Keypad } from './Keypad'
@@ -21,15 +22,6 @@ function updateAmount(current: string, key: KeypadKey): string {
 function createId(): string {
   if (typeof crypto.randomUUID === 'function') return crypto.randomUUID()
   return `spend-${Date.now()}`
-}
-
-function formatAmount(amount: number): string {
-  return `KSh ${amount.toLocaleString('en-KE', { maximumFractionDigits: 2 })}`
-}
-
-function formatDate(date: string): string {
-  const parsed = new Date(`${date}T12:00:00`)
-  return parsed.toLocaleDateString('en-KE', { weekday: 'long', day: 'numeric', month: 'short' })
 }
 
 export function SpendTab() {
@@ -143,11 +135,11 @@ export function SpendTab() {
         <div className="grid grid-cols-2 gap-3">
           <div className="rounded-xl bg-[color:var(--surface)] p-4">
             <p className="text-[13px] text-[color:var(--text-muted)]">Today</p>
-            <p className="mt-1 text-[20px] font-semibold tabular-nums">{formatAmount(todayTotal)}</p>
+            <p className="mt-1 text-[20px] font-semibold tabular-nums">{formatMoney(todayTotal)}</p>
           </div>
           <div className="rounded-xl bg-[color:var(--surface)] p-4">
             <p className="text-[13px] text-[color:var(--text-muted)]">This month</p>
-            <p className="mt-1 text-[20px] font-semibold tabular-nums">{formatAmount(monthTotal)}</p>
+            <p className="mt-1 text-[20px] font-semibold tabular-nums">{formatMoney(monthTotal)}</p>
           </div>
         </div>
 
@@ -221,9 +213,9 @@ export function SpendTab() {
             Object.entries(groupedEntries).map(([entryDate, entries]) => (
               <div key={entryDate} className="overflow-hidden rounded-xl bg-[color:var(--surface)]">
                 <div className="flex items-center justify-between border-b border-[color:var(--separator)] px-4 py-3">
-                  <h3 className="text-[15px] font-semibold">{formatDate(entryDate)}</h3>
+                  <h3 className="text-[15px] font-semibold">{formatShortDate(entryDate)}</h3>
                   <span className="text-[15px] tabular-nums text-[color:var(--text-muted)]">
-                    {formatAmount(entries.reduce((sum, item) => sum + item.amount, 0))}
+                    {formatMoney(entries.reduce((sum, item) => sum + item.amount, 0))}
                   </span>
                 </div>
                 {entries.map((item) => {
@@ -239,7 +231,7 @@ export function SpendTab() {
                         <span className="block truncate text-[17px]">{itemCategory}</span>
                         {item.note && <span className="block truncate text-[13px] text-[color:var(--text-muted)]">{item.note}</span>}
                       </span>
-                      <span className="ml-4 shrink-0 tabular-nums">{formatAmount(item.amount)}</span>
+                      <span className="ml-4 shrink-0 tabular-nums">{formatMoney(item.amount)}</span>
                     </button>
                   )
                 })}

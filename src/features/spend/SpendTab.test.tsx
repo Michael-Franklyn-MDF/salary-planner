@@ -107,8 +107,8 @@ describe('SpendTab', () => {
       </AppStateProvider>,
     )
 
-    expect(screen.getByText('Monday, 12 Oct')).toBeInTheDocument()
-    expect(screen.getByText('Saturday, 10 Oct')).toBeInTheDocument()
+    expect(screen.getByText('Mon 12 Oct')).toBeInTheDocument()
+    expect(screen.getByText('Sat 10 Oct')).toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: /OtherTeaKSh 8/ }))
     fireEvent.change(screen.getByLabelText('Edit amount'), { target: { value: '9' } })
     fireEvent.click(screen.getByRole('button', { name: 'Save' }))

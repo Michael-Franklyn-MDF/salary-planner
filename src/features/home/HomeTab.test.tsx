@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { AppStateProvider } from '@/state/AppStateProvider'
 import type { AppState } from '@/domain/types'
+import { formatShortDate } from '@/lib/format'
 import { HomeTab } from './HomeTab'
 
 const state: AppState = {
@@ -49,6 +50,7 @@ describe('HomeTab', () => {
         <HomeTab onOpenCalendar={onOpenCalendar} />
       </AppStateProvider>,
     )
+    expect(screen.getByRole('button', { name: /Insurance/ })).toHaveTextContent(formatShortDate(dueDate))
     fireEvent.click(screen.getByRole('button', { name: /Insurance/ }))
     expect(onOpenCalendar).toHaveBeenCalledWith(dueDate)
   })

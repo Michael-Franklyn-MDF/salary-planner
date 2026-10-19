@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { today } from '@/domain/dates'
 import { dueItemsForDate } from '@/domain/calendar'
+import { formatLongDate, formatMoney, formatShortDate, formatShortWeekday } from '@/lib/format'
 import { useAppState } from '@/state/useAppState'
 
 function dateString(date: Date): string {
@@ -49,7 +50,6 @@ export function CalendarTab({ initialDate = today(), onOpenPlan }: CalendarTabPr
   const hasDatedItems = state.recurring.some((item) => item.dayOfMonth !== null)
     || state.debts.some((item) => item.dayOfMonth !== null)
     || state.oneOffs.some((item) => item.date !== null)
-  const formatAmount = (amount: number) => `KSh ${amount.toLocaleString('en-KE', { maximumFractionDigits: 2 })}`
   const currentDate = today()
 
   return (
@@ -87,9 +87,11 @@ export function CalendarTab({ initialDate = today(), onOpenPlan }: CalendarTabPr
           const selected = date === selectedDate
           const hasDue = dueItemsForDate(state, date).length > 0
           const hasSpent = state.dailySpend.some((item) => item.date === date)
+          const shortDate = formatShortDate(date)
+          const weekday = formatShortWeekday(date)
           return (
-            <button key={date} type="button" aria-pressed={selected} aria-label={`${parsed.toLocaleDateString('en-KE', { weekday: 'short' }).slice(0, 2)}${parsed.getDate()}${date === currentDate ? ', today' : ''}`} className={`flex min-h-16 flex-col items-center justify-center rounded-xl text-[13px] ${date === currentDate && !selected ? 'ring-2 ring-[color:var(--accent)] ring-inset' : ''} ${selected ? 'bg-[color:var(--accent)] text-white' : ''}`} onClick={() => setSelectedDate(date)}>
-              <span>{parsed.toLocaleDateString('en-KE', { weekday: 'short' }).slice(0, 2)}</span>
+            <button key={date} type="button" aria-pressed={selected} aria-label={`${shortDate}${date === currentDate ? ', today' : ''}`} className={`flex min-h-16 flex-col items-center justify-center rounded-xl text-[13px] ${date === currentDate && !selected ? 'ring-2 ring-[color:var(--accent)] ring-inset' : ''} ${selected ? 'bg-[color:var(--accent)] text-white' : ''}`} onClick={() => setSelectedDate(date)}>
+              <span>{weekday.slice(0, 2)}</span>
               <span className="mt-1 text-[17px] font-semibold">{parsed.getDate()}</span>
               <span className="mt-1 flex h-1 gap-1" aria-hidden="true">
                 {hasDue && <span className={`h-1 w-1 rounded-full ${selected ? 'bg-white' : 'bg-[color:var(--accent)]'}`} />}
@@ -100,7 +102,7 @@ export function CalendarTab({ initialDate = today(), onOpenPlan }: CalendarTabPr
           })}
         </section>
       )}
-      <h2 className="text-[20px] font-semibold">{parseDate(selectedDate).toLocaleDateString('en-KE', { weekday: 'long', day: 'numeric', month: 'long' })}</h2>
+      <h2 className="text-[20px] font-semibold">{formatLongDate(selectedDate)}</h2>
       <section aria-labelledby="due-heading" className="space-y-2">
         <h2 id="due-heading" className="px-1 text-[13px] font-medium uppercase tracking-wide text-[color:var(--text-muted)]">Due</h2>
         <div className="overflow-hidden rounded-xl bg-[color:var(--surface)]">
@@ -109,7 +111,7 @@ export function CalendarTab({ initialDate = today(), onOpenPlan }: CalendarTabPr
           ) : dueItems.map((entry) => (
             <div key={`${entry.kind}-${entry.item.id}`} className="flex min-h-14 items-center justify-between border-b border-[color:var(--separator)] px-4 last:border-b-0">
               <span>{entry.item.name || 'Unnamed'}</span>
-              <span className="tabular-nums">{formatAmount(entry.item.amount)}</span>
+              <span className="tabular-nums">{formatMoney(entry.item.amount)}</span>
             </div>
           ))}
         </div>
@@ -124,7 +126,7 @@ export function CalendarTab({ initialDate = today(), onOpenPlan }: CalendarTabPr
       <section aria-labelledby="spent-heading" className="space-y-2">
         <div className="flex items-center justify-between px-1">
           <h2 id="spent-heading" className="text-[13px] font-medium uppercase tracking-wide text-[color:var(--text-muted)]">Spent</h2>
-          <span className="text-[13px] text-[color:var(--text-muted)]">{formatAmount(spentItems.reduce((sum, item) => sum + item.amount, 0))}</span>
+          <span className="text-[13px] text-[color:var(--text-muted)]">{formatMoney(spentItems.reduce((sum, item) => sum + item.amount, 0))}</span>
         </div>
         <div className="overflow-hidden rounded-xl bg-[color:var(--surface)]">
           {spentItems.length === 0 ? (
@@ -132,7 +134,7 @@ export function CalendarTab({ initialDate = today(), onOpenPlan }: CalendarTabPr
           ) : spentItems.map((item) => (
             <div key={item.id} className="flex min-h-14 items-center justify-between border-b border-[color:var(--separator)] px-4 last:border-b-0">
               <span>{state.categories.find((category) => category.id === item.category)?.name ?? 'Other'}</span>
-              <span className="tabular-nums">{formatAmount(item.amount)}</span>
+              <span className="tabular-nums">{formatMoney(item.amount)}</span>
             </div>
           ))}
         </div>

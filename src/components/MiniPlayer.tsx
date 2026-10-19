@@ -1,16 +1,13 @@
 import { ChevronRight } from 'lucide-react'
+import { formatMoney } from '@/lib/format'
 
 interface MiniPlayerProps {
   amount: number
   onOpenHome: () => void
 }
 
-function formatAmount(amount: number): string {
-  return `KSh ${amount.toLocaleString('en-KE', { maximumFractionDigits: 2 })}`
-}
-
 export function MiniPlayer({ amount, onOpenHome }: MiniPlayerProps) {
-  const amountLabel = formatAmount(amount)
+  const amountLabel = formatMoney(amount)
   const amountColour = amount >= 0 ? 'var(--good)' : 'var(--bad)'
 
   return (

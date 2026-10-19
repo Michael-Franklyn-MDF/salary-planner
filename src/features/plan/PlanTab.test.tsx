@@ -33,6 +33,12 @@ describe('PlanTab', () => {
     expect(screen.getByText('No date')).toBeInTheDocument()
   })
 
+  it('shows one-off dates in the shared short date format', () => {
+    renderPlan({ ...state, oneOffs: [{ id: 'one-off-1', name: 'Insurance', amount: 1200, date: '2026-11-03', note: '' }] })
+
+    expect(screen.getByRole('button', { name: /Insurance/ })).toHaveTextContent('Tue 3 Nov')
+  })
+
   it('adds a recurring expense from the bottom sheet', () => {
     renderPlan({ ...state, recurring: [] })
 

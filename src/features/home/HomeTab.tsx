@@ -1,11 +1,8 @@
 import { calculateSummary } from '@/domain/calc'
 import { today } from '@/domain/dates'
 import { dueItemsForRange, type CalendarDueItem } from '@/domain/calendar'
+import { formatMoney, formatShortDate } from '@/lib/format'
 import { useAppState } from '@/state/useAppState'
-
-function formatAmount(amount: number): string {
-  return `KSh ${amount.toLocaleString('en-KE', { maximumFractionDigits: 2 })}`
-}
 
 export function HomeTab({ onOpenCalendar }: HomeTabProps = {}) {
   const { state } = useAppState()
@@ -38,16 +35,16 @@ function HomeContent({ onOpenCalendar, upcoming }: HomeTabProps & { upcoming: Ar
       <section className="rounded-2xl bg-[color:var(--surface)] p-6 text-center" aria-labelledby="left-to-spend-heading">
         <p id="left-to-spend-heading" className="text-[15px] text-[color:var(--text-muted)]">{overspent ? 'Over by this month' : 'Left to spend'}</p>
         <p
-          aria-label={`Left to spend, ${formatAmount(summary.remainingToSpend)}`}
+          aria-label={`Left to spend, ${formatMoney(summary.remainingToSpend)}`}
           className={`mt-2 overflow-hidden text-[52px] font-semibold leading-[56px] tabular-nums ${overspent ? 'text-[color:var(--bad)]' : 'text-[color:var(--good)]'}`}
         >
-          {formatAmount(summary.remainingToSpend)}
+          {formatMoney(summary.remainingToSpend)}
         </p>
         <p className="mt-2 text-[13px] text-[color:var(--text-muted)]">after commitments and this month's spending</p>
       </section>
       <div className="flex items-center justify-between rounded-xl bg-[color:var(--surface)] px-4 py-4">
         <span className="text-[17px]">After commitments</span>
-        <span className="text-[17px] font-semibold tabular-nums">{formatAmount(summary.remaining)}</span>
+        <span className="text-[17px] font-semibold tabular-nums">{formatMoney(summary.remaining)}</span>
       </div>
       <section aria-labelledby="summary-heading" className="space-y-2">
         <h2 id="summary-heading" className="px-1 text-[13px] font-medium uppercase tracking-wide text-[color:var(--text-muted)]">Summary</h2>
@@ -55,7 +52,7 @@ function HomeContent({ onOpenCalendar, upcoming }: HomeTabProps & { upcoming: Ar
           {summaryCards.map(([label, amount], index) => (
             <div key={label} className={`rounded-xl bg-[color:var(--surface)] p-4 ${index === summaryCards.length - 1 ? 'col-span-2' : ''}`}>
               <p className="text-[13px] text-[color:var(--text-muted)]">{label}</p>
-              <p className="mt-1 text-[17px] font-semibold tabular-nums">{formatAmount(amount)}</p>
+              <p className="mt-1 text-[17px] font-semibold tabular-nums">{formatMoney(amount)}</p>
             </div>
           ))}
         </div>
@@ -71,9 +68,9 @@ function HomeContent({ onOpenCalendar, upcoming }: HomeTabProps & { upcoming: Ar
               <button key={`${entry.kind}-${entry.item.id}-${entry.date}`} type="button" className="flex min-h-16 w-full items-center justify-between border-b border-[color:var(--separator)] px-4 text-left last:border-b-0" onClick={() => onOpenCalendar?.(entry.date)}>
                 <span>
                   <span className="block text-[17px]">{name}</span>
-                  <span className="block text-[13px] text-[color:var(--text-muted)]">{entry.date}</span>
+                  <span className="block text-[13px] text-[color:var(--text-muted)]">{formatShortDate(entry.date)}</span>
                 </span>
-                <span className="ml-4 shrink-0 tabular-nums">{formatAmount(entry.item.amount)}</span>
+                <span className="ml-4 shrink-0 tabular-nums">{formatMoney(entry.item.amount)}</span>
               </button>
             )
           })}

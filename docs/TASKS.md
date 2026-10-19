@@ -11,14 +11,14 @@ Not verified: **T7.5** (on the phone: data intact after update). Data persistenc
 
 ## Phase A: Data safety and architecture
 
-No visual or behavior change except A0. Each task keeps all existing tests green.
+No behavior change except A0. A1 may change date labels to the formats in the spec. Each task keeps all existing tests green.
 
-- [ ] **A0 (release blocker)** Wire storage into the app [X-01].
+- [~] **A0 (release blocker)** Wire storage into the app [X-01].
   - Tests first, in `src/state/AppStateProvider.test.tsx` and `src/storage`: empty storage gives the empty state; stored v3 data loads; stored v1 data migrates and the raw backup key `salary-planner-v1-pre-v3-backup` is written before parsing; corrupt data shows the error screen and leaves storage untouched; add an item, unmount, remount, the item is there; a failed save shows a visible message.
   - `AppStateProvider` loads with a lazy initializer from `loadState()`. On failure render a `StorageErrorScreen` with "Download raw data". Save with `saveState` after every state change, skipping the first run and skipping entirely if loading failed.
   - Load always runs before any save.
-  - Manual check on the phone (see `TESTING.md` items 1 and 2) before moving on.
-- [ ] **A1** `src/lib/format.ts` with `formatMoney` and date formatters, tested. Replace the five copies of `formatAmount` [X-02]. One date format everywhere [G-07]. No visible change except dates.
+  - Manual check on the phone (see `TESTING.md` items 1 and 2) is required before A0 can be marked done. Owner authorized continuing while these checks remain pending.
+- [x] **A1** `src/lib/format.ts` with `formatMoney` and date formatters, tested. Replace the five copies of `formatAmount` [X-02]. One date format everywhere [G-07]. No visible change except dates.
 - [ ] **A2** Register colours and type sizes in Tailwind `@theme` (names in `UI_UX_SPEC.md`). Replace arbitrary values such as `text-[color:var(--text-muted)]` and `text-[34px]` with token classes [X-03]. Screens look the same as before.
 - [ ] **A3** Shared `Sheet`, `ConfirmDialog` and `ListGroup` components. Use them in `SpendTab` and `PlanTab`, then split those files into smaller parts [X-04].
 - [ ] **A4** Keep an unsaved Spend amount when switching tabs [X-05].
@@ -60,4 +60,4 @@ No visual or behavior change except A0. Each task keeps all existing tests green
 
 ## Current task
 
-A0: wire storage into the app.
+A2: register colours and type sizes in Tailwind `@theme`.
