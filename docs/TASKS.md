@@ -1,124 +1,63 @@
-# Salary Planner v2: Task Backlog
+# Salary Planner v2.1: Task Backlog
 
-Work top to bottom. One task at a time. State the task before starting. Update this file after each task.
+Work top to bottom, one task at a time. State the task before starting. Update this file after each task. One focused commit per task, on the `v2.1` branch.
 
-Status: `[ ]` todo, `[~]` in progress, `[x]` done
+Status: `[ ]` todo, `[~]` in progress, `[x]` done. Task sources: `V2.1_PRD.md` and `DESIGN_AUDIT.md` (IDs in brackets).
 
-## Phase 0: Setup
+## v2 (released)
 
-- [x] **T0.1** Tag the current `main` as `v1.0`. Create the branch `v2`. (Owner runs the git commands.)
-- [x] **T0.2** Archive the v1 docs into `docs/v1/`. Put the v2 docs in `docs/`. Replace `.github/copilot-instructions.md`. Ask the owner before deleting `GEMINI.md` (superseded by Copilot).
-- [x] **T0.3** Scaffold Vite + React + TypeScript in the repo root. Remove the v1 root files on this branch (they remain at `v1.0`). Set `base` in `vite.config.ts` to match the live Pages path. Confirm the live URL first.
-- [x] **T0.4** Add Tailwind and initialise shadcn/ui. Add ESLint, Vitest, and these scripts: `dev`, `build`, `preview`, `lint`, `typecheck`, `test`.
-- [x] **T0.5** Fill in the real commands in `.github/copilot-instructions.md` and confirm each one runs.
+Phases 0 to 7 of v2 are complete: setup, domain core, Plan, Spend, Home, Calendar, PWA and release (tag `v2.0`, live on GitHub Pages).
+Not verified: **T7.5** (on the phone: data intact after update). Data persistence turned out not to be wired in (audit X-01), so this is covered by A0 below.
 
+## Phase A: Data safety and architecture
 
+No visual or behavior change except A0. Each task keeps all existing tests green.
 
-## Phase 1: Domain core (no UI)
+- [ ] **A0 (release blocker)** Wire storage into the app [X-01].
+  - Tests first, in `src/state/AppStateProvider.test.tsx` and `src/storage`: empty storage gives the empty state; stored v3 data loads; stored v1 data migrates and the raw backup key `salary-planner-v1-pre-v3-backup` is written before parsing; corrupt data shows the error screen and leaves storage untouched; add an item, unmount, remount, the item is there; a failed save shows a visible message.
+  - `AppStateProvider` loads with a lazy initializer from `loadState()`. On failure render a `StorageErrorScreen` with "Download raw data". Save with `saveState` after every state change, skipping the first run and skipping entirely if loading failed.
+  - Load always runs before any save.
+  - Manual check on the phone (see `TESTING.md` items 1 and 2) before moving on.
+- [ ] **A1** `src/lib/format.ts` with `formatMoney` and date formatters, tested. Replace the five copies of `formatAmount` [X-02]. One date format everywhere [G-07]. No visible change except dates.
+- [ ] **A2** Register colours and type sizes in Tailwind `@theme` (names in `UI_UX_SPEC.md`). Replace arbitrary values such as `text-[color:var(--text-muted)]` and `text-[34px]` with token classes [X-03]. Screens look the same as before.
+- [ ] **A3** Shared `Sheet`, `ConfirmDialog` and `ListGroup` components. Use them in `SpendTab` and `PlanTab`, then split those files into smaller parts [X-04].
+- [ ] **A4** Keep an unsaved Spend amount when switching tabs [X-05].
+- [ ] **A5** Cleanup in one commit [X-06, X-07]: remove the stray `@/` folder (first check nothing imports it), unused Vite template files (`src/App.css`, `src/assets/*`), committed `.DS_Store` files (add to `.gitignore`), the unrelated `cn` package (use `clsx` plus `tailwind-merge` in `src/lib/cn.ts`), `@fontsource-variable/geist`, and move `shadcn` out of runtime dependencies. Update this file and `README.md`.
 
-Write the tests first, then the code.
+## Phase B: Behavior
 
-- [x] **T1.1** `domain/types.ts`: the v3 types from `ARCHITECTURE.md`.
-- [x] **T1.2** `domain/calc.ts` with tests.
-  - Income 100000, recurring 30000, one-off 10000, debt 20000, spend this month 5000: remaining 40000, remainingToSpend 35000.
-  - Empty state: everything 0.
-  - Spend dated last month is ignored. Spend dated today is included.
-  - A non-numeric amount counts as 0.
-  - `0.1 + 0.2` style inputs return 0.3, not 0.30000000000000004.
-  - Overspent state returns a negative `remainingToSpend`.
-- [x] **T1.3** `domain/dates.ts` with tests: local `today()`, `daysInMonth`, `lastDayOfMonth`, `isValidDateString`.
-  - February 2024 has 29 days, February 2025 has 28.
-  - `today()` at 00:30 local time returns the local date, not the UTC date.
-  - `2025-02-30` is invalid.
-- [x] **T1.4** `domain/migrate.ts` with tests and fixtures (dummy data only).
-  - v1 fixture (no `schemaVersion`, only `income`, `exp`, `oneoff`, `debt`) migrates with no item lost.
-  - v2 fixture (with `dailySpend` and `categories`) migrates with entries and categories intact.
-  - `due: "5th"` becomes `dayOfMonth: 5`, note empty. `due: "end of month"` becomes `'last'`.
-  - `due: "when Dad pays"` becomes `dayOfMonth: null`, note `"when Dad pays"`.
-  - One-off `due: "2026-11-03"` becomes `date: "2026-11-03"`. `due: "soon"` becomes `date: null`, note `"soon"`.
-  - Garbage input (`null`, a string, an array) returns a valid default state without throwing.
-  - Running `migrateState` twice gives the same result.
-  - `schemaVersion: 4` is rejected.
-- [x] **T1.5** `domain/calendar.ts` with tests.
-  - Recurring on day 31 appears on 28 Feb 2025, 29 Feb 2024, 30 Apr, 31 May.
-  - `'last'` appears on the last day of every month.
-  - One-off appears only on its date.
-  - Debt with `endDate: 2026-12-15` appears on 15 Dec 2026 and not on 15 Jan 2027.
-  - Item with `null` day or date never appears.
-  - Range query across a month boundary returns items in date order.
-- [x] **T1.6** `storage/storage.ts`: load, save, pre-migration raw backup, error path. Tests with a fake `localStorage`.
-  - First load of v2 data creates `salary-planner-v1-pre-v3-backup` and does not overwrite it on the next load.
-  - Corrupt JSON does not overwrite stored data and returns an error result.
-- [x] **T1.7** `storage/backup.ts`: export to JSON file, import from file (v1, v2, v3). Tests for each version and for a rejected file.
+- [ ] **B1** Cold-launch sequence on Home: `useColdLaunch()` with a `sessionStorage` flag. Ring draws and number counts up under 900 ms, bars slide in. Never on tab switches. Instant under reduced motion [B-01].
+- [ ] **B2** Bilingual greeting: `lib/greetings.ts` (English, Spanish). Shows the first, swaps once, stays. Same cold-launch rule [B-02, G-05].
+- [ ] **B3** Home first-run state: neutral zero and an EmptyState with an Open Plan button [H-04].
+- [ ] **B4** Spend fits one view: amount, chips, all 12 keys and Add visible without scrolling on a 360 x 640 viewport, amount visible while typing [S-01].
+- [ ] **B5** Plan: items with no day show an "Add day" prompt [P-02]. Verify the v2 to v2.1 update path on the phone [B-04].
+- [ ] **B6 (needs owner decision first)** Mark as paid on due items [C-03, B-03]. Needs `schemaVersion` 4, a migration, fixture tests and no effect on the calculation. Ask the owner before starting.
 
+## Phase C: Visual
 
+- [ ] **C1** Savanna and Midnight tokens in `theme.css`, `data-theme` handling, inline pre-render script to avoid a flash, per-scheme `theme-color` meta tags, manifest `theme_color` and `background_color` [G-01, G-06]. Keep `scope` and `start_url`.
+- [ ] **C2** Inter via `@fontsource-variable/inter`, fallback stack, confirm it is precached and works offline [G-08].
+- [ ] **C3** Home layout: greeting, hero with HeroAmount and Ring, "Add spend" button, "Where it goes" breakdown, Coming up [H-01, H-02, H-03, H-05, H-06].
+- [ ] **C4** Spend polish: AmountDisplay alignment, chips (hidden scrollbar, fade, accent), keypad key shapes and pressed state, compact summary line, Recent day totals [S-02 to S-08].
+- [ ] **C5** Calendar polish: 44px controls, dots on every day with items, today ring, selected fill [C-01, C-02].
+- [ ] **C6** Plan polish: counts and totals on headers, chevrons, helper text on backup, "Clear all data" in its own group [P-01, P-03, P-04].
+- [ ] **C7** Mini player and tab bar: new tokens, within content width on wide screens, bottom padding on scroll areas [G-04, G-09, S-07].
+- [ ] **C8** Sentence-case section labels and contrast check of every text and background pair in both themes [G-03].
+- [ ] **C9** New logo and app icons in the Savanna palette; add `<link rel="icon">` for `favicon.svg`.
 
-## Phase 2: App shell and Plan tab
+## Phase D: Later
 
-- [x] **T2.1** State: `AppStateProvider` and reducer (add, update, delete for each list, set income, replace all, clear). Reducer tests.
-- [x] **T2.2** Design tokens in `styles/index.css`, light and dark, from `UI_UX_SPEC.md`. Theme the shadcn components to match.
-- [x] **T2.3** `TabBar` (four tabs, bottom, translucent) and `MiniPlayer` (hidden on Home, tap opens Home).
-- [x] **T2.4** Plan tab: income row and the three grouped lists with the add/edit/delete bottom sheet. Show a "No date" tag on items without a day or date.
-- [x] **T2.5** Plan tab "Data" group: export, import, clear all, with in-app confirmation dialogs.
+- [ ] **D1** Settings button (top right) and sheet with Appearance: System, Light, Dark. Choice stored under `salary-planner-prefs` [B-05].
+- [ ] **D2** Wide-screen refinements.
+- [ ] Greeting languages in settings, more languages in the list.
 
+## Release
 
-
-## Phase 3: Spend tab
-
-- [x] **T3.1** Keypad and amount display. Blocks a third decimal place and a second `.`. Backspace works. Add is disabled at 0.
-- [x] **T3.2** Category chips, date picker (default today), optional note. Adding an entry takes under 10 seconds.
-- [x] **T3.3** Entry list grouped by day, newest first. Edit and delete in a bottom sheet.
-- [x] **T3.4** Today and month totals. Categories management (add, rename, delete with entries moved to "Other").
-
-
-
-## Phase 4: Home tab
-
-- [x] **T4.1** Hero "Left to spend" with correct colour state and caption.
-- [x] **T4.2** "After commitments" line and summary cards.
-- [x] **T4.3** "Coming up" list (next three due items in 14 days). Tap opens that day in Calendar.
-
-
-
-## Phase 5: Calendar tab
-
-- [x] **T5.1** Week strip (Monday start) with day selection and week navigation.
-- [x] **T5.2** Day view with **Due** and **Spent** groups.
-- [x] **T5.3** Month grid toggle with day markers.
-- [x] **T5.4** Empty states (nothing due, nothing spent, no dated items yet).
-
-
-
-## Phase 6: PWA and polish
-
-- [x] **T6.1** `vite-plugin-pwa` with manifest parity (`sw.js`, `manifest.json`, `scope`, `start_url` unchanged).
-- [x] **T6.2** Update prompt toast and legacy cache cleanup (`salary-planner-v`*).
-- [x] **T6.3** New icons (any and maskable), logo, `theme_color`, `background_color`. Open design choices go to the owner first.
-- [x] **T6.4** Accessibility pass: contrast in both themes, 44px targets, labels, focus states, screen reader order, reduced motion.
-- [x] **T6.5** Lighthouse (PWA, accessibility) on the built app. Fix what it flags.
-
-
-
-## Phase 7: Release
-
-- [x] **T7.1** Owner exports a backup from the live v1 app on the phone and keeps it safe. Do not commit it. (Backup provided at a local Downloads path; not committed.)
-- [x] **T7.2** Import that real backup into the v2 build locally. Check every item, total, and entry against v1. (Validated through the v2 migration/import path; temporary validation test passed and was removed without adding the backup to the repository.)
-- [~] **T7.3** Add `deploy.yml`. Switch the Pages source to "GitHub Actions". (Workflow is ready and runs successfully, but the live site still serves v1 because the repository Pages source has not yet been changed in Settings.)
-- [~] **T7.4** Merge `v2` into `main`. Confirm the deploy succeeds. (Merge commit `7f94429` and successful Actions runs exist, but live asset checks remain blocked until the Pages source is switched.)
-- [ ] **T7.5** On the phone: open the installed app, accept the update, confirm data is intact and it loads offline.
-- [x] **T7.6** Write the rollback steps in `README.md` and tag `v2.0`. (Tag `v2.0` pushed.)
-
-
-
-## Later (not committed)
-
-- [ ] Monthly history and simple charts
-- [ ] Recurring spend reminders
-- [ ] Debt payoff projection
-- [ ] Manual light/dark toggle
-
-
+- [ ] **R1** All automated checks pass and the manual phone checklist in `TESTING.md` passes.
+- [ ] **R2** Owner exports a fresh backup from the installed app and keeps it safe. Do not commit it.
+- [ ] **R3** Merge `v2.1` into `main`, confirm the Pages deploy succeeds.
+- [ ] **R4** On the phone: accept the update prompt, confirm data is intact, loads offline, theme and animation behave. Tag `v2.1`.
 
 ## Current task
 
-Current release checkpoint: **T7.3** needs the repository Pages source switched to GitHub Actions in Settings.
+A0: wire storage into the app.
