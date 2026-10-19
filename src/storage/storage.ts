@@ -23,11 +23,13 @@ function asError(error: unknown): Error {
   return error instanceof Error ? error : new Error(String(error))
 }
 
-export function loadState(storage: StorageLike = defaultStorage()): LoadResult {
+export function loadState(storage?: StorageLike): LoadResult {
+  let targetStorage: StorageLike
   let raw: string | null
 
   try {
-    raw = storage.getItem(STORAGE_KEY)
+    targetStorage = storage ?? defaultStorage()
+    raw = targetStorage.getItem(STORAGE_KEY)
   } catch (error) {
     return { ok: false, error: asError(error), raw: null }
   }
@@ -41,8 +43,8 @@ export function loadState(storage: StorageLike = defaultStorage()): LoadResult {
   }
 
   try {
-    if (storage.getItem(PRE_MIGRATION_BACKUP_KEY) === null) {
-      storage.setItem(PRE_MIGRATION_BACKUP_KEY, raw)
+    if (targetStorage.getItem(PRE_MIGRATION_BACKUP_KEY) === null) {
+      targetStorage.setItem(PRE_MIGRATION_BACKUP_KEY, raw)
     }
 
     const parsed: unknown = JSON.parse(raw)
@@ -52,9 +54,10 @@ export function loadState(storage: StorageLike = defaultStorage()): LoadResult {
   }
 }
 
-export function saveState(state: AppState, storage: StorageLike = defaultStorage()): SaveResult {
+export function saveState(state: AppState, storage?: StorageLike): SaveResult {
   try {
-    storage.setItem(STORAGE_KEY, JSON.stringify(state))
+    const targetStorage = storage ?? defaultStorage()
+    targetStorage.setItem(STORAGE_KEY, JSON.stringify(state))
     return { ok: true }
   } catch (error) {
     return { ok: false, error: asError(error) }
