@@ -20,7 +20,7 @@ No behavior change except A0. A1 may change date labels to the formats in the sp
   - Manual check on the phone (see `TESTING.md` items 1 and 2) is required before A0 can be marked done. Owner authorized continuing while these checks remain pending.
 - [x] **A1** `src/lib/format.ts` with `formatMoney` and date formatters, tested. Replace the five copies of `formatAmount` [X-02]. One date format everywhere [G-07]. No visible change except dates.
 - [x] **A2** Register colours and type sizes in Tailwind `@theme` (names in `UI_UX_SPEC.md`). Replace arbitrary values such as `text-[color:var(--text-muted)]` and `text-[34px]` with token classes [X-03]. Screens look the same as before.
-- [ ] **A3** Shared `Sheet`, `ConfirmDialog` and `ListGroup` components. Use them in `SpendTab` and `PlanTab`, then split those files into smaller parts [X-04].
+- [x] **A3** Shared `Sheet`, `ConfirmDialog` and `ListGroup` components. Use them in `SpendTab` and `PlanTab`, then split those files into smaller parts [X-04].
 - [ ] **A4** Keep an unsaved Spend amount when switching tabs [X-05].
 - [ ] **A5** Cleanup in one commit [X-06, X-07]: remove the stray `@/` folder (first check nothing imports it), unused Vite template files (`src/App.css`, `src/assets/*`), committed `.DS_Store` files (add to `.gitignore`), the unrelated `cn` package (use `clsx` plus `tailwind-merge` in `src/lib/cn.ts`), `@fontsource-variable/geist`, and move `shadcn` out of runtime dependencies. Update this file and `README.md`.
 
@@ -60,4 +60,4 @@ No behavior change except A0. A1 may change date labels to the formats in the sp
 
 ## Current task
 
-A3: shared `Sheet`, `ConfirmDialog` and `ListGroup` components.
+A4: keep an unsaved Spend amount when switching tabs.

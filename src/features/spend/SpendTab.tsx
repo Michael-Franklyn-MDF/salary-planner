@@ -3,6 +3,9 @@ import { today } from '@/domain/dates'
 import { formatMoney, formatShortDate } from '@/lib/format'
 import type { DailySpend } from '@/domain/types'
 import { useAppState } from '@/state/useAppState'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { ListGroup } from '@/components/ListGroup'
+import { Sheet } from '@/components/Sheet'
 import { Keypad } from './Keypad'
 
 type KeypadKey = Parameters<ComponentProps<typeof Keypad>['onKeyPress']>[0]
@@ -211,7 +214,7 @@ export function SpendTab() {
             <p className="rounded-xl bg-surface px-4 py-5 text-subhead text-muted">No spending logged yet.</p>
           ) : (
             Object.entries(groupedEntries).map(([entryDate, entries]) => (
-              <div key={entryDate} className="overflow-hidden rounded-xl bg-surface">
+              <ListGroup key={entryDate}>
                 <div className="flex items-center justify-between border-b border-separator px-4 py-3">
                   <h3 className="text-subhead font-semibold">{formatShortDate(entryDate)}</h3>
                   <span className="text-subhead tabular-nums text-muted">
@@ -235,22 +238,14 @@ export function SpendTab() {
                     </button>
                   )
                 })}
-              </div>
+              </ListGroup>
             ))
           )}
         </section>
       </div>
 
-      {editing && (
-        <div className="fixed inset-0 z-50 flex items-end bg-black/40" role="presentation" onMouseDown={(event) => {
-          if (event.target === event.currentTarget) closeEdit()
-        }}>
-          <section role="dialog" aria-modal="true" aria-labelledby="spend-editor-title" className="w-full rounded-t-2xl bg-surface p-5 pb-[calc(20px+env(safe-area-inset-bottom))]">
-            <div className="mx-auto mb-4 h-1 w-9 rounded-full bg-separator" />
-            <div className="mb-5 flex items-center justify-between">
-              <h2 id="spend-editor-title" className="text-section font-semibold">Edit spending</h2>
-              <button type="button" className="text-accent" onClick={closeEdit}>Cancel</button>
-            </div>
+      <Sheet open={editing !== null} title="Edit spending" titleId="spend-editor-title" onClose={closeEdit}>
+        {editing && (
             <form className="space-y-4" onSubmit={(event) => { event.preventDefault(); saveEdit() }}>
               <label className="block space-y-1">
                 <span className="text-footnote text-muted">Amount</span>
@@ -283,18 +278,11 @@ export function SpendTab() {
                 </div>
               )}
             </form>
-          </section>
-        </div>
-      )}
+        )}
+      </Sheet>
 
-      {categoriesOpen && (
-        <div className="fixed inset-0 z-50 flex items-end bg-black/40" role="presentation" onMouseDown={(event) => {
-          if (event.target === event.currentTarget) setCategoriesOpen(false)
-        }}>
-          <section role="dialog" aria-modal="true" aria-labelledby="categories-title" className="w-full rounded-t-2xl bg-surface p-5 pb-[calc(20px+env(safe-area-inset-bottom))]">
-            <div className="mx-auto mb-4 h-1 w-9 rounded-full bg-separator" />
-            <div className="mb-5 flex items-center justify-between">
-              <h2 id="categories-title" className="text-section font-semibold">Categories</h2>
+      <Sheet open={categoriesOpen} title="Categories" titleId="categories-title" onClose={() => setCategoriesOpen(false)}>
+            <div className="mb-5 flex justify-end">
               <button type="button" className="text-accent" onClick={() => setCategoriesOpen(false)}>Done</button>
             </div>
             <div className="space-y-2">
@@ -317,23 +305,24 @@ export function SpendTab() {
                   )}
                 </div>
               ))}
-              {categoryDeleteId && (
-                <div className="rounded-xl bg-surface-2 p-3" role="alertdialog" aria-label="Confirm category deletion">
-                  <p>Delete this category? Its entries will move to Other.</p>
-                  <div className="mt-2 flex gap-2">
-                    <button type="button" className="min-h-11 flex-1 rounded-lg bg-surface" onClick={() => setCategoryDeleteId(null)}>Cancel</button>
-                    <button type="button" className="min-h-11 flex-1 rounded-lg bg-bad font-semibold text-white" onClick={() => { dispatch({ type: 'deleteCategory', id: categoryDeleteId }); if (category === categoryDeleteId) setCategory('cat-other'); setCategoryDeleteId(null) }}>Delete</button>
-                  </div>
-                </div>
-              )}
               <div className="flex gap-2 pt-2">
                 <input aria-label="New category" value={editingCategoryId ? '' : categoryName} onChange={(event) => setCategoryName(event.target.value)} placeholder="New category" className="min-h-11 min-w-0 flex-1 rounded-lg bg-surface-2 px-3" />
                 <button type="button" className="min-h-11 rounded-lg bg-accent px-4 font-semibold text-white" onClick={saveCategory}>Add</button>
               </div>
             </div>
-          </section>
-        </div>
-      )}
+      </Sheet>
+      <ConfirmDialog
+        open={categoryDeleteId !== null}
+        title="Delete this category? Its entries will move to Other."
+        confirmLabel="Delete"
+        onCancel={() => setCategoryDeleteId(null)}
+        onConfirm={() => {
+          if (!categoryDeleteId) return
+          dispatch({ type: 'deleteCategory', id: categoryDeleteId })
+          if (category === categoryDeleteId) setCategory('cat-other')
+          setCategoryDeleteId(null)
+        }}
+      />
     </main>
   )
 }

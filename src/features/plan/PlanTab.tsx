@@ -3,6 +3,9 @@ import type { AppState, Debt, OneOffCost, RecurringExpense } from '@/domain/type
 import { formatMoney, formatShortDate } from '@/lib/format'
 import { useAppState } from '@/state/useAppState'
 import { exportBackup, importBackup } from '@/storage/backup'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { ListGroup } from '@/components/ListGroup'
+import { Sheet } from '@/components/Sheet'
 
 type ItemKind = 'recurring' | 'oneOff' | 'debt'
 type Editor = { kind: 'income' } | { kind: ItemKind; id?: string }
@@ -67,7 +70,7 @@ function PlanGroup<T extends RecurringExpense | OneOffCost | Debt>({
       <h2 id={`${kind}-heading`} className="px-4 text-footnote font-medium uppercase tracking-wide text-muted">
         {title}
       </h2>
-      <div className="overflow-hidden rounded-xl bg-surface">
+      <ListGroup>
         {items.map((item) => {
           const date = itemDate(item)
           return (
@@ -94,7 +97,7 @@ function PlanGroup<T extends RecurringExpense | OneOffCost | Debt>({
         >
           Add {kind === 'recurring' ? 'recurring expense' : kind === 'oneOff' ? 'one-off cost' : 'debt'}
         </button>
-      </div>
+      </ListGroup>
     </section>
   )
 }
@@ -197,12 +200,12 @@ export function PlanTab() {
 
       <section aria-labelledby="income-heading" className="space-y-2">
         <h2 id="income-heading" className="px-4 text-footnote font-medium uppercase tracking-wide text-muted">Income</h2>
-        <div className="overflow-hidden rounded-xl bg-surface">
+        <ListGroup>
           <button type="button" className="flex min-h-16 w-full items-center justify-between px-4 text-left" onClick={() => openEditor({ kind: 'income' })}>
             <span className="text-body">Monthly take-home</span>
             <span className="tabular-nums">{formatMoney(state.income)}</span>
           </button>
-        </div>
+        </ListGroup>
       </section>
 
       <PlanGroup title="Recurring expenses" items={state.recurring} kind="recurring" onAdd={(kind) => openEditor({ kind })} onEdit={(kind, id) => openEditor({ kind, id })} />
@@ -211,7 +214,7 @@ export function PlanTab() {
 
       <section aria-labelledby="data-heading" className="space-y-2">
         <h2 id="data-heading" className="px-4 text-footnote font-medium uppercase tracking-wide text-muted">Data</h2>
-        <div className="overflow-hidden rounded-xl bg-surface">
+        <ListGroup>
           <button type="button" className="min-h-12 w-full border-b border-separator px-4 text-left text-accent" onClick={downloadBackup}>Export backup</button>
           <label className="block min-h-12 cursor-pointer border-b border-separator px-4 leading-[48px] text-accent">
             Import backup
@@ -227,33 +230,21 @@ export function PlanTab() {
             />
           </label>
           <button type="button" className="min-h-12 w-full px-4 text-left text-bad" onClick={() => setConfirmClear(true)}>Clear all data</button>
-        </div>
+        </ListGroup>
         {importError && <p role="alert" className="px-4 text-footnote text-bad">{importError}</p>}
       </section>
 
-      {confirmClear && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-5" role="presentation">
-          <section role="alertdialog" aria-modal="true" aria-labelledby="clear-title" className="w-full max-w-sm rounded-2xl bg-surface p-5">
-            <h2 id="clear-title" className="text-section font-semibold">Clear all data?</h2>
-            <p className="mt-2 text-subhead text-muted">This cannot be undone. Export a backup first if you may need this data.</p>
-            <div className="mt-5 flex gap-2">
-              <button type="button" className="min-h-11 flex-1 rounded-lg bg-surface-2" onClick={() => setConfirmClear(false)}>Cancel</button>
-              <button type="button" className="min-h-11 flex-1 rounded-lg bg-bad font-semibold text-white" onClick={() => { dispatch({ type: 'clear' }); setConfirmClear(false) }}>Clear all data</button>
-            </div>
-          </section>
-        </div>
-      )}
+      <ConfirmDialog
+        open={confirmClear}
+        title="Clear all data?"
+        description="This cannot be undone. Export a backup first if you may need this data."
+        confirmLabel="Clear all data"
+        onCancel={() => setConfirmClear(false)}
+        onConfirm={() => { dispatch({ type: 'clear' }); setConfirmClear(false) }}
+      />
 
-      {editor && (
-        <div className="fixed inset-0 z-50 flex items-end bg-black/40" role="presentation" onMouseDown={(event) => {
-          if (event.target === event.currentTarget) closeEditor()
-        }}>
-          <section role="dialog" aria-modal="true" aria-labelledby="editor-title" className="w-full rounded-t-2xl bg-surface p-5 pb-[calc(20px+env(safe-area-inset-bottom))]">
-            <div className="mx-auto mb-4 h-1 w-9 rounded-full bg-separator" />
-            <div className="mb-5 flex items-center justify-between">
-              <h2 id="editor-title" className="text-section font-semibold">{editor.kind === 'income' ? 'Income' : editor.id ? 'Edit item' : 'Add item'}</h2>
-              <button type="button" className="text-accent" onClick={closeEditor}>Cancel</button>
-            </div>
+      <Sheet open={editor !== null} title={editor?.kind === 'income' ? 'Income' : editor?.id ? 'Edit item' : 'Add item'} titleId="editor-title" onClose={closeEditor}>
+        {editor && (
             <form className="space-y-4" onSubmit={(event) => { event.preventDefault(); save() }}>
               {editor.kind !== 'income' && (
                 <label className="block space-y-1">
@@ -303,9 +294,8 @@ export function PlanTab() {
                 </div>
               )}
             </form>
-          </section>
-        </div>
-      )}
+        )}
+      </Sheet>
     </main>
   )
 }
