@@ -26,7 +26,7 @@ No behavior change except A0. A1 may change date labels to the formats in the sp
 
 ## Phase B: Behavior
 
-- [ ] **B1** Cold-launch sequence on Home: `useColdLaunch()` with a `sessionStorage` flag. Ring draws and number counts up under 900 ms, bars slide in. Never on tab switches. Instant under reduced motion [B-01].
+- [x] **B1** Cold-launch sequence on Home: `useColdLaunch()` with a `sessionStorage` flag. Ring draws and number counts up under 900 ms, bars slide in. Never on tab switches. Instant under reduced motion [B-01].
 - [ ] **B2** Bilingual greeting: `lib/greetings.ts` (English, Spanish). Shows the first, swaps once, stays. Same cold-launch rule [B-02, G-05].
 - [ ] **B3** Home first-run state: neutral zero and an EmptyState with an Open Plan button [H-04].
 - [ ] **B4** Spend fits one view: amount, chips, all 12 keys and Add visible without scrolling on a 360 x 640 viewport, amount visible while typing [S-01].
@@ -60,4 +60,4 @@ No behavior change except A0. A1 may change date labels to the formats in the sp
 
 ## Current task
 
-B1: cold-launch sequence on Home.
+B2: bilingual greeting.

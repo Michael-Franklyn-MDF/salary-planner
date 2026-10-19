@@ -3,24 +3,57 @@ import { today } from '@/domain/dates'
 import { dueItemsForRange, type CalendarDueItem } from '@/domain/calendar'
 import { formatMoney, formatShortDate } from '@/lib/format'
 import { useAppState } from '@/state/useAppState'
+import { Ring } from '@/components/Ring'
+import { useColdLaunch, useReducedMotion } from '@/hooks/useColdLaunch'
+import { useEffect, useState } from 'react'
 
-export function HomeTab({ onOpenCalendar }: HomeTabProps = {}) {
+export function HomeTab({ onOpenCalendar, coldLaunch }: HomeTabProps = {}) {
+  const detectedColdLaunch = useColdLaunch()
+  return <HomeTabContent coldLaunch={coldLaunch ?? detectedColdLaunch} onOpenCalendar={onOpenCalendar} />
+}
+
+interface HomeTabContentProps extends HomeTabProps {
+  coldLaunch: boolean
+}
+
+function HomeTabContent({ onOpenCalendar, coldLaunch }: HomeTabContentProps) {
   const { state } = useAppState()
   const [year, month, day] = today().split('-').map(Number)
   const rangeEnd = new Date(year, month - 1, day + 14)
   const rangeEndString = `${rangeEnd.getFullYear()}-${String(rangeEnd.getMonth() + 1).padStart(2, '0')}-${String(rangeEnd.getDate()).padStart(2, '0')}`
   const upcoming = dueItemsForRange(state, today(), rangeEndString).slice(0, 3)
-  return <HomeContent upcoming={upcoming} onOpenCalendar={onOpenCalendar} />
+  return <HomeContent upcoming={upcoming} coldLaunch={coldLaunch} onOpenCalendar={onOpenCalendar} />
 }
 
 interface HomeTabProps {
   onOpenCalendar?: (date: string) => void
+  coldLaunch?: boolean
 }
 
-function HomeContent({ onOpenCalendar, upcoming }: HomeTabProps & { upcoming: Array<CalendarDueItem & { date: string }> }) {
+function HomeContent({ onOpenCalendar, upcoming, coldLaunch }: HomeTabProps & { upcoming: Array<CalendarDueItem & { date: string }>; coldLaunch: boolean }) {
   const { state } = useAppState()
+  const reducedMotion = useReducedMotion()
   const summary = calculateSummary(state, today())
   const overspent = summary.remainingToSpend < 0
+  const shouldAnimate = coldLaunch && !reducedMotion
+  const [animatedAmount, setAnimatedAmount] = useState(0)
+  const displayedAmount = shouldAnimate ? animatedAmount : summary.remainingToSpend
+  const progress = summary.remaining > 0 ? summary.remainingToSpend / summary.remaining : 0
+
+  useEffect(() => {
+    if (!shouldAnimate) return
+
+    const start = performance.now()
+    const duration = 800
+    let frame = 0
+    const animate = (now: number) => {
+      const fraction = Math.min(1, (now - start) / duration)
+      setAnimatedAmount(summary.remainingToSpend * fraction)
+      if (fraction < 1) frame = requestAnimationFrame(animate)
+    }
+    frame = requestAnimationFrame(animate)
+    return () => cancelAnimationFrame(frame)
+  }, [shouldAnimate, summary.remainingToSpend])
   const summaryCards: Array<[string, number]> = [
     ['Income', summary.income],
     ['Recurring', summary.recurringTotal],
@@ -34,12 +67,15 @@ function HomeContent({ onOpenCalendar, upcoming }: HomeTabProps & { upcoming: Ar
       <h1 className="text-large-title font-bold tracking-tight">Home</h1>
       <section className="rounded-2xl bg-surface p-6 text-center" aria-labelledby="left-to-spend-heading">
         <p id="left-to-spend-heading" className="text-subhead text-muted">{overspent ? 'Over by this month' : 'Left to spend'}</p>
-        <p
-          aria-label={`Left to spend, ${formatMoney(summary.remainingToSpend)}`}
-          className={`mt-2 overflow-hidden text-hero font-semibold tabular-nums ${overspent ? 'text-bad' : 'text-good'}`}
-        >
-          {formatMoney(summary.remainingToSpend)}
-        </p>
+        <div className="mt-2 flex items-center justify-center gap-4">
+          <p
+            aria-label={`Left to spend, ${formatMoney(summary.remainingToSpend)}`}
+            className={`overflow-hidden text-hero font-semibold tabular-nums ${overspent ? 'text-bad' : 'text-good'}`}
+          >
+            {formatMoney(displayedAmount)}
+          </p>
+          <Ring progress={progress} animate={shouldAnimate} />
+        </div>
         <p className="mt-2 text-footnote text-muted">after commitments and this month's spending</p>
       </section>
       <div className="flex items-center justify-between rounded-xl bg-surface px-4 py-4">
