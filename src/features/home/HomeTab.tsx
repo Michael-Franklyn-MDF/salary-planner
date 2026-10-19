@@ -31,44 +31,44 @@ function HomeContent({ onOpenCalendar, upcoming }: HomeTabProps & { upcoming: Ar
 
   return (
     <main id="home-panel" role="tabpanel" aria-labelledby="home-tab" className="mx-auto max-w-[480px] space-y-6 px-4 pb-32 pt-8">
-      <h1 className="text-[34px] font-bold leading-[41px] tracking-tight">Home</h1>
-      <section className="rounded-2xl bg-[color:var(--surface)] p-6 text-center" aria-labelledby="left-to-spend-heading">
-        <p id="left-to-spend-heading" className="text-[15px] text-[color:var(--text-muted)]">{overspent ? 'Over by this month' : 'Left to spend'}</p>
+      <h1 className="text-large-title font-bold tracking-tight">Home</h1>
+      <section className="rounded-2xl bg-surface p-6 text-center" aria-labelledby="left-to-spend-heading">
+        <p id="left-to-spend-heading" className="text-subhead text-muted">{overspent ? 'Over by this month' : 'Left to spend'}</p>
         <p
           aria-label={`Left to spend, ${formatMoney(summary.remainingToSpend)}`}
-          className={`mt-2 overflow-hidden text-[52px] font-semibold leading-[56px] tabular-nums ${overspent ? 'text-[color:var(--bad)]' : 'text-[color:var(--good)]'}`}
+          className={`mt-2 overflow-hidden text-hero font-semibold tabular-nums ${overspent ? 'text-bad' : 'text-good'}`}
         >
           {formatMoney(summary.remainingToSpend)}
         </p>
-        <p className="mt-2 text-[13px] text-[color:var(--text-muted)]">after commitments and this month's spending</p>
+        <p className="mt-2 text-footnote text-muted">after commitments and this month's spending</p>
       </section>
-      <div className="flex items-center justify-between rounded-xl bg-[color:var(--surface)] px-4 py-4">
-        <span className="text-[17px]">After commitments</span>
-        <span className="text-[17px] font-semibold tabular-nums">{formatMoney(summary.remaining)}</span>
+      <div className="flex items-center justify-between rounded-xl bg-surface px-4 py-4">
+        <span className="text-body">After commitments</span>
+        <span className="text-headline font-semibold tabular-nums">{formatMoney(summary.remaining)}</span>
       </div>
       <section aria-labelledby="summary-heading" className="space-y-2">
-        <h2 id="summary-heading" className="px-1 text-[13px] font-medium uppercase tracking-wide text-[color:var(--text-muted)]">Summary</h2>
+        <h2 id="summary-heading" className="px-1 text-footnote font-medium uppercase tracking-wide text-muted">Summary</h2>
         <div className="grid grid-cols-2 gap-3">
           {summaryCards.map(([label, amount], index) => (
-            <div key={label} className={`rounded-xl bg-[color:var(--surface)] p-4 ${index === summaryCards.length - 1 ? 'col-span-2' : ''}`}>
-              <p className="text-[13px] text-[color:var(--text-muted)]">{label}</p>
-              <p className="mt-1 text-[17px] font-semibold tabular-nums">{formatMoney(amount)}</p>
+            <div key={label} className={`rounded-xl bg-surface p-4 ${index === summaryCards.length - 1 ? 'col-span-2' : ''}`}>
+              <p className="text-footnote text-muted">{label}</p>
+              <p className="mt-1 text-headline font-semibold tabular-nums">{formatMoney(amount)}</p>
             </div>
           ))}
         </div>
       </section>
       <section aria-labelledby="coming-up-heading" className="space-y-2">
-        <h2 id="coming-up-heading" className="px-1 text-[13px] font-medium uppercase tracking-wide text-[color:var(--text-muted)]">Coming up</h2>
-        <div className="overflow-hidden rounded-xl bg-[color:var(--surface)]">
+        <h2 id="coming-up-heading" className="px-1 text-footnote font-medium uppercase tracking-wide text-muted">Coming up</h2>
+        <div className="overflow-hidden rounded-xl bg-surface">
           {upcoming.length === 0 ? (
-            <p className="px-4 py-5 text-[15px] text-[color:var(--text-muted)]">Nothing due in the next 14 days.</p>
+            <p className="px-4 py-5 text-subhead text-muted">Nothing due in the next 14 days.</p>
           ) : upcoming.map((entry) => {
             const name = entry.item.name || 'Unnamed'
             return (
-              <button key={`${entry.kind}-${entry.item.id}-${entry.date}`} type="button" className="flex min-h-16 w-full items-center justify-between border-b border-[color:var(--separator)] px-4 text-left last:border-b-0" onClick={() => onOpenCalendar?.(entry.date)}>
+              <button key={`${entry.kind}-${entry.item.id}-${entry.date}`} type="button" className="flex min-h-16 w-full items-center justify-between border-b border-separator px-4 text-left last:border-b-0" onClick={() => onOpenCalendar?.(entry.date)}>
                 <span>
-                  <span className="block text-[17px]">{name}</span>
-                  <span className="block text-[13px] text-[color:var(--text-muted)]">{formatShortDate(entry.date)}</span>
+                  <span className="block text-body">{name}</span>
+                  <span className="block text-footnote text-muted">{formatShortDate(entry.date)}</span>
                 </span>
                 <span className="ml-4 shrink-0 tabular-nums">{formatMoney(entry.item.amount)}</span>
               </button>

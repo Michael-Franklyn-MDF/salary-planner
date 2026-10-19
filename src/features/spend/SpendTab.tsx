@@ -129,26 +129,26 @@ export function SpendTab() {
 
   return (
     <main id="spend-panel" role="tabpanel" aria-labelledby="spend-tab" className="mx-auto flex min-h-[calc(100svh-49px)] max-w-[480px] flex-col space-y-6 px-4 pb-32 pt-8">
-      <h1 className="text-[34px] font-bold leading-[41px] tracking-tight">Spend</h1>
+      <h1 className="text-large-title font-bold tracking-tight">Spend</h1>
 
       <div className="flex flex-1 flex-col justify-end gap-6">
         <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-xl bg-[color:var(--surface)] p-4">
-            <p className="text-[13px] text-[color:var(--text-muted)]">Today</p>
-            <p className="mt-1 text-[20px] font-semibold tabular-nums">{formatMoney(todayTotal)}</p>
+          <div className="rounded-xl bg-surface p-4">
+            <p className="text-footnote text-muted">Today</p>
+            <p className="mt-1 text-section font-semibold tabular-nums">{formatMoney(todayTotal)}</p>
           </div>
-          <div className="rounded-xl bg-[color:var(--surface)] p-4">
-            <p className="text-[13px] text-[color:var(--text-muted)]">This month</p>
-            <p className="mt-1 text-[20px] font-semibold tabular-nums">{formatMoney(monthTotal)}</p>
+          <div className="rounded-xl bg-surface p-4">
+            <p className="text-footnote text-muted">This month</p>
+            <p className="mt-1 text-section font-semibold tabular-nums">{formatMoney(monthTotal)}</p>
           </div>
         </div>
 
         <div
           role="status"
           aria-label={`Amount KSh ${amount || '0'}`}
-          className="overflow-hidden text-center text-[52px] font-semibold leading-[56px] tabular-nums"
+          className="overflow-hidden text-center text-hero font-semibold tabular-nums"
         >
-          <span className="mr-2 text-[17px] font-normal leading-[22px] text-[color:var(--text-muted)]">KSh</span>{' '}
+          <span className="mr-2 text-body font-normal leading-[22px] text-muted">KSh</span>{' '}
           {amount || '0'}
         </div>
 
@@ -158,10 +158,10 @@ export function SpendTab() {
               key={item.id}
               type="button"
               aria-pressed={category === item.id}
-              className={`min-h-11 shrink-0 rounded-full px-4 text-[15px] transition-colors motion-reduce:transition-none ${
+              className={`min-h-11 shrink-0 rounded-full px-4 text-subhead transition-colors motion-reduce:transition-none ${
                 category === item.id
-                  ? 'bg-[color:var(--accent)] text-white'
-                  : 'bg-[color:var(--surface)] text-[color:var(--text)]'
+                  ? 'bg-accent text-white'
+                  : 'bg-surface text-foreground'
               }`}
               onClick={() => setCategory(item.id)}
             >
@@ -169,17 +169,17 @@ export function SpendTab() {
             </button>
           ))}
         </div>
-        <button type="button" className="min-h-11 text-left text-[15px] text-[color:var(--accent)]" onClick={openCategories}>Manage categories</button>
+        <button type="button" className="min-h-11 text-left text-subhead text-accent" onClick={openCategories}>Manage categories</button>
 
         <div className="grid gap-3">
-          <label className="flex min-h-12 items-center justify-between rounded-xl bg-[color:var(--surface)] px-4">
-            <span className="text-[15px] text-[color:var(--text-muted)]">Date</span>
+          <label className="flex min-h-12 items-center justify-between rounded-xl bg-surface px-4">
+            <span className="text-subhead text-muted">Date</span>
             <input
               aria-label="Spend date"
               type="date"
               value={date}
               onChange={(event) => setDate(event.target.value)}
-              className="bg-transparent text-right text-[15px]"
+              className="bg-transparent text-right text-subhead"
             />
           </label>
           <label className="block">
@@ -189,7 +189,7 @@ export function SpendTab() {
               value={note}
               onChange={(event) => setNote(event.target.value)}
               placeholder="Add a note (optional)"
-              className="min-h-12 w-full rounded-xl bg-[color:var(--surface)] px-4 text-[15px] placeholder:text-[color:var(--text-muted)]"
+              className="min-h-12 w-full rounded-xl bg-surface px-4 text-subhead placeholder:text-muted"
             />
           </label>
         </div>
@@ -198,7 +198,7 @@ export function SpendTab() {
 
         <button
           type="button"
-          className="min-h-12 w-full rounded-xl bg-[color:var(--accent)] font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
+          className="min-h-12 w-full rounded-xl bg-accent font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
           disabled={!Number.isFinite(numericAmount) || numericAmount <= 0}
           onClick={addSpend}
         >
@@ -206,15 +206,15 @@ export function SpendTab() {
         </button>
 
         <section aria-labelledby="recent-heading" className="space-y-3">
-          <h2 id="recent-heading" className="px-1 text-[13px] font-medium uppercase tracking-wide text-[color:var(--text-muted)]">Recent</h2>
+          <h2 id="recent-heading" className="px-1 text-footnote font-medium uppercase tracking-wide text-muted">Recent</h2>
           {Object.keys(groupedEntries).length === 0 ? (
-            <p className="rounded-xl bg-[color:var(--surface)] px-4 py-5 text-[15px] text-[color:var(--text-muted)]">No spending logged yet.</p>
+            <p className="rounded-xl bg-surface px-4 py-5 text-subhead text-muted">No spending logged yet.</p>
           ) : (
             Object.entries(groupedEntries).map(([entryDate, entries]) => (
-              <div key={entryDate} className="overflow-hidden rounded-xl bg-[color:var(--surface)]">
-                <div className="flex items-center justify-between border-b border-[color:var(--separator)] px-4 py-3">
-                  <h3 className="text-[15px] font-semibold">{formatShortDate(entryDate)}</h3>
-                  <span className="text-[15px] tabular-nums text-[color:var(--text-muted)]">
+              <div key={entryDate} className="overflow-hidden rounded-xl bg-surface">
+                <div className="flex items-center justify-between border-b border-separator px-4 py-3">
+                  <h3 className="text-subhead font-semibold">{formatShortDate(entryDate)}</h3>
+                  <span className="text-subhead tabular-nums text-muted">
                     {formatMoney(entries.reduce((sum, item) => sum + item.amount, 0))}
                   </span>
                 </div>
@@ -224,12 +224,12 @@ export function SpendTab() {
                     <button
                       key={item.id}
                       type="button"
-                      className="flex min-h-14 w-full items-center justify-between border-b border-[color:var(--separator)] px-4 text-left last:border-b-0"
+                      className="flex min-h-14 w-full items-center justify-between border-b border-separator px-4 text-left last:border-b-0"
                       onClick={() => openEdit(item)}
                     >
                       <span className="min-w-0">
-                        <span className="block truncate text-[17px]">{itemCategory}</span>
-                        {item.note && <span className="block truncate text-[13px] text-[color:var(--text-muted)]">{item.note}</span>}
+                        <span className="block truncate text-body">{itemCategory}</span>
+                        {item.note && <span className="block truncate text-footnote text-muted">{item.note}</span>}
                       </span>
                       <span className="ml-4 shrink-0 tabular-nums">{formatMoney(item.amount)}</span>
                     </button>
@@ -245,40 +245,40 @@ export function SpendTab() {
         <div className="fixed inset-0 z-50 flex items-end bg-black/40" role="presentation" onMouseDown={(event) => {
           if (event.target === event.currentTarget) closeEdit()
         }}>
-          <section role="dialog" aria-modal="true" aria-labelledby="spend-editor-title" className="w-full rounded-t-2xl bg-[color:var(--surface)] p-5 pb-[calc(20px+env(safe-area-inset-bottom))]">
-            <div className="mx-auto mb-4 h-1 w-9 rounded-full bg-[color:var(--separator)]" />
+          <section role="dialog" aria-modal="true" aria-labelledby="spend-editor-title" className="w-full rounded-t-2xl bg-surface p-5 pb-[calc(20px+env(safe-area-inset-bottom))]">
+            <div className="mx-auto mb-4 h-1 w-9 rounded-full bg-separator" />
             <div className="mb-5 flex items-center justify-between">
-              <h2 id="spend-editor-title" className="text-[20px] font-semibold">Edit spending</h2>
-              <button type="button" className="text-[color:var(--accent)]" onClick={closeEdit}>Cancel</button>
+              <h2 id="spend-editor-title" className="text-section font-semibold">Edit spending</h2>
+              <button type="button" className="text-accent" onClick={closeEdit}>Cancel</button>
             </div>
             <form className="space-y-4" onSubmit={(event) => { event.preventDefault(); saveEdit() }}>
               <label className="block space-y-1">
-                <span className="text-[13px] text-[color:var(--text-muted)]">Amount</span>
-                <input aria-label="Edit amount" required inputMode="decimal" value={editAmount} onChange={(event) => setEditAmount(event.target.value)} className="min-h-11 w-full rounded-lg bg-[color:var(--surface-2)] px-3" />
+                <span className="text-footnote text-muted">Amount</span>
+                <input aria-label="Edit amount" required inputMode="decimal" value={editAmount} onChange={(event) => setEditAmount(event.target.value)} className="min-h-11 w-full rounded-lg bg-surface-2 px-3" />
               </label>
               <label className="block space-y-1">
-                <span className="text-[13px] text-[color:var(--text-muted)]">Category</span>
-                <select aria-label="Edit category" value={editCategory} onChange={(event) => setEditCategory(event.target.value)} className="min-h-11 w-full rounded-lg bg-[color:var(--surface-2)] px-3">
+                <span className="text-footnote text-muted">Category</span>
+                <select aria-label="Edit category" value={editCategory} onChange={(event) => setEditCategory(event.target.value)} className="min-h-11 w-full rounded-lg bg-surface-2 px-3">
                   {state.categories.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
                 </select>
               </label>
               <label className="block space-y-1">
-                <span className="text-[13px] text-[color:var(--text-muted)]">Date</span>
-                <input aria-label="Edit date" type="date" value={editDate} onChange={(event) => setEditDate(event.target.value)} className="min-h-11 w-full rounded-lg bg-[color:var(--surface-2)] px-3" />
+                <span className="text-footnote text-muted">Date</span>
+                <input aria-label="Edit date" type="date" value={editDate} onChange={(event) => setEditDate(event.target.value)} className="min-h-11 w-full rounded-lg bg-surface-2 px-3" />
               </label>
               <label className="block space-y-1">
-                <span className="text-[13px] text-[color:var(--text-muted)]">Note</span>
-                <textarea aria-label="Edit note" value={editNote} onChange={(event) => setEditNote(event.target.value)} className="min-h-20 w-full rounded-lg bg-[color:var(--surface-2)] px-3 py-2" />
+                <span className="text-footnote text-muted">Note</span>
+                <textarea aria-label="Edit note" value={editNote} onChange={(event) => setEditNote(event.target.value)} className="min-h-20 w-full rounded-lg bg-surface-2 px-3 py-2" />
               </label>
-              <button type="submit" className="min-h-12 w-full rounded-xl bg-[color:var(--accent)] font-semibold text-white">Save</button>
+              <button type="submit" className="min-h-12 w-full rounded-xl bg-accent font-semibold text-white">Save</button>
               {!confirmDelete ? (
-                <button type="button" className="min-h-11 w-full text-[color:var(--bad)]" onClick={() => setConfirmDelete(true)}>Delete</button>
+                <button type="button" className="min-h-11 w-full text-bad" onClick={() => setConfirmDelete(true)}>Delete</button>
               ) : (
-                <div className="space-y-2 rounded-xl bg-[color:var(--surface-2)] p-3" role="alertdialog" aria-label="Confirm spending deletion">
+                <div className="space-y-2 rounded-xl bg-surface-2 p-3" role="alertdialog" aria-label="Confirm spending deletion">
                   <p>Delete this spending entry?</p>
                   <div className="flex gap-2">
-                    <button type="button" className="min-h-11 flex-1 rounded-lg bg-[color:var(--surface)]" onClick={() => setConfirmDelete(false)}>Cancel</button>
-                    <button type="button" className="min-h-11 flex-1 rounded-lg bg-[color:var(--bad)] font-semibold text-white" onClick={deleteEdit}>Delete</button>
+                    <button type="button" className="min-h-11 flex-1 rounded-lg bg-surface" onClick={() => setConfirmDelete(false)}>Cancel</button>
+                    <button type="button" className="min-h-11 flex-1 rounded-lg bg-bad font-semibold text-white" onClick={deleteEdit}>Delete</button>
                   </div>
                 </div>
               )}
@@ -291,15 +291,15 @@ export function SpendTab() {
         <div className="fixed inset-0 z-50 flex items-end bg-black/40" role="presentation" onMouseDown={(event) => {
           if (event.target === event.currentTarget) setCategoriesOpen(false)
         }}>
-          <section role="dialog" aria-modal="true" aria-labelledby="categories-title" className="w-full rounded-t-2xl bg-[color:var(--surface)] p-5 pb-[calc(20px+env(safe-area-inset-bottom))]">
-            <div className="mx-auto mb-4 h-1 w-9 rounded-full bg-[color:var(--separator)]" />
+          <section role="dialog" aria-modal="true" aria-labelledby="categories-title" className="w-full rounded-t-2xl bg-surface p-5 pb-[calc(20px+env(safe-area-inset-bottom))]">
+            <div className="mx-auto mb-4 h-1 w-9 rounded-full bg-separator" />
             <div className="mb-5 flex items-center justify-between">
-              <h2 id="categories-title" className="text-[20px] font-semibold">Categories</h2>
-              <button type="button" className="text-[color:var(--accent)]" onClick={() => setCategoriesOpen(false)}>Done</button>
+              <h2 id="categories-title" className="text-section font-semibold">Categories</h2>
+              <button type="button" className="text-accent" onClick={() => setCategoriesOpen(false)}>Done</button>
             </div>
             <div className="space-y-2">
               {state.categories.map((item) => (
-                <div key={item.id} className="flex min-h-12 items-center gap-2 rounded-xl bg-[color:var(--surface-2)] px-3">
+                <div key={item.id} className="flex min-h-12 items-center gap-2 rounded-xl bg-surface-2 px-3">
                   {editingCategoryId === item.id ? (
                     <input aria-label={`Rename ${item.name}`} autoFocus value={categoryName} onChange={(event) => setCategoryName(event.target.value)} className="min-w-0 flex-1 bg-transparent" />
                   ) : (
@@ -307,28 +307,28 @@ export function SpendTab() {
                   )}
                   {item.id !== 'cat-other' && (
                     editingCategoryId === item.id ? (
-                      <button type="button" className="text-[color:var(--accent)]" onClick={saveCategory}>Save</button>
+                      <button type="button" className="text-accent" onClick={saveCategory}>Save</button>
                     ) : (
                       <>
-                        <button type="button" className="text-[color:var(--accent)]" onClick={() => { setEditingCategoryId(item.id); setCategoryName(item.name) }}>Rename</button>
-                        <button type="button" className="text-[color:var(--bad)]" onClick={() => setCategoryDeleteId(item.id)}>Delete</button>
+                        <button type="button" className="text-accent" onClick={() => { setEditingCategoryId(item.id); setCategoryName(item.name) }}>Rename</button>
+                        <button type="button" className="text-bad" onClick={() => setCategoryDeleteId(item.id)}>Delete</button>
                       </>
                     )
                   )}
                 </div>
               ))}
               {categoryDeleteId && (
-                <div className="rounded-xl bg-[color:var(--surface-2)] p-3" role="alertdialog" aria-label="Confirm category deletion">
+                <div className="rounded-xl bg-surface-2 p-3" role="alertdialog" aria-label="Confirm category deletion">
                   <p>Delete this category? Its entries will move to Other.</p>
                   <div className="mt-2 flex gap-2">
-                    <button type="button" className="min-h-11 flex-1 rounded-lg bg-[color:var(--surface)]" onClick={() => setCategoryDeleteId(null)}>Cancel</button>
-                    <button type="button" className="min-h-11 flex-1 rounded-lg bg-[color:var(--bad)] font-semibold text-white" onClick={() => { dispatch({ type: 'deleteCategory', id: categoryDeleteId }); if (category === categoryDeleteId) setCategory('cat-other'); setCategoryDeleteId(null) }}>Delete</button>
+                    <button type="button" className="min-h-11 flex-1 rounded-lg bg-surface" onClick={() => setCategoryDeleteId(null)}>Cancel</button>
+                    <button type="button" className="min-h-11 flex-1 rounded-lg bg-bad font-semibold text-white" onClick={() => { dispatch({ type: 'deleteCategory', id: categoryDeleteId }); if (category === categoryDeleteId) setCategory('cat-other'); setCategoryDeleteId(null) }}>Delete</button>
                   </div>
                 </div>
               )}
               <div className="flex gap-2 pt-2">
-                <input aria-label="New category" value={editingCategoryId ? '' : categoryName} onChange={(event) => setCategoryName(event.target.value)} placeholder="New category" className="min-h-11 min-w-0 flex-1 rounded-lg bg-[color:var(--surface-2)] px-3" />
-                <button type="button" className="min-h-11 rounded-lg bg-[color:var(--accent)] px-4 font-semibold text-white" onClick={saveCategory}>Add</button>
+                <input aria-label="New category" value={editingCategoryId ? '' : categoryName} onChange={(event) => setCategoryName(event.target.value)} placeholder="New category" className="min-h-11 min-w-0 flex-1 rounded-lg bg-surface-2 px-3" />
+                <button type="button" className="min-h-11 rounded-lg bg-accent px-4 font-semibold text-white" onClick={saveCategory}>Add</button>
               </div>
             </div>
           </section>

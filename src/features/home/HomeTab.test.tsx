@@ -26,7 +26,7 @@ describe('HomeTab', () => {
   it('shows the overspent caption and bad colour state', () => {
     render(<AppStateProvider initialState={{ ...state, dailySpend: [{ ...state.dailySpend[0], amount: 80000 }] }}><HomeTab /></AppStateProvider>)
     expect(screen.getByText('Over by this month')).toBeInTheDocument()
-    expect(screen.getByLabelText('Left to spend, KSh -10,000')).toHaveClass('text-[color:var(--bad)]')
+    expect(screen.getByLabelText('Left to spend, KSh -10,000')).toHaveClass('text-bad')
   })
 
   it('shows after commitments and summary cards', () => {

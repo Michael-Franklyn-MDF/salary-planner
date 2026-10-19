@@ -55,33 +55,33 @@ export function CalendarTab({ initialDate = today(), onOpenPlan }: CalendarTabPr
   return (
     <main id="calendar-panel" role="tabpanel" aria-labelledby="calendar-tab" className="mx-auto max-w-[480px] space-y-6 px-4 pb-32 pt-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-[34px] font-bold leading-[41px] tracking-tight">Calendar</h1>
+        <h1 className="text-large-title font-bold tracking-tight">Calendar</h1>
         <div className="flex items-center gap-1">
-          <button type="button" aria-pressed={monthView} className="min-h-11 rounded-lg px-3 text-[13px] text-[color:var(--accent)]" onClick={() => setMonthView((current) => !current)}>{monthView ? 'Week' : 'Month'}</button>
-          <button type="button" aria-label="Previous week" className="min-h-11 rounded-lg px-3 text-[color:var(--accent)]" onClick={() => setSelectedDate(shiftDays(selectedDate, -7))}>‹</button>
-          <button type="button" aria-label="Next week" className="min-h-11 rounded-lg px-3 text-[color:var(--accent)]" onClick={() => setSelectedDate(shiftDays(selectedDate, 7))}>›</button>
+          <button type="button" aria-pressed={monthView} className="min-h-11 rounded-lg px-3 text-footnote text-accent" onClick={() => setMonthView((current) => !current)}>{monthView ? 'Week' : 'Month'}</button>
+          <button type="button" aria-label="Previous week" className="min-h-11 rounded-lg px-3 text-accent" onClick={() => setSelectedDate(shiftDays(selectedDate, -7))}>‹</button>
+          <button type="button" aria-label="Next week" className="min-h-11 rounded-lg px-3 text-accent" onClick={() => setSelectedDate(shiftDays(selectedDate, 7))}>›</button>
         </div>
       </div>
       {monthView ? (
-        <section aria-label="Month grid" className="grid grid-cols-7 gap-1 rounded-2xl bg-[color:var(--surface)] p-2">
+        <section aria-label="Month grid" className="grid grid-cols-7 gap-1 rounded-2xl bg-surface p-2">
           {monthDays.map((date) => {
             const parsed = parseDate(date)
             const hasDue = dueItemsForDate(state, date).length > 0
             const hasSpent = state.dailySpend.some((item) => item.date === date)
             const selected = date === selectedDate
             return (
-              <button key={date} type="button" aria-pressed={selected} aria-label={`${parsed.getDate()}${date === currentDate ? ', today' : ''}`} className={`relative flex min-h-12 flex-col items-center justify-center rounded-xl text-[13px] ${date === currentDate && !selected ? 'ring-2 ring-[color:var(--accent)] ring-inset' : ''} ${selected ? 'bg-[color:var(--accent)] text-white' : ''}`} onClick={() => setSelectedDate(date)}>
+              <button key={date} type="button" aria-pressed={selected} aria-label={`${parsed.getDate()}${date === currentDate ? ', today' : ''}`} className={`relative flex min-h-12 flex-col items-center justify-center rounded-xl text-footnote ${date === currentDate && !selected ? 'ring-2 ring-accent ring-inset' : ''} ${selected ? 'bg-accent text-white' : ''}`} onClick={() => setSelectedDate(date)}>
                 <span>{parsed.getDate()}</span>
                 <span className="mt-1 flex h-1 gap-1">
-                  {hasDue && <span className={`h-1 w-1 rounded-full ${selected ? 'bg-white' : 'bg-[color:var(--accent)]'}`} />}
-                  {hasSpent && <span className={`h-1 w-1 rounded-full ${selected ? 'bg-white/70' : 'bg-[color:var(--text-muted)]'}`} />}
+                  {hasDue && <span className={`h-1 w-1 rounded-full ${selected ? 'bg-white' : 'bg-accent'}`} />}
+                  {hasSpent && <span className={`h-1 w-1 rounded-full ${selected ? 'bg-white/70' : 'bg-muted'}`} />}
                 </span>
               </button>
             )
           })}
         </section>
       ) : (
-        <section aria-label="Week strip" className="grid grid-cols-7 gap-1 rounded-2xl bg-[color:var(--surface)] p-2">
+        <section aria-label="Week strip" className="grid grid-cols-7 gap-1 rounded-2xl bg-surface p-2">
           {days.map((date) => {
           const parsed = parseDate(date)
           const selected = date === selectedDate
@@ -90,26 +90,26 @@ export function CalendarTab({ initialDate = today(), onOpenPlan }: CalendarTabPr
           const shortDate = formatShortDate(date)
           const weekday = formatShortWeekday(date)
           return (
-            <button key={date} type="button" aria-pressed={selected} aria-label={`${shortDate}${date === currentDate ? ', today' : ''}`} className={`flex min-h-16 flex-col items-center justify-center rounded-xl text-[13px] ${date === currentDate && !selected ? 'ring-2 ring-[color:var(--accent)] ring-inset' : ''} ${selected ? 'bg-[color:var(--accent)] text-white' : ''}`} onClick={() => setSelectedDate(date)}>
+            <button key={date} type="button" aria-pressed={selected} aria-label={`${shortDate}${date === currentDate ? ', today' : ''}`} className={`flex min-h-16 flex-col items-center justify-center rounded-xl text-footnote ${date === currentDate && !selected ? 'ring-2 ring-accent ring-inset' : ''} ${selected ? 'bg-accent text-white' : ''}`} onClick={() => setSelectedDate(date)}>
               <span>{weekday.slice(0, 2)}</span>
-              <span className="mt-1 text-[17px] font-semibold">{parsed.getDate()}</span>
+              <span className="mt-1 text-headline font-semibold">{parsed.getDate()}</span>
               <span className="mt-1 flex h-1 gap-1" aria-hidden="true">
-                {hasDue && <span className={`h-1 w-1 rounded-full ${selected ? 'bg-white' : 'bg-[color:var(--accent)]'}`} />}
-                {hasSpent && <span className={`h-1 w-1 rounded-full ${selected ? 'bg-white/70' : 'bg-[color:var(--text-muted)]'}`} />}
+                {hasDue && <span className={`h-1 w-1 rounded-full ${selected ? 'bg-white' : 'bg-accent'}`} />}
+                {hasSpent && <span className={`h-1 w-1 rounded-full ${selected ? 'bg-white/70' : 'bg-muted'}`} />}
               </span>
             </button>
           )
           })}
         </section>
       )}
-      <h2 className="text-[20px] font-semibold">{formatLongDate(selectedDate)}</h2>
+      <h2 className="text-section font-semibold">{formatLongDate(selectedDate)}</h2>
       <section aria-labelledby="due-heading" className="space-y-2">
-        <h2 id="due-heading" className="px-1 text-[13px] font-medium uppercase tracking-wide text-[color:var(--text-muted)]">Due</h2>
-        <div className="overflow-hidden rounded-xl bg-[color:var(--surface)]">
+        <h2 id="due-heading" className="px-1 text-footnote font-medium uppercase tracking-wide text-muted">Due</h2>
+        <div className="overflow-hidden rounded-xl bg-surface">
           {dueItems.length === 0 ? (
-            <p className="px-4 py-5 text-[15px] text-[color:var(--text-muted)]">Nothing due</p>
+            <p className="px-4 py-5 text-subhead text-muted">Nothing due</p>
           ) : dueItems.map((entry) => (
-            <div key={`${entry.kind}-${entry.item.id}`} className="flex min-h-14 items-center justify-between border-b border-[color:var(--separator)] px-4 last:border-b-0">
+            <div key={`${entry.kind}-${entry.item.id}`} className="flex min-h-14 items-center justify-between border-b border-separator px-4 last:border-b-0">
               <span>{entry.item.name || 'Unnamed'}</span>
               <span className="tabular-nums">{formatMoney(entry.item.amount)}</span>
             </div>
@@ -117,22 +117,22 @@ export function CalendarTab({ initialDate = today(), onOpenPlan }: CalendarTabPr
         </div>
       </section>
       {!hasDatedItems && (
-        <section className="rounded-xl bg-[color:var(--surface)] p-4">
-          <p className="text-[17px] font-semibold">No dated items yet</p>
-          <p className="mt-1 text-[15px] text-[color:var(--text-muted)]">Add dates to bills and costs in Plan to see them here.</p>
-          <button type="button" className="mt-3 min-h-11 text-[color:var(--accent)]" onClick={onOpenPlan}>Open Plan</button>
+        <section className="rounded-xl bg-surface p-4">
+          <p className="text-headline font-semibold">No dated items yet</p>
+          <p className="mt-1 text-subhead text-muted">Add dates to bills and costs in Plan to see them here.</p>
+          <button type="button" className="mt-3 min-h-11 text-accent" onClick={onOpenPlan}>Open Plan</button>
         </section>
       )}
       <section aria-labelledby="spent-heading" className="space-y-2">
         <div className="flex items-center justify-between px-1">
-          <h2 id="spent-heading" className="text-[13px] font-medium uppercase tracking-wide text-[color:var(--text-muted)]">Spent</h2>
-          <span className="text-[13px] text-[color:var(--text-muted)]">{formatMoney(spentItems.reduce((sum, item) => sum + item.amount, 0))}</span>
+          <h2 id="spent-heading" className="text-footnote font-medium uppercase tracking-wide text-muted">Spent</h2>
+          <span className="text-footnote text-muted">{formatMoney(spentItems.reduce((sum, item) => sum + item.amount, 0))}</span>
         </div>
-        <div className="overflow-hidden rounded-xl bg-[color:var(--surface)]">
+        <div className="overflow-hidden rounded-xl bg-surface">
           {spentItems.length === 0 ? (
-            <p className="px-4 py-5 text-[15px] text-[color:var(--text-muted)]">No spending this day</p>
+            <p className="px-4 py-5 text-subhead text-muted">No spending this day</p>
           ) : spentItems.map((item) => (
-            <div key={item.id} className="flex min-h-14 items-center justify-between border-b border-[color:var(--separator)] px-4 last:border-b-0">
+            <div key={item.id} className="flex min-h-14 items-center justify-between border-b border-separator px-4 last:border-b-0">
               <span>{state.categories.find((category) => category.id === item.category)?.name ?? 'Other'}</span>
               <span className="tabular-nums">{formatMoney(item.amount)}</span>
             </div>

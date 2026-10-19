@@ -14,7 +14,7 @@ export function Keypad({ onKeyPress }: KeypadProps) {
           key={key}
           type="button"
           aria-label={key === '.' ? 'decimal point' : key === 'backspace' ? 'Backspace' : key}
-          className="flex h-16 items-center justify-center rounded-xl text-[32px] leading-none transition-opacity active:opacity-50 motion-reduce:transition-none"
+          className="flex h-16 items-center justify-center rounded-xl text-keypad transition-opacity active:opacity-50 motion-reduce:transition-none"
           onClick={() => onKeyPress(key)}
         >
           {key === 'backspace' ? <Delete size={28} strokeWidth={1.8} aria-hidden /> : key}

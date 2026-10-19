@@ -64,22 +64,22 @@ function PlanGroup<T extends RecurringExpense | OneOffCost | Debt>({
 }) {
   return (
     <section aria-labelledby={`${kind}-heading`} className="space-y-2">
-      <h2 id={`${kind}-heading`} className="px-4 text-[13px] font-medium uppercase tracking-wide text-[color:var(--text-muted)]">
+      <h2 id={`${kind}-heading`} className="px-4 text-footnote font-medium uppercase tracking-wide text-muted">
         {title}
       </h2>
-      <div className="overflow-hidden rounded-xl bg-[color:var(--surface)]">
+      <div className="overflow-hidden rounded-xl bg-surface">
         {items.map((item) => {
           const date = itemDate(item)
           return (
             <button
               key={item.id}
               type="button"
-              className="flex min-h-16 w-full items-center justify-between border-b border-[color:var(--separator)] px-4 text-left last:border-b-0"
+              className="flex min-h-16 w-full items-center justify-between border-b border-separator px-4 text-left last:border-b-0"
               onClick={() => onEdit(kind, item.id)}
             >
               <span className="min-w-0">
-                <span className="block truncate text-[17px] leading-[22px]">{item.name || 'Unnamed'}</span>
-                <span className="block text-[13px] leading-[18px] text-[color:var(--text-muted)]">
+                <span className="block truncate text-body">{item.name || 'Unnamed'}</span>
+                <span className="block text-footnote text-muted">
                   {date ? (kind === 'oneOff' ? formatShortDate(date) : `Day ${date}`) : 'No date'}
                 </span>
               </span>
@@ -89,7 +89,7 @@ function PlanGroup<T extends RecurringExpense | OneOffCost | Debt>({
         })}
         <button
           type="button"
-          className="min-h-12 w-full px-4 text-left text-[color:var(--accent)]"
+          className="min-h-12 w-full px-4 text-left text-accent"
           onClick={() => onAdd(kind)}
         >
           Add {kind === 'recurring' ? 'recurring expense' : kind === 'oneOff' ? 'one-off cost' : 'debt'}
@@ -193,13 +193,13 @@ export function PlanTab() {
 
   return (
     <main className="mx-auto max-w-[480px] space-y-7 px-4 pb-32 pt-8">
-      <h1 className="text-[34px] font-bold leading-[41px] tracking-tight">Plan</h1>
+      <h1 className="text-large-title font-bold tracking-tight">Plan</h1>
 
       <section aria-labelledby="income-heading" className="space-y-2">
-        <h2 id="income-heading" className="px-4 text-[13px] font-medium uppercase tracking-wide text-[color:var(--text-muted)]">Income</h2>
-        <div className="overflow-hidden rounded-xl bg-[color:var(--surface)]">
+        <h2 id="income-heading" className="px-4 text-footnote font-medium uppercase tracking-wide text-muted">Income</h2>
+        <div className="overflow-hidden rounded-xl bg-surface">
           <button type="button" className="flex min-h-16 w-full items-center justify-between px-4 text-left" onClick={() => openEditor({ kind: 'income' })}>
-            <span className="text-[17px] leading-[22px]">Monthly take-home</span>
+            <span className="text-body">Monthly take-home</span>
             <span className="tabular-nums">{formatMoney(state.income)}</span>
           </button>
         </div>
@@ -210,10 +210,10 @@ export function PlanTab() {
       <PlanGroup title="Debts" items={state.debts} kind="debt" onAdd={(kind) => openEditor({ kind })} onEdit={(kind, id) => openEditor({ kind, id })} />
 
       <section aria-labelledby="data-heading" className="space-y-2">
-        <h2 id="data-heading" className="px-4 text-[13px] font-medium uppercase tracking-wide text-[color:var(--text-muted)]">Data</h2>
-        <div className="overflow-hidden rounded-xl bg-[color:var(--surface)]">
-          <button type="button" className="min-h-12 w-full border-b border-[color:var(--separator)] px-4 text-left text-[color:var(--accent)]" onClick={downloadBackup}>Export backup</button>
-          <label className="block min-h-12 cursor-pointer border-b border-[color:var(--separator)] px-4 leading-[48px] text-[color:var(--accent)]">
+        <h2 id="data-heading" className="px-4 text-footnote font-medium uppercase tracking-wide text-muted">Data</h2>
+        <div className="overflow-hidden rounded-xl bg-surface">
+          <button type="button" className="min-h-12 w-full border-b border-separator px-4 text-left text-accent" onClick={downloadBackup}>Export backup</button>
+          <label className="block min-h-12 cursor-pointer border-b border-separator px-4 leading-[48px] text-accent">
             Import backup
             <input
               type="file"
@@ -226,19 +226,19 @@ export function PlanTab() {
               }}
             />
           </label>
-          <button type="button" className="min-h-12 w-full px-4 text-left text-[color:var(--bad)]" onClick={() => setConfirmClear(true)}>Clear all data</button>
+          <button type="button" className="min-h-12 w-full px-4 text-left text-bad" onClick={() => setConfirmClear(true)}>Clear all data</button>
         </div>
-        {importError && <p role="alert" className="px-4 text-[13px] text-[color:var(--bad)]">{importError}</p>}
+        {importError && <p role="alert" className="px-4 text-footnote text-bad">{importError}</p>}
       </section>
 
       {confirmClear && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-5" role="presentation">
-          <section role="alertdialog" aria-modal="true" aria-labelledby="clear-title" className="w-full max-w-sm rounded-2xl bg-[color:var(--surface)] p-5">
-            <h2 id="clear-title" className="text-[20px] font-semibold">Clear all data?</h2>
-            <p className="mt-2 text-[15px] text-[color:var(--text-muted)]">This cannot be undone. Export a backup first if you may need this data.</p>
+          <section role="alertdialog" aria-modal="true" aria-labelledby="clear-title" className="w-full max-w-sm rounded-2xl bg-surface p-5">
+            <h2 id="clear-title" className="text-section font-semibold">Clear all data?</h2>
+            <p className="mt-2 text-subhead text-muted">This cannot be undone. Export a backup first if you may need this data.</p>
             <div className="mt-5 flex gap-2">
-              <button type="button" className="min-h-11 flex-1 rounded-lg bg-[color:var(--surface-2)]" onClick={() => setConfirmClear(false)}>Cancel</button>
-              <button type="button" className="min-h-11 flex-1 rounded-lg bg-[color:var(--bad)] font-semibold text-white" onClick={() => { dispatch({ type: 'clear' }); setConfirmClear(false) }}>Clear all data</button>
+              <button type="button" className="min-h-11 flex-1 rounded-lg bg-surface-2" onClick={() => setConfirmClear(false)}>Cancel</button>
+              <button type="button" className="min-h-11 flex-1 rounded-lg bg-bad font-semibold text-white" onClick={() => { dispatch({ type: 'clear' }); setConfirmClear(false) }}>Clear all data</button>
             </div>
           </section>
         </div>
@@ -248,57 +248,57 @@ export function PlanTab() {
         <div className="fixed inset-0 z-50 flex items-end bg-black/40" role="presentation" onMouseDown={(event) => {
           if (event.target === event.currentTarget) closeEditor()
         }}>
-          <section role="dialog" aria-modal="true" aria-labelledby="editor-title" className="w-full rounded-t-2xl bg-[color:var(--surface)] p-5 pb-[calc(20px+env(safe-area-inset-bottom))]">
-            <div className="mx-auto mb-4 h-1 w-9 rounded-full bg-[color:var(--separator)]" />
+          <section role="dialog" aria-modal="true" aria-labelledby="editor-title" className="w-full rounded-t-2xl bg-surface p-5 pb-[calc(20px+env(safe-area-inset-bottom))]">
+            <div className="mx-auto mb-4 h-1 w-9 rounded-full bg-separator" />
             <div className="mb-5 flex items-center justify-between">
-              <h2 id="editor-title" className="text-[20px] font-semibold">{editor.kind === 'income' ? 'Income' : editor.id ? 'Edit item' : 'Add item'}</h2>
-              <button type="button" className="text-[color:var(--accent)]" onClick={closeEditor}>Cancel</button>
+              <h2 id="editor-title" className="text-section font-semibold">{editor.kind === 'income' ? 'Income' : editor.id ? 'Edit item' : 'Add item'}</h2>
+              <button type="button" className="text-accent" onClick={closeEditor}>Cancel</button>
             </div>
             <form className="space-y-4" onSubmit={(event) => { event.preventDefault(); save() }}>
               {editor.kind !== 'income' && (
                 <label className="block space-y-1">
-                  <span className="text-[13px] text-[color:var(--text-muted)]">Name</span>
-                  <input required value={form.name} onChange={(event) => updateForm('name', event.target.value)} className="min-h-11 w-full rounded-lg border border-[color:var(--separator)] bg-[color:var(--surface-2)] px-3" />
+                  <span className="text-footnote text-muted">Name</span>
+                  <input required value={form.name} onChange={(event) => updateForm('name', event.target.value)} className="min-h-11 w-full rounded-lg border border-separator bg-surface-2 px-3" />
                 </label>
               )}
               <label className="block space-y-1">
-                <span className="text-[13px] text-[color:var(--text-muted)]">Amount</span>
-                <input required inputMode="decimal" type="number" step="0.01" min="0" value={form.amount} onChange={(event) => updateForm('amount', event.target.value)} className="min-h-11 w-full rounded-lg border border-[color:var(--separator)] bg-[color:var(--surface-2)] px-3" />
+                <span className="text-footnote text-muted">Amount</span>
+                <input required inputMode="decimal" type="number" step="0.01" min="0" value={form.amount} onChange={(event) => updateForm('amount', event.target.value)} className="min-h-11 w-full rounded-lg border border-separator bg-surface-2 px-3" />
               </label>
               {editor.kind === 'oneOff' && (
                 <label className="block space-y-1">
-                  <span className="text-[13px] text-[color:var(--text-muted)]">Date</span>
-                  <input type="date" value={form.date} onChange={(event) => updateForm('date', event.target.value)} className="min-h-11 w-full rounded-lg border border-[color:var(--separator)] bg-[color:var(--surface-2)] px-3" />
+                  <span className="text-footnote text-muted">Date</span>
+                  <input type="date" value={form.date} onChange={(event) => updateForm('date', event.target.value)} className="min-h-11 w-full rounded-lg border border-separator bg-surface-2 px-3" />
                 </label>
               )}
               {(editor.kind === 'recurring' || editor.kind === 'debt') && (
                 <label className="block space-y-1">
-                  <span className="text-[13px] text-[color:var(--text-muted)]">Day of month</span>
-                  <input inputMode="numeric" placeholder="1-31 or last" value={form.day} onChange={(event) => updateForm('day', event.target.value)} className="min-h-11 w-full rounded-lg border border-[color:var(--separator)] bg-[color:var(--surface-2)] px-3" />
+                  <span className="text-footnote text-muted">Day of month</span>
+                  <input inputMode="numeric" placeholder="1-31 or last" value={form.day} onChange={(event) => updateForm('day', event.target.value)} className="min-h-11 w-full rounded-lg border border-separator bg-surface-2 px-3" />
                 </label>
               )}
               {editor.kind === 'debt' && (
                 <label className="block space-y-1">
-                  <span className="text-[13px] text-[color:var(--text-muted)]">End date</span>
-                  <input type="date" value={form.endDate} onChange={(event) => updateForm('endDate', event.target.value)} className="min-h-11 w-full rounded-lg border border-[color:var(--separator)] bg-[color:var(--surface-2)] px-3" />
+                  <span className="text-footnote text-muted">End date</span>
+                  <input type="date" value={form.endDate} onChange={(event) => updateForm('endDate', event.target.value)} className="min-h-11 w-full rounded-lg border border-separator bg-surface-2 px-3" />
                 </label>
               )}
               {editor.kind !== 'income' && (
                 <label className="block space-y-1">
-                  <span className="text-[13px] text-[color:var(--text-muted)]">Note</span>
-                  <textarea value={form.note} onChange={(event) => updateForm('note', event.target.value)} className="min-h-20 w-full rounded-lg border border-[color:var(--separator)] bg-[color:var(--surface-2)] px-3 py-2" />
+                  <span className="text-footnote text-muted">Note</span>
+                  <textarea value={form.note} onChange={(event) => updateForm('note', event.target.value)} className="min-h-20 w-full rounded-lg border border-separator bg-surface-2 px-3 py-2" />
                 </label>
               )}
-              <button type="submit" className="min-h-12 w-full rounded-xl bg-[color:var(--accent)] font-semibold text-white">{editor.kind === 'income' || ('id' in editor && editor.id) ? 'Save' : 'Add'}</button>
+              <button type="submit" className="min-h-12 w-full rounded-xl bg-accent font-semibold text-white">{editor.kind === 'income' || ('id' in editor && editor.id) ? 'Save' : 'Add'}</button>
               {editor.kind !== 'income' && editor.id && !confirmDelete && (
-                <button type="button" className="min-h-11 w-full text-[color:var(--bad)]" onClick={() => setConfirmDelete(true)}>Delete</button>
+                <button type="button" className="min-h-11 w-full text-bad" onClick={() => setConfirmDelete(true)}>Delete</button>
               )}
               {confirmDelete && (
-                <div className="space-y-2 rounded-xl bg-[color:var(--surface-2)] p-3" role="alertdialog" aria-label="Confirm deletion">
+                <div className="space-y-2 rounded-xl bg-surface-2 p-3" role="alertdialog" aria-label="Confirm deletion">
                   <p>Delete this item?</p>
                   <div className="flex gap-2">
-                    <button type="button" className="min-h-11 flex-1 rounded-lg bg-[color:var(--surface)]" onClick={() => setConfirmDelete(false)}>Cancel</button>
-                    <button type="button" className="min-h-11 flex-1 rounded-lg bg-[color:var(--bad)] font-semibold text-white" onClick={deleteItem}>Delete</button>
+                    <button type="button" className="min-h-11 flex-1 rounded-lg bg-surface" onClick={() => setConfirmDelete(false)}>Cancel</button>
+                    <button type="button" className="min-h-11 flex-1 rounded-lg bg-bad font-semibold text-white" onClick={deleteItem}>Delete</button>
                   </div>
                 </div>
               )}
