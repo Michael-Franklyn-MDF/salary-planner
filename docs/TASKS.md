@@ -30,7 +30,7 @@ No behavior change except A0. A1 may change date labels to the formats in the sp
 - [x] **B2** Bilingual greeting: `lib/greetings.ts` (English, Spanish). Shows the first, swaps once, stays. Same cold-launch rule [B-02, G-05].
 - [x] **B3** Home first-run state: neutral zero and an EmptyState with an Open Plan button [H-04].
 - [x] **B4** Spend fits one view: amount, chips, all 12 keys and Add visible without scrolling on a 360 x 640 viewport, amount visible while typing [S-01].
-- [x] **B5** Plan: items with no day show an "Add day" prompt [P-02]. Verify the v2 to v2.1 update path on the phone [B-04].
+- [~] **B5** Plan: items with no day show an "Add day" prompt [P-02]. Verify the v2 to v2.1 update path on the phone [B-04]. Code complete; phone verification pending.
 - [ ] **B6 (needs owner decision first)** Mark as paid on due items [C-03, B-03]. Needs `schemaVersion` 4, a migration, fixture tests and no effect on the calculation. Ask the owner before starting.
 
 ## Phase C: Visual
@@ -60,4 +60,4 @@ No behavior change except A0. A1 may change date labels to the formats in the sp
 
 ## Current task
 
-B5: Plan items without a day show an "Add day" prompt. Phone update-path verification remains manual.
+B6: Mark as paid on due items (owner decision required before schema v4 work).
