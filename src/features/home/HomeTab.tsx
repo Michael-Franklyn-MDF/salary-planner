@@ -5,6 +5,7 @@ import { formatMoney, formatShortDate } from '@/lib/format'
 import { useAppState } from '@/state/useAppState'
 import { Ring } from '@/components/Ring'
 import { useColdLaunch, useReducedMotion } from '@/hooks/useColdLaunch'
+import { greetings } from '@/lib/greetings'
 import { useEffect, useState } from 'react'
 
 export function HomeTab({ onOpenCalendar, coldLaunch }: HomeTabProps = {}) {
@@ -36,9 +37,16 @@ function HomeContent({ onOpenCalendar, upcoming, coldLaunch }: HomeTabProps & { 
   const summary = calculateSummary(state, today())
   const overspent = summary.remainingToSpend < 0
   const shouldAnimate = coldLaunch && !reducedMotion
+  const [greetingIndex, setGreetingIndex] = useState(0)
   const [animatedAmount, setAnimatedAmount] = useState(0)
   const displayedAmount = shouldAnimate ? animatedAmount : summary.remainingToSpend
   const progress = summary.remaining > 0 ? summary.remainingToSpend / summary.remaining : 0
+
+  useEffect(() => {
+    if (!coldLaunch) return
+    const timeout = window.setTimeout(() => setGreetingIndex(1), reducedMotion ? 0 : 250)
+    return () => window.clearTimeout(timeout)
+  }, [coldLaunch, reducedMotion])
 
   useEffect(() => {
     if (!shouldAnimate) return
@@ -65,6 +73,9 @@ function HomeContent({ onOpenCalendar, upcoming, coldLaunch }: HomeTabProps & { 
   return (
     <main id="home-panel" role="tabpanel" aria-labelledby="home-tab" className="mx-auto max-w-[480px] space-y-6 px-4 pb-32 pt-8">
       <h1 className="text-large-title font-bold tracking-tight">Home</h1>
+      <p className="text-headline text-muted transition-opacity duration-250 motion-reduce:transition-none" key={greetings[greetingIndex].text}>
+        {greetings[greetingIndex].text}
+      </p>
       <section className="rounded-2xl bg-surface p-6 text-center" aria-labelledby="left-to-spend-heading">
         <p id="left-to-spend-heading" className="text-subhead text-muted">{overspent ? 'Over by this month' : 'Left to spend'}</p>
         <div className="mt-2 flex items-center justify-center gap-4">

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { AppStateProvider } from '@/state/AppStateProvider'
 import type { AppState } from '@/domain/types'
@@ -16,6 +16,32 @@ const state: AppState = {
 }
 
 describe('HomeTab', () => {
+  it('swaps the greeting once on a cold launch', async () => {
+    vi.useFakeTimers()
+    try {
+      render(<AppStateProvider initialState={state}><HomeTab coldLaunch /></AppStateProvider>)
+
+      expect(screen.getByText('Hello, Michael')).toBeInTheDocument()
+      act(() => vi.advanceTimersByTime(250))
+      expect(screen.getByText('Hola, Michael')).toBeInTheDocument()
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('does not swap the greeting on a warm return', () => {
+    vi.useFakeTimers()
+    try {
+      render(<AppStateProvider initialState={state}><HomeTab coldLaunch={false} /></AppStateProvider>)
+
+      act(() => vi.advanceTimersByTime(250))
+      expect(screen.getByText('Hello, Michael')).toBeInTheDocument()
+      expect(screen.queryByText('Hola, Michael')).not.toBeInTheDocument()
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
   it('shows left to spend in the positive colour state', () => {
     render(<AppStateProvider initialState={state}><HomeTab /></AppStateProvider>)
     expect(screen.getByRole('heading', { name: 'Home' })).toBeInTheDocument()
