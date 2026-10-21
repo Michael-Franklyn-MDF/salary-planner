@@ -143,7 +143,7 @@ export function SpendTab({ draftAmount, onDraftAmountChange }: SpendTabProps = {
     }, {})
 
   return (
-    <main id="spend-panel" role="tabpanel" aria-labelledby="spend-tab" className="mx-auto flex min-h-[calc(100svh-49px)] max-w-[480px] flex-col space-y-6 px-4 pb-32 pt-8">
+    <main id="spend-panel" role="tabpanel" aria-labelledby="spend-tab" className="spend-screen mx-auto flex min-h-[calc(100svh-49px)] max-w-[480px] flex-col space-y-6 px-4 pb-32 pt-8">
       <h1 className="text-large-title font-bold tracking-tight">Spend</h1>
 
       <div className="flex flex-1 flex-col justify-end gap-6">
@@ -161,7 +161,7 @@ export function SpendTab({ draftAmount, onDraftAmountChange }: SpendTabProps = {
         <div
           role="status"
           aria-label={`Amount KSh ${amount || '0'}`}
-          className="overflow-hidden text-center text-hero font-semibold tabular-nums"
+          className="spend-amount overflow-hidden text-center text-hero font-semibold tabular-nums"
         >
           <span className="mr-2 text-body font-normal leading-[22px] text-muted">KSh</span>{' '}
           {amount || '0'}

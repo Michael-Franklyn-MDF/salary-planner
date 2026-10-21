@@ -206,6 +206,44 @@
   min-height: 100svh;
 }
 
+@media (max-width: 480px) and (max-height: 700px) {
+  .spend-screen {
+    gap: 0.5rem;
+    min-height: calc(100svh - 49px);
+    padding-bottom: 7rem;
+    padding-top: 1rem;
+  }
+
+  .spend-screen > h1 {
+    line-height: 2rem;
+  }
+
+  .spend-screen > .flex-1 {
+    gap: 0.5rem;
+  }
+
+  .spend-screen > .flex-1 > .grid.grid-cols-2 {
+    display: none;
+  }
+
+  .spend-amount {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--bg);
+    font-size: 2.5rem;
+    line-height: 3rem;
+  }
+
+  .spend-keypad button {
+    height: 2.75rem;
+  }
+
+  .spend-screen section[aria-labelledby='recent-heading'] {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

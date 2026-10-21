@@ -8,7 +8,7 @@ interface KeypadProps {
 
 export function Keypad({ onKeyPress }: KeypadProps) {
   return (
-    <div aria-label="Amount keypad" className="grid grid-cols-3 gap-1">
+    <div role="group" aria-label="Amount keypad" className="spend-keypad grid grid-cols-3 gap-1">
       {keys.map((key) => (
         <button
           key={key}

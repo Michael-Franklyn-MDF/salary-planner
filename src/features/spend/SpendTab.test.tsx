@@ -12,6 +12,20 @@ function StateProbe() {
 }
 
 describe('SpendTab', () => {
+  it('keeps the compact entry controls in the short-screen layout', () => {
+    render(
+      <AppStateProvider>
+        <SpendTab />
+      </AppStateProvider>,
+    )
+
+    expect(screen.getByRole('tabpanel')).toHaveClass('spend-screen')
+    expect(screen.getByRole('status')).toHaveClass('spend-amount')
+    expect(screen.getByRole('group', { name: 'Amount keypad' })).toHaveClass('spend-keypad')
+    expect(screen.getByRole('group', { name: 'Amount keypad' }).querySelectorAll('button')).toHaveLength(12)
+    expect(screen.getByRole('button', { name: 'Add' })).toBeVisible()
+  })
+
   it('blocks a second decimal point and a third decimal place', () => {
     render(
       <AppStateProvider>
