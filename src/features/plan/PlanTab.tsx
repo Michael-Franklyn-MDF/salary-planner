@@ -83,7 +83,11 @@ function PlanGroup<T extends RecurringExpense | OneOffCost | Debt>({
               <span className="min-w-0">
                 <span className="block truncate text-body">{item.name || 'Unnamed'}</span>
                 <span className="block text-footnote text-muted">
-                  {date ? (kind === 'oneOff' ? formatShortDate(date) : `Day ${date}`) : 'No date'}
+                  {date
+                    ? (kind === 'oneOff' ? formatShortDate(date) : `Day ${date}`)
+                    : kind === 'oneOff'
+                      ? 'No date'
+                      : <span className="text-accent">Add day</span>}
                 </span>
               </span>
               <span className="ml-4 shrink-0 tabular-nums">{formatMoney(item.amount)}</span>
