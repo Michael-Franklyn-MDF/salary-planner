@@ -49,6 +49,21 @@ describe('HomeTab', () => {
     expect(screen.getByText('Left to spend')).toBeInTheDocument()
   })
 
+  it('shows the first-run state and opens Plan', () => {
+    const onOpenPlan = vi.fn()
+    render(
+      <AppStateProvider initialState={{ ...state, income: 0, recurring: [], dailySpend: [] }}>
+        <HomeTab onOpenPlan={onOpenPlan} />
+      </AppStateProvider>,
+    )
+
+    expect(screen.getByLabelText('Left to spend, KSh 0')).toHaveClass('text-foreground')
+    expect(screen.getByRole('heading', { name: 'Start with your income' })).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: 'Summary' })).not.toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Open Plan' }))
+    expect(onOpenPlan).toHaveBeenCalledOnce()
+  })
+
   it('shows the overspent caption and bad colour state', () => {
     render(<AppStateProvider initialState={{ ...state, dailySpend: [{ ...state.dailySpend[0], amount: 80000 }] }}><HomeTab /></AppStateProvider>)
     expect(screen.getByText('Over by this month')).toBeInTheDocument()

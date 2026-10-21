@@ -20,4 +20,11 @@ describe('v2 app shell', () => {
     fireEvent.click(screen.getByRole('tab', { name: 'Spend' }))
     expect(screen.getByRole('status')).toHaveTextContent('KSh 7')
   })
+
+  it('opens Plan from the Home first-run action', () => {
+    render(<App />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open Plan' }))
+    expect(screen.getByRole('heading', { name: 'Plan' })).toBeInTheDocument()
+  })
 })
