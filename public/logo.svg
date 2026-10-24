@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
   <title>Salary Planner</title>
-  <rect width="512" height="512" rx="112" fill="#0071E3"/>
+  <rect width="512" height="512" rx="112" fill="#1F6B4A"/>
   <path d="M120 170c0-22 18-40 40-40h182c28 0 50 22 50 50v26h-74c-33 0-60 27-60 60s27 60 60 60h74v26c0 28-22 50-50 50H160c-22 0-40-18-40-40V170Z" fill="#fff"/>
-  <path d="M326 206h66c22 0 40 18 40 40v40c0 22-18 40-40 40h-66c-22 0-40-18-40-40v-40c0-22 18-40 40-40Zm12 34a16 16 0 1 0 0 32 16 16 0 0 0 0-32Z" fill="#0A84FF"/>
-  <path d="M176 182h100" stroke="#0071E3" stroke-width="20" stroke-linecap="round"/>
-  <path d="M176 226h62" stroke="#0071E3" stroke-width="20" stroke-linecap="round"/>
+  <path d="M326 206h66c22 0 40 18 40 40v40c0 22-18 40-40 40h-66c-33 0-60-27-60-60s27-60 60-60Zm12 34a16 16 0 1 0 0 32 16 16 0 0 0 0-32Z" fill="#4FBF8B"/>
+  <path d="M176 182h100" stroke="#1F6B4A" stroke-width="20" stroke-linecap="round"/>
+  <path d="M176 226h62" stroke="#1F6B4A" stroke-width="20" stroke-linecap="round"/>
 </svg>
