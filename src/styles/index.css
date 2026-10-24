@@ -18,6 +18,7 @@
 
   --font-system: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display',
     system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-inter: 'Inter', var(--font-system);
   --text-hero-size: 52px;
   --text-hero-leading: 56px;
   --text-large-title-size: 34px;
@@ -108,8 +109,8 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-system);
-  --font-heading: var(--font-system);
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-inter);
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);

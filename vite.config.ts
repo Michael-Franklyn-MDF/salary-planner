@@ -14,6 +14,9 @@ export default defineConfig({
       registerType: 'prompt',
       filename: 'sw.js',
       manifestFilename: 'manifest.json',
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,woff2,svg,png}'],
+      },
       manifest: {
         name: 'Salary Planner',
         short_name: 'Salary Planner',
