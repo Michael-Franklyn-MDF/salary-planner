@@ -202,6 +202,15 @@
   select {
     outline-color: var(--accent);
   }
+
+  .category-chips > div {
+    scrollbar-width: none;
+    mask-image: linear-gradient(to right, transparent, black 1rem, black calc(100% - 1rem), transparent);
+  }
+
+  .category-chips > div::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 #root {

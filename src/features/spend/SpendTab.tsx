@@ -147,15 +147,9 @@ export function SpendTab({ draftAmount, onDraftAmountChange }: SpendTabProps = {
       <h1 className="text-large-title font-bold tracking-tight">Spend</h1>
 
       <div className="flex flex-1 flex-col justify-end gap-6">
-        <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-xl bg-surface p-4">
-            <p className="text-footnote text-muted">Today</p>
-            <p className="mt-1 text-section font-semibold tabular-nums">{formatMoney(todayTotal)}</p>
-          </div>
-          <div className="rounded-xl bg-surface p-4">
-            <p className="text-footnote text-muted">This month</p>
-            <p className="mt-1 text-section font-semibold tabular-nums">{formatMoney(monthTotal)}</p>
-          </div>
+        <div className="flex items-center justify-between rounded-xl bg-surface px-4 py-3 text-subhead">
+          <span><span className="text-muted">Today </span><strong className="tabular-nums">{formatMoney(todayTotal)}</strong></span>
+          <span><span className="text-muted">This month </span><strong className="tabular-nums">{formatMoney(monthTotal)}</strong></span>
         </div>
 
         <div
@@ -167,22 +161,22 @@ export function SpendTab({ draftAmount, onDraftAmountChange }: SpendTabProps = {
           {amount || '0'}
         </div>
 
-        <div aria-label="Categories" className="flex gap-2 overflow-x-auto pb-1">
-          {state.categories.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              aria-pressed={category === item.id}
-              className={`min-h-11 shrink-0 rounded-full px-4 text-subhead transition-colors motion-reduce:transition-none ${
-                category === item.id
-                  ? 'bg-accent text-white'
-                  : 'bg-surface text-foreground'
-              }`}
-              onClick={() => setCategory(item.id)}
-            >
-              {item.name}
-            </button>
-          ))}
+        <div className="category-chips" aria-label="Categories">
+          <div className="flex snap-x gap-2 overflow-x-auto px-1 pb-1">
+            {state.categories.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                aria-pressed={category === item.id}
+                className={`min-h-11 shrink-0 snap-start rounded-full px-4 text-subhead transition-colors motion-reduce:transition-none ${
+                  category === item.id ? 'bg-accent text-white' : 'bg-surface text-foreground'
+                }`}
+                onClick={() => setCategory(item.id)}
+              >
+                {item.name}
+              </button>
+            ))}
+          </div>
         </div>
         <button type="button" className="min-h-11 text-left text-subhead text-accent" onClick={openCategories}>Manage categories</button>
 
@@ -227,12 +221,10 @@ export function SpendTab({ draftAmount, onDraftAmountChange }: SpendTabProps = {
           ) : (
             Object.entries(groupedEntries).map(([entryDate, entries]) => (
               <ListGroup key={entryDate}>
-                <div className="flex items-center justify-between border-b border-separator px-4 py-3">
+                {entries.length > 1 && <div className="flex items-center justify-between border-b border-separator px-4 py-3">
                   <h3 className="text-subhead font-semibold">{formatShortDate(entryDate)}</h3>
-                  <span className="text-subhead tabular-nums text-muted">
-                    {formatMoney(entries.reduce((sum, item) => sum + item.amount, 0))}
-                  </span>
-                </div>
+                  <span className="text-subhead tabular-nums text-muted">{formatMoney(entries.reduce((sum, item) => sum + item.amount, 0))}</span>
+                </div>}
                 {entries.map((item) => {
                   const itemCategory = state.categories.find((categoryItem) => categoryItem.id === item.category)?.name ?? 'Other'
                   return (
@@ -244,6 +236,7 @@ export function SpendTab({ draftAmount, onDraftAmountChange }: SpendTabProps = {
                     >
                       <span className="min-w-0">
                         <span className="block truncate text-body">{itemCategory}</span>
+                        {entries.length === 1 && <span aria-hidden="true" className="block text-footnote text-muted">{formatShortDate(entryDate)}</span>}
                         {item.note && <span className="block truncate text-footnote text-muted">{item.note}</span>}
                       </span>
                       <span className="ml-4 shrink-0 tabular-nums">{formatMoney(item.amount)}</span>

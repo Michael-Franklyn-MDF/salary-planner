@@ -126,7 +126,7 @@ describe('SpendTab', () => {
     fireEvent.click(screen.getByRole('button', { name: /OtherTeaKSh 8/ }))
     fireEvent.change(screen.getByLabelText('Edit amount'), { target: { value: '9' } })
     fireEvent.click(screen.getByRole('button', { name: 'Save' }))
-    expect(screen.getAllByText('KSh 9')).toHaveLength(2)
+    expect(screen.getAllByText('KSh 9')).toHaveLength(1)
 
     fireEvent.click(screen.getByRole('button', { name: /OtherTeaKSh 9/ }))
     fireEvent.click(screen.getByRole('button', { name: 'Delete' }))

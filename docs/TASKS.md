@@ -38,8 +38,8 @@ No behavior change except A0. A1 may change date labels to the formats in the sp
 - [x] **C1** Savanna and Midnight tokens in `theme.css`, `data-theme` handling, inline pre-render script to avoid a flash, per-scheme `theme-color` meta tags, manifest `theme_color` and `background_color` [G-01, G-06]. Keep `scope` and `start_url`.
 - [x] **C2** Inter via `@fontsource-variable/inter`, fallback stack, confirm it is precached and works offline [G-08].
 - [x] **C3** Home layout: greeting, hero with HeroAmount and Ring, "Add spend" button, "Where it goes" breakdown, Coming up [H-01, H-02, H-03, H-05, H-06].
-- [~] **C4** Spend polish: AmountDisplay alignment, chips (hidden scrollbar, fade, accent), keypad key shapes and pressed state, compact summary line, Recent day totals [S-02 to S-08].
-- [ ] **C5** Calendar polish: 44px controls, dots on every day with items, today ring, selected fill [C-01, C-02].
+- [x] **C4** Spend polish: AmountDisplay alignment, chips (hidden scrollbar, fade, accent), keypad key shapes and pressed state, compact summary line, Recent day totals [S-02 to S-08].
+- [~] **C5** Calendar polish: 44px controls, dots on every day with items, today ring, selected fill [C-01, C-02].
 - [ ] **C6** Plan polish: counts and totals on headers, chevrons, helper text on backup, "Clear all data" in its own group [P-01, P-03, P-04].
 - [ ] **C7** Mini player and tab bar: new tokens, within content width on wide screens, bottom padding on scroll areas [G-04, G-09, S-07].
 - [ ] **C8** Sentence-case section labels and contrast check of every text and background pair in both themes [G-03].
@@ -60,4 +60,4 @@ No behavior change except A0. A1 may change date labels to the formats in the sp
 
 ## Current task
 
-C4: Spend polish and compact entry layout.
+C5: Calendar polish and due-day controls.
