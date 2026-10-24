@@ -29,7 +29,7 @@ export function ConfirmDialog({
         {children}
         <div className="mt-5 flex gap-2">
           <button type="button" className="min-h-11 flex-1 rounded-lg bg-surface-2" onClick={onCancel}>Cancel</button>
-          <button type="button" className="min-h-11 flex-1 rounded-lg bg-bad font-semibold text-white" onClick={onConfirm}>{confirmLabel}</button>
+          <button type="button" className="min-h-11 flex-1 rounded-lg bg-bad font-semibold text-danger-foreground" onClick={onConfirm}>{confirmLabel}</button>
         </div>
       </section>
     </div>

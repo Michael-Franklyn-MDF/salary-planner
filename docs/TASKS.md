@@ -42,8 +42,8 @@ No behavior change except A0. A1 may change date labels to the formats in the sp
 - [x] **C5** Calendar polish: 44px controls, dots on every day with items, today ring, selected fill [C-01, C-02].
 - [x] **C6** Plan polish: counts and totals on headers, chevrons, helper text on backup, "Clear all data" in its own group [P-01, P-03, P-04].
 - [x] **C7** Mini player and tab bar: new tokens, within content width on wide screens, bottom padding on scroll areas [G-04, G-09, S-07].
-- [~] **C8** Sentence-case section labels and contrast check of every text and background pair in both themes [G-03].
-- [ ] **C9** New logo and app icons in the Savanna palette; add `<link rel="icon">` for `favicon.svg`.
+- [x] **C8** Sentence-case section labels and contrast check of every text and background pair in both themes [G-03].
+- [~] **C9** New logo and app icons in the Savanna palette; add `<link rel="icon">` for `favicon.svg`.
 
 ## Phase D: Later
 
@@ -60,4 +60,4 @@ No behavior change except A0. A1 may change date labels to the formats in the sp
 
 ## Current task
 
-C8: Sentence case and contrast cleanup.
+C9: Savanna logo, favicon, and app icons.

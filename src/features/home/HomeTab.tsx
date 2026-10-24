@@ -88,21 +88,21 @@ function HomeContent({ onOpenSpend, onOpenCalendar, onOpenPlan, upcoming, coldLa
         </div>
         <p className="mt-2 text-footnote text-muted">after commitments and this month's spending</p>
       </section>
-      <button type="button" className="min-h-12 w-full rounded-xl bg-accent font-semibold text-white" onClick={onOpenSpend}>
+      <button type="button" className="min-h-12 w-full rounded-xl bg-accent font-semibold text-accent-foreground" onClick={onOpenSpend}>
         Add spend
       </button>
       {firstRun ? (
         <section className="rounded-2xl bg-surface p-6 text-center" aria-labelledby="first-run-heading">
           <h2 id="first-run-heading" className="text-title font-semibold">Start with your income</h2>
           <p className="mx-auto mt-2 max-w-xs text-subhead text-muted">Add your monthly take-home pay in Plan to get started.</p>
-          <button type="button" className="mt-5 min-h-12 w-full rounded-xl bg-accent font-semibold text-white" onClick={onOpenPlan}>
+          <button type="button" className="mt-5 min-h-12 w-full rounded-xl bg-accent font-semibold text-accent-foreground" onClick={onOpenPlan}>
             Open Plan
           </button>
         </section>
       ) : (
         <>
       <section aria-labelledby="where-it-goes-heading" className="space-y-2">
-        <h2 id="where-it-goes-heading" className="px-1 text-footnote font-medium uppercase tracking-wide text-muted">Where it goes</h2>
+        <h2 id="where-it-goes-heading" className="px-1 text-footnote font-medium text-muted">Where it goes</h2>
         <div className="overflow-hidden rounded-xl bg-surface">
           {([
             ['Income', summary.income],
@@ -121,7 +121,7 @@ function HomeContent({ onOpenSpend, onOpenCalendar, onOpenPlan, upcoming, coldLa
         </div>
       </section>
       <section aria-labelledby="coming-up-heading" className="space-y-2">
-        <h2 id="coming-up-heading" className="px-1 text-footnote font-medium uppercase tracking-wide text-muted">Coming up</h2>
+        <h2 id="coming-up-heading" className="px-1 text-footnote font-medium text-muted">Coming up</h2>
         <div className="overflow-hidden rounded-xl bg-surface">
           {upcoming.length === 0 ? (
             <p className="px-4 py-5 text-subhead text-muted">Nothing due in the next 14 days.</p>

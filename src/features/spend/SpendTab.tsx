@@ -169,7 +169,7 @@ export function SpendTab({ draftAmount, onDraftAmountChange }: SpendTabProps = {
                 type="button"
                 aria-pressed={category === item.id}
                 className={`min-h-11 shrink-0 snap-start rounded-full px-4 text-subhead transition-colors motion-reduce:transition-none ${
-                  category === item.id ? 'bg-accent text-white' : 'bg-surface text-foreground'
+                  category === item.id ? 'bg-accent text-accent-foreground' : 'bg-surface text-foreground'
                 }`}
                 onClick={() => setCategory(item.id)}
               >
@@ -207,7 +207,7 @@ export function SpendTab({ draftAmount, onDraftAmountChange }: SpendTabProps = {
 
         <button
           type="button"
-          className="min-h-12 w-full rounded-xl bg-accent font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
+          className="min-h-12 w-full rounded-xl bg-accent font-semibold text-accent-foreground disabled:cursor-not-allowed disabled:opacity-40"
           disabled={!Number.isFinite(numericAmount) || numericAmount <= 0}
           onClick={addSpend}
         >
@@ -215,7 +215,7 @@ export function SpendTab({ draftAmount, onDraftAmountChange }: SpendTabProps = {
         </button>
 
         <section aria-labelledby="recent-heading" className="space-y-3">
-          <h2 id="recent-heading" className="px-1 text-footnote font-medium uppercase tracking-wide text-muted">Recent</h2>
+          <h2 id="recent-heading" className="px-1 text-footnote font-medium text-muted">Recent</h2>
           {Object.keys(groupedEntries).length === 0 ? (
             <p className="rounded-xl bg-surface px-4 py-5 text-subhead text-muted">No spending logged yet.</p>
           ) : (
@@ -270,7 +270,7 @@ export function SpendTab({ draftAmount, onDraftAmountChange }: SpendTabProps = {
                 <span className="text-footnote text-muted">Note</span>
                 <textarea aria-label="Edit note" value={editNote} onChange={(event) => setEditNote(event.target.value)} className="min-h-20 w-full rounded-lg bg-surface-2 px-3 py-2" />
               </label>
-              <button type="submit" className="min-h-12 w-full rounded-xl bg-accent font-semibold text-white">Save</button>
+              <button type="submit" className="min-h-12 w-full rounded-xl bg-accent font-semibold text-accent-foreground">Save</button>
               {!confirmDelete ? (
                 <button type="button" className="min-h-11 w-full text-bad" onClick={() => setConfirmDelete(true)}>Delete</button>
               ) : (
@@ -278,7 +278,7 @@ export function SpendTab({ draftAmount, onDraftAmountChange }: SpendTabProps = {
                   <p>Delete this spending entry?</p>
                   <div className="flex gap-2">
                     <button type="button" className="min-h-11 flex-1 rounded-lg bg-surface" onClick={() => setConfirmDelete(false)}>Cancel</button>
-                    <button type="button" className="min-h-11 flex-1 rounded-lg bg-bad font-semibold text-white" onClick={deleteEdit}>Delete</button>
+                    <button type="button" className="min-h-11 flex-1 rounded-lg bg-bad font-semibold text-danger-foreground" onClick={deleteEdit}>Delete</button>
                   </div>
                 </div>
               )}
@@ -312,7 +312,7 @@ export function SpendTab({ draftAmount, onDraftAmountChange }: SpendTabProps = {
               ))}
               <div className="flex gap-2 pt-2">
                 <input aria-label="New category" value={editingCategoryId ? '' : categoryName} onChange={(event) => setCategoryName(event.target.value)} placeholder="New category" className="min-h-11 min-w-0 flex-1 rounded-lg bg-surface-2 px-3" />
-                <button type="button" className="min-h-11 rounded-lg bg-accent px-4 font-semibold text-white" onClick={saveCategory}>Add</button>
+                <button type="button" className="min-h-11 rounded-lg bg-accent px-4 font-semibold text-accent-foreground" onClick={saveCategory}>Add</button>
               </div>
             </div>
       </Sheet>

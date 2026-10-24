@@ -68,7 +68,7 @@ function PlanGroup<T extends RecurringExpense | OneOffCost | Debt>({
 }) {
   return (
     <section aria-labelledby={`${kind}-heading`} className="space-y-2">
-      <h2 id={`${kind}-heading`} aria-label={title} className="px-4 text-footnote font-medium uppercase tracking-wide text-muted">
+      <h2 id={`${kind}-heading`} aria-label={title} className="px-4 text-footnote font-medium text-muted">
         <span>{title}</span>
         <span className="ml-2 normal-case">{items.length} · {formatMoney(items.reduce((sum, item) => sum + item.amount, 0))}</span>
       </h2>
@@ -205,7 +205,7 @@ export function PlanTab() {
       <h1 className="text-large-title font-bold tracking-tight">Plan</h1>
 
       <section aria-labelledby="income-heading" className="space-y-2">
-        <h2 id="income-heading" className="px-4 text-footnote font-medium uppercase tracking-wide text-muted">Income</h2>
+        <h2 id="income-heading" className="px-4 text-footnote font-medium text-muted">Income</h2>
         <ListGroup>
           <button type="button" className="flex min-h-16 w-full items-center justify-between px-4 text-left" onClick={() => openEditor({ kind: 'income' })}>
             <span className="text-body">Monthly take-home</span>
@@ -219,7 +219,7 @@ export function PlanTab() {
       <PlanGroup title="Debts" items={state.debts} kind="debt" onAdd={(kind) => openEditor({ kind })} onEdit={(kind, id) => openEditor({ kind, id })} />
 
       <section aria-labelledby="data-heading" className="space-y-2">
-        <h2 id="data-heading" className="px-4 text-footnote font-medium uppercase tracking-wide text-muted">Data</h2>
+        <h2 id="data-heading" className="px-4 text-footnote font-medium text-muted">Data</h2>
         <ListGroup>
           <button type="button" className="flex min-h-16 w-full items-center justify-between border-b border-separator px-4 text-left" onClick={downloadBackup}>
             <span><span className="block text-accent">Export backup</span><span className="block text-footnote text-muted">Save a copy of your data to this device.</span></span>
@@ -295,7 +295,7 @@ export function PlanTab() {
                   <textarea value={form.note} onChange={(event) => updateForm('note', event.target.value)} className="min-h-20 w-full rounded-lg border border-separator bg-surface-2 px-3 py-2" />
                 </label>
               )}
-              <button type="submit" className="min-h-12 w-full rounded-xl bg-accent font-semibold text-white">{editor.kind === 'income' || ('id' in editor && editor.id) ? 'Save' : 'Add'}</button>
+              <button type="submit" className="min-h-12 w-full rounded-xl bg-accent font-semibold text-accent-foreground">{editor.kind === 'income' || ('id' in editor && editor.id) ? 'Save' : 'Add'}</button>
               {editor.kind !== 'income' && editor.id && !confirmDelete && (
                 <button type="button" className="min-h-11 w-full text-bad" onClick={() => setConfirmDelete(true)}>Delete</button>
               )}
@@ -304,7 +304,7 @@ export function PlanTab() {
                   <p>Delete this item?</p>
                   <div className="flex gap-2">
                     <button type="button" className="min-h-11 flex-1 rounded-lg bg-surface" onClick={() => setConfirmDelete(false)}>Cancel</button>
-                    <button type="button" className="min-h-11 flex-1 rounded-lg bg-bad font-semibold text-white" onClick={deleteItem}>Delete</button>
+                    <button type="button" className="min-h-11 flex-1 rounded-lg bg-bad font-semibold text-danger-foreground" onClick={deleteItem}>Delete</button>
                   </div>
                 </div>
               )}

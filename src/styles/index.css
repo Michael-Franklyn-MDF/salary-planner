@@ -14,6 +14,7 @@
   --accent: #1f6b4a;
   --good: var(--accent);
   --bad: #b42318;
+  --danger-foreground: #ffffff;
   --bar-bg: rgba(255, 255, 255, 0.88);
 
   --font-system: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display',
@@ -84,6 +85,7 @@
     --accent: #4fbf8b;
     --good: var(--accent);
     --bad: #ff6b61;
+    --danger-foreground: #06140d;
     --bar-bg: rgba(22, 26, 34, 0.88);
     --primary-foreground: #06140d;
     --accent-foreground: #06140d;
@@ -102,6 +104,7 @@
   --accent: #4fbf8b;
   --good: var(--accent);
   --bad: #ff6b61;
+  --danger-foreground: #06140d;
   --bar-bg: rgba(22, 26, 34, 0.88);
   --primary-foreground: #06140d;
   --accent-foreground: #06140d;
@@ -120,6 +123,7 @@
   --color-accent: var(--accent);
   --color-good: var(--good);
   --color-bad: var(--bad);
+  --color-danger-foreground: var(--danger-foreground);
   --color-bar: var(--bar-bg);
   --color-background: var(--background);
   --color-foreground: var(--foreground);

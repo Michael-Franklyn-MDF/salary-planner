@@ -24,7 +24,7 @@ export function UpdatePrompt({ onUpdate }: UpdatePromptProps) {
       <p className="text-subhead">A new version is ready.</p>
       <button
         type="button"
-        className="min-h-11 shrink-0 rounded-xl bg-accent px-4 font-semibold text-white"
+        className="min-h-11 shrink-0 rounded-xl bg-accent px-4 font-semibold text-accent-foreground"
         onClick={() => void onUpdate()}
       >
         Update

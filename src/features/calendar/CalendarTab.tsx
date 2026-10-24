@@ -79,11 +79,11 @@ export function CalendarTab({ initialDate = today(), onOpenPlan }: CalendarTabPr
             const hasSpent = state.dailySpend.some((item) => item.date === date)
             const selected = date === selectedDate
             return (
-              <button key={date} type="button" aria-pressed={selected} aria-label={`${parsed.getDate()}${date === currentDate ? ', today' : ''}`} className={`relative flex min-h-12 flex-col items-center justify-center rounded-xl text-footnote ${date === currentDate && !selected ? 'ring-2 ring-accent ring-inset' : ''} ${selected ? 'bg-accent text-white' : ''}`} onClick={() => setSelectedDate(date)}>
+              <button key={date} type="button" aria-pressed={selected} aria-label={`${parsed.getDate()}${date === currentDate ? ', today' : ''}`} className={`relative flex min-h-12 flex-col items-center justify-center rounded-xl text-footnote ${date === currentDate && !selected ? 'ring-2 ring-accent ring-inset' : ''} ${selected ? 'bg-accent text-accent-foreground' : ''}`} onClick={() => setSelectedDate(date)}>
                 <span>{parsed.getDate()}</span>
                 <span className="mt-1 flex h-1 gap-1">
-                  {hasDue && <span className={`h-1 w-1 rounded-full ${selected ? 'bg-white' : 'bg-accent'}`} />}
-                  {hasSpent && <span className={`h-1 w-1 rounded-full ${selected ? 'bg-white/70' : 'bg-muted'}`} />}
+                  {hasDue && <span className={`h-1 w-1 rounded-full ${selected ? 'bg-accent-foreground' : 'bg-accent'}`} />}
+                  {hasSpent && <span className={`h-1 w-1 rounded-full ${selected ? 'bg-accent-foreground/70' : 'bg-muted'}`} />}
                 </span>
               </button>
             )
@@ -99,12 +99,12 @@ export function CalendarTab({ initialDate = today(), onOpenPlan }: CalendarTabPr
           const shortDate = formatShortDate(date)
           const weekday = formatShortWeekday(date)
           return (
-            <button key={date} type="button" aria-pressed={selected} aria-label={`${shortDate}${date === currentDate ? ', today' : ''}`} className={`flex min-h-16 flex-col items-center justify-center rounded-xl text-footnote ${date === currentDate && !selected ? 'ring-2 ring-accent ring-inset' : ''} ${selected ? 'bg-accent text-white' : ''}`} onClick={() => setSelectedDate(date)}>
+            <button key={date} type="button" aria-pressed={selected} aria-label={`${shortDate}${date === currentDate ? ', today' : ''}`} className={`flex min-h-16 flex-col items-center justify-center rounded-xl text-footnote ${date === currentDate && !selected ? 'ring-2 ring-accent ring-inset' : ''} ${selected ? 'bg-accent text-accent-foreground' : ''}`} onClick={() => setSelectedDate(date)}>
               <span>{weekday.slice(0, 2)}</span>
               <span className="mt-1 text-headline font-semibold">{parsed.getDate()}</span>
               <span className="mt-1 flex h-1 gap-1" aria-hidden="true">
-                {hasDue && <span className={`h-1 w-1 rounded-full ${selected ? 'bg-white' : 'bg-accent'}`} />}
-                {hasSpent && <span className={`h-1 w-1 rounded-full ${selected ? 'bg-white/70' : 'bg-muted'}`} />}
+                {hasDue && <span className={`h-1 w-1 rounded-full ${selected ? 'bg-accent-foreground' : 'bg-accent'}`} />}
+                {hasSpent && <span className={`h-1 w-1 rounded-full ${selected ? 'bg-accent-foreground/70' : 'bg-muted'}`} />}
               </span>
             </button>
           )
@@ -113,7 +113,7 @@ export function CalendarTab({ initialDate = today(), onOpenPlan }: CalendarTabPr
       )}
       <h2 className="text-section font-semibold">{formatLongDate(selectedDate)}</h2>
       <section aria-labelledby="due-heading" className="space-y-2">
-        <h2 id="due-heading" className="px-1 text-footnote font-medium uppercase tracking-wide text-muted">Due</h2>
+        <h2 id="due-heading" className="px-1 text-footnote font-medium text-muted">Due</h2>
         <div className="overflow-hidden rounded-xl bg-surface">
           {dueItems.length === 0 ? (
             <p className="px-4 py-5 text-subhead text-muted">Nothing due</p>
@@ -147,7 +147,7 @@ export function CalendarTab({ initialDate = today(), onOpenPlan }: CalendarTabPr
       )}
       <section aria-labelledby="spent-heading" className="space-y-2">
         <div className="flex items-center justify-between px-1">
-          <h2 id="spent-heading" className="text-footnote font-medium uppercase tracking-wide text-muted">Spent</h2>
+          <h2 id="spent-heading" className="text-footnote font-medium text-muted">Spent</h2>
           <span className="text-footnote text-muted">{formatMoney(spentItems.reduce((sum, item) => sum + item.amount, 0))}</span>
         </div>
         <div className="overflow-hidden rounded-xl bg-surface">
