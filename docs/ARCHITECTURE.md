@@ -50,7 +50,7 @@ Use current stable versions. Run the official `npm create vite@latest` and `npx 
    ├─ domain/                  types.ts, calc.ts, migrate.ts, dates.ts, calendar.ts (+ *.test.ts)
    ├─ storage/                 storage.ts, backup.ts
    ├─ state/                   AppStateProvider.tsx, reducer.ts, selectors.ts
-   ├─ features/                home/, spend/, calendar/, plan/
+   ├─ features/                home/, spend/, calendar/, plan/, settings/
    ├─ components/              ui/ (shadcn), TabBar.tsx, MiniPlayer.tsx, GroupedList.tsx ...
    ├─ pwa/                     register.ts, UpdatePrompt.tsx, legacyCache.ts
    └─ styles/                  index.css (tokens, light and dark)
@@ -209,7 +209,7 @@ Rules that stay: `src/domain` is pure, no router, no state library, no new depen
 - Savanna is the light set and Midnight the dark set. Switch with a `data-theme` attribute on `<html>` (`light`, `dark`) and fall back to `prefers-color-scheme` when the choice is "system".
 - The choice is stored under a separate key `salary-planner-prefs`, never inside the app data.
 - A tiny inline script in `index.html` sets `data-theme` and the `theme-color` meta tag before React loads, to avoid a flash.
-- Until the settings button exists (Phase D), the choice is always "system".
+- The settings sheet stores `system`, `light`, or `dark` under `salary-planner-prefs`; system removes `data-theme` so CSS follows the device preference.
 - Status colours: one accent, `danger` for overdue, over budget and destructive actions. `good` is replaced by the accent.
 
 ### 12.5 Typeface
@@ -232,6 +232,8 @@ Import `@fontsource-variable/inter` once in `main.tsx`, set `--font-sans` to Int
 5. A4 keep unsaved Spend input across tab switches.
 6. A5 cleanup (stray `@/` folder, template files, `.DS_Store`, dependency changes). First confirm nothing imports them.
 7. Then Phases B and C from `V2.1_PRD.md`.
+
+Phase D adds the settings sheet and wide-screen layout refinements without changing the mobile content width or app data shape.
 
 Each step is its own commit and must pass `npm test`, `npm run lint`, `npm run typecheck` and `npm run build`. Steps 2 to 6 must not change what the app does.
 

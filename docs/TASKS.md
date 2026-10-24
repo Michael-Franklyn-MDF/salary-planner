@@ -60,4 +60,4 @@ No behavior change except A0. A1 may change date labels to the formats in the sp
 
 ## Current task
 
-R1: Automated checks and manual release checklist.
+R1: Automated checks and manual release checklist. Automated checks pass; phone verification remains pending.
