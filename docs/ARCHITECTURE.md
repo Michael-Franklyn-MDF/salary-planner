@@ -58,7 +58,7 @@ Use current stable versions. Run the official `npm create vite@latest` and `npx 
 
 Rule: `src/domain` and `src/storage` never import React or touch the DOM (storage may use `localStorage`).
 
-## 4. Data model (schema v3)
+## 4. Data model (schema v4)
 
 ```ts
 type Id = string;                       // crypto.randomUUID(), with a fallback
@@ -69,15 +69,17 @@ interface OneOffCost       { id: Id; name: string; amount: number; date: string 
 interface Debt             { id: Id; name: string; amount: number; dayOfMonth: DayOfMonth | null; endDate: string | null; note: string }
 interface Category         { id: Id; name: string }
 interface DailySpend       { id: Id; amount: number; category: Id; date: string; note: string }          // YYYY-MM-DD
+interface PaidOccurrence   { kind: 'recurring' | 'oneOff' | 'debt'; itemId: Id; date: string }           // YYYY-MM-DD
 
 interface AppState {
-  schemaVersion: 3;
+  schemaVersion: 4;
   income: number;
   recurring: RecurringExpense[];
   oneOffs: OneOffCost[];
   debts: Debt[];
   dailySpend: DailySpend[];
   categories: Category[];
+  paidOccurrences: PaidOccurrence[];
 }
 ```
 
@@ -122,6 +124,7 @@ All functions take the state and a "today" string as arguments, so tests do not 
 | v1/v2 `oneoff[]` | `oneOffs[]` with new `id`; `due` becomes `date` if it is already `YYYY-MM-DD`, otherwise `date: null` and `note = due` |
 | v1/v2 `debt[]` | `debts[]` with new `id`; same `due` rule as recurring; `endDate: null` |
 | `income`, `dailySpend`, `categories` | carried over; missing or invalid pieces get safe defaults (same normalization as v1 `migrateState`) |
+| `paidOccurrences` | carried over and normalized; missing values become an empty list |
 | Missing `categories` | default list from v1 (`cat-food`, `cat-transport`, `cat-bills`, `cat-shopping`, `cat-entertainment`, `cat-other`) |
 
 Migration must be idempotent: running it on v3 data returns the same data.

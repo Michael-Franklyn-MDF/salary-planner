@@ -8,6 +8,16 @@ export type CalendarDueItem =
   | { kind: 'oneOff'; item: OneOffCost }
   | { kind: 'debt'; item: Debt }
 
+export function isPaidOccurrence(
+  state: AppState,
+  item: CalendarDueItem,
+  date: string,
+): boolean {
+  return (state.paidOccurrences ?? []).some((occurrence) => occurrence.kind === item.kind
+    && occurrence.itemId === item.item.id
+    && occurrence.date === date)
+}
+
 function dayForMonth(dayOfMonth: RecurringExpense['dayOfMonth'], year: number, month: number): number | null {
   if (dayOfMonth === null) return null
   return dayOfMonth === 'last' ? daysInMonth(year, month) : Math.min(dayOfMonth, daysInMonth(year, month))

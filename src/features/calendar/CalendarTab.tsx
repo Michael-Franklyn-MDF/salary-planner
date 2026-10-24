@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { today } from '@/domain/dates'
-import { dueItemsForDate } from '@/domain/calendar'
+import { dueItemsForDate, isPaidOccurrence } from '@/domain/calendar'
 import { formatLongDate, formatMoney, formatShortDate, formatShortWeekday } from '@/lib/format'
 import { useAppState } from '@/state/useAppState'
 
@@ -32,7 +32,7 @@ interface CalendarTabProps {
 }
 
 export function CalendarTab({ initialDate = today(), onOpenPlan }: CalendarTabProps) {
-  const { state } = useAppState()
+  const { state, dispatch } = useAppState()
   const [selectedDate, setSelectedDate] = useState(initialDate)
   const [monthView, setMonthView] = useState(false)
   const weekStart = useMemo(() => startOfWeek(selectedDate), [selectedDate])
@@ -108,12 +108,25 @@ export function CalendarTab({ initialDate = today(), onOpenPlan }: CalendarTabPr
         <div className="overflow-hidden rounded-xl bg-surface">
           {dueItems.length === 0 ? (
             <p className="px-4 py-5 text-subhead text-muted">Nothing due</p>
-          ) : dueItems.map((entry) => (
-            <div key={`${entry.kind}-${entry.item.id}`} className="flex min-h-14 items-center justify-between border-b border-separator px-4 last:border-b-0">
-              <span>{entry.item.name || 'Unnamed'}</span>
-              <span className="tabular-nums">{formatMoney(entry.item.amount)}</span>
-            </div>
-          ))}
+          ) : dueItems.map((entry) => {
+            const paid = isPaidOccurrence(state, entry, selectedDate)
+            return (
+              <div key={`${entry.kind}-${entry.item.id}`} className="flex min-h-14 items-center justify-between gap-3 border-b border-separator px-4 last:border-b-0">
+              <span className={paid ? 'text-muted line-through' : ''}>{entry.item.name || 'Unnamed'}</span>
+              <span className="flex items-center gap-3">
+                <span className={`tabular-nums ${paid ? 'text-muted' : ''}`}>{formatMoney(entry.item.amount)}</span>
+                <button
+                  type="button"
+                  className={`min-h-11 rounded-lg px-2 text-footnote ${paid ? 'text-muted' : 'text-accent'}`}
+                  aria-pressed={paid}
+                  onClick={() => !paid && dispatch({ type: 'markPaid', occurrence: { kind: entry.kind, itemId: entry.item.id, date: selectedDate } })}
+                >
+                  {paid ? 'Paid' : 'Mark paid'}
+                </button>
+              </span>
+              </div>
+            )
+          })}
         </div>
       </section>
       {!hasDatedItems && (

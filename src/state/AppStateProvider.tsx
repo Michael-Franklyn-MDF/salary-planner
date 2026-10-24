@@ -14,13 +14,14 @@ export function AppStateProvider({ children, initialState }: AppStateProviderPro
     ? { ok: true, state: initialState }
     : loadState())
   const [state, dispatch] = useReducer(appReducer, loaded.ok ? loaded.state : {
-    schemaVersion: 3,
+    schemaVersion: 4,
     income: 0,
     recurring: [],
     oneOffs: [],
     debts: [],
     dailySpend: [],
     categories: [{ id: 'cat-other', name: 'Other' }],
+    paidOccurrences: [],
   })
   const [saveFailed, setSaveFailed] = useState(false)
   const initialLoadedState = useRef(loaded.ok ? loaded.state : null)

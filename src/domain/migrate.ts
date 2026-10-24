@@ -6,10 +6,12 @@ import type {
   DayOfMonth,
   Debt,
   OneOffCost,
+  PaidOccurrence,
+  PaidOccurrenceKind,
   RecurringExpense,
 } from './types'
 
-const CURRENT_SCHEMA_VERSION = 3
+const CURRENT_SCHEMA_VERSION = 4
 
 export const DEFAULT_CATEGORIES: Category[] = [
   { id: 'cat-food', name: 'Food & Groceries' },
@@ -133,6 +135,22 @@ function normalizeCategories(raw: unknown): Category[] {
     : [...categories, { ...DEFAULT_CATEGORIES[DEFAULT_CATEGORIES.length - 1] }]
 }
 
+function normalizePaidOccurrences(raw: unknown): PaidOccurrence[] {
+  if (!Array.isArray(raw)) return []
+  return raw.flatMap((value) => {
+    const item = value && typeof value === 'object' ? value as Record<string, unknown> : {}
+    const kind = item.kind
+    const date = item.date
+    const itemId = item.itemId
+    if (
+      (kind !== 'recurring' && kind !== 'oneOff' && kind !== 'debt')
+      || typeof itemId !== 'string'
+      || !isValidDateString(date)
+    ) return []
+    return [{ kind: kind as PaidOccurrenceKind, itemId, date }]
+  })
+}
+
 function defaultState(): AppState {
   return {
     schemaVersion: CURRENT_SCHEMA_VERSION,
@@ -142,6 +160,7 @@ function defaultState(): AppState {
     debts: [],
     dailySpend: [],
     categories: DEFAULT_CATEGORIES.map((category) => ({ ...category })),
+    paidOccurrences: [],
   }
 }
 
@@ -166,6 +185,7 @@ export function migrateState(raw: unknown): AppState {
         ? source.dailySpend.map(normalizeDailySpend)
         : [],
       categories: normalizeCategories(source.categories),
+      paidOccurrences: normalizePaidOccurrences(source.paidOccurrences),
     }
   }
 
