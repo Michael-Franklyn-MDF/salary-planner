@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { today } from '@/domain/dates'
 import { dueItemsForDate, isPaidOccurrence } from '@/domain/calendar'
-import { formatLongDate, formatMoney, formatShortDate, formatShortWeekday } from '@/lib/format'
+import { formatLongDate, formatMoney, formatMonthYear, formatShortDate, formatShortWeekday } from '@/lib/format'
 import { useAppState } from '@/state/useAppState'
 
 function dateString(date: Date): string {
@@ -23,6 +23,12 @@ function startOfWeek(value: string): Date {
 function shiftDays(value: string, amount: number): string {
   const date = parseDate(value)
   date.setDate(date.getDate() + amount)
+  return dateString(date)
+}
+
+function shiftMonth(value: string, amount: number): string {
+  const date = parseDate(value)
+  date.setMonth(date.getMonth() + amount, 1)
   return dateString(date)
 }
 
@@ -55,11 +61,14 @@ export function CalendarTab({ initialDate = today(), onOpenPlan }: CalendarTabPr
   return (
     <main id="calendar-panel" role="tabpanel" aria-labelledby="calendar-tab" className="mx-auto max-w-[480px] space-y-6 px-4 pb-32 pt-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-large-title font-bold tracking-tight">Calendar</h1>
+        <div>
+          <h1 className="text-large-title font-bold tracking-tight">Calendar</h1>
+          <p className="text-subhead text-muted">{formatMonthYear(selectedDate)}</p>
+        </div>
         <div className="flex items-center gap-1">
           <button type="button" aria-pressed={monthView} className="min-h-11 rounded-lg px-3 text-footnote text-accent" onClick={() => setMonthView((current) => !current)}>{monthView ? 'Week' : 'Month'}</button>
-          <button type="button" aria-label="Previous week" className="min-h-11 rounded-lg px-3 text-accent" onClick={() => setSelectedDate(shiftDays(selectedDate, -7))}>‹</button>
-          <button type="button" aria-label="Next week" className="min-h-11 rounded-lg px-3 text-accent" onClick={() => setSelectedDate(shiftDays(selectedDate, 7))}>›</button>
+          <button type="button" aria-label={monthView ? 'Previous month' : 'Previous week'} className="min-h-11 rounded-lg px-3 text-accent" onClick={() => setSelectedDate(monthView ? shiftMonth(selectedDate, -1) : shiftDays(selectedDate, -7))}>‹</button>
+          <button type="button" aria-label={monthView ? 'Next month' : 'Next week'} className="min-h-11 rounded-lg px-3 text-accent" onClick={() => setSelectedDate(monthView ? shiftMonth(selectedDate, 1) : shiftDays(selectedDate, 7))}>›</button>
         </div>
       </div>
       {monthView ? (

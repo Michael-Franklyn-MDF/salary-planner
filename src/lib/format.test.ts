@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { formatLongDate, formatMoney, formatShortDate, formatShortWeekday } from './format'
+import { formatLongDate, formatMoney, formatMonthYear, formatShortDate, formatShortWeekday } from './format'
 
 describe('formatMoney', () => {
   it('uses KSh, grouping separators, and up to two decimal places', () => {
@@ -25,6 +25,10 @@ describe('date formatters', () => {
 
   it('formats a weekday label from the same parsed calendar date', () => {
     expect(formatShortWeekday('2026-10-20')).toBe('Tue')
+  })
+
+  it('formats month and year', () => {
+    expect(formatMonthYear('2026-10-25')).toBe('October 2026')
   })
 
   it('handles leap day and the final day of a month', () => {

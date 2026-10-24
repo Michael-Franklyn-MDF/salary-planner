@@ -14,6 +14,12 @@ const longDateFormatter = new Intl.DateTimeFormat('en-KE', {
   timeZone: 'UTC',
 })
 
+const monthYearFormatter = new Intl.DateTimeFormat('en-KE', {
+  month: 'long',
+  year: 'numeric',
+  timeZone: 'UTC',
+})
+
 export function formatMoney(amount: number): string {
   const normalizedAmount = amount === 0 ? 0 : amount
   return `KSh ${normalizedAmount.toLocaleString('en-KE', { maximumFractionDigits: 2 })}`
@@ -55,4 +61,13 @@ export function formatLongDate(value: string): string {
 
 export function formatShortWeekday(value: string): string {
   return formatDateParts(value, shortDateFormatter).weekday
+}
+
+export function formatMonthYear(value: string): string {
+  if (!isValidDateString(value)) throw new RangeError(`Invalid calendar date: ${value}`)
+  const [year, month, day] = value.split('-').map(Number)
+  const date = new Date(0)
+  date.setUTCFullYear(year, month - 1, day)
+  date.setUTCHours(12, 0, 0, 0)
+  return monthYearFormatter.format(date)
 }
