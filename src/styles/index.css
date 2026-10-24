@@ -2,19 +2,19 @@
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:is([data-theme='dark'] *, .dark *));
 
 :root {
-  --bg: #f2f2f7;
+  --bg: #e9f0ea;
   --surface: #ffffff;
-  --surface-2: #f2f2f7;
-  --text: #000000;
-  --text-muted: rgba(60, 60, 67, 0.6);
-  --separator: rgba(60, 60, 67, 0.29);
-  --accent: #0071e3;
-  --good: #248a3d;
-  --bad: #d70015;
-  --bar-bg: rgba(249, 249, 249, 0.94);
+  --surface-2: #f3f7f4;
+  --text: #14281d;
+  --text-muted: #526659;
+  --separator: rgba(20, 40, 29, 0.14);
+  --accent: #1f6b4a;
+  --good: var(--accent);
+  --bad: #b42318;
+  --bar-bg: rgba(255, 255, 255, 0.88);
 
   --font-system: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display',
     system-ui, 'Segoe UI', Roboto, sans-serif;
@@ -73,36 +73,37 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #000000;
-    --surface: #1c1c1e;
-    --surface-2: #2c2c2e;
-    --text: #ffffff;
-    --text-muted: rgba(235, 235, 245, 0.6);
-    --separator: rgba(84, 84, 88, 0.65);
-    --accent: #0a84ff;
-    --good: #30d158;
-    --bad: #ff453a;
-    --bar-bg: rgba(30, 30, 30, 0.94);
-    --primary-foreground: #000000;
-    --accent-foreground: #ffffff;
+  :root:not([data-theme]) {
+    --bg: #0b0d12;
+    --surface: #161a22;
+    --surface-2: #1e232d;
+    --text: #f2f4f8;
+    --text-muted: #8b93a3;
+    --separator: rgba(255, 255, 255, 0.1);
+    --accent: #4fbf8b;
+    --good: var(--accent);
+    --bad: #ff6b61;
+    --bar-bg: rgba(22, 26, 34, 0.88);
+    --primary-foreground: #06140d;
+    --accent-foreground: #06140d;
     color-scheme: dark;
   }
 }
 
+[data-theme='dark'],
 .dark {
-  --bg: #000000;
-  --surface: #1c1c1e;
-  --surface-2: #2c2c2e;
-  --text: #ffffff;
-  --text-muted: rgba(235, 235, 245, 0.6);
-  --separator: rgba(84, 84, 88, 0.65);
-  --accent: #0a84ff;
-  --good: #30d158;
-  --bad: #ff453a;
-  --bar-bg: rgba(30, 30, 30, 0.94);
-  --primary-foreground: #000000;
-  --accent-foreground: #ffffff;
+  --bg: #0b0d12;
+  --surface: #161a22;
+  --surface-2: #1e232d;
+  --text: #f2f4f8;
+  --text-muted: #8b93a3;
+  --separator: rgba(255, 255, 255, 0.1);
+  --accent: #4fbf8b;
+  --good: var(--accent);
+  --bad: #ff6b61;
+  --bar-bg: rgba(22, 26, 34, 0.88);
+  --primary-foreground: #06140d;
+  --accent-foreground: #06140d;
   color-scheme: dark;
 }
 

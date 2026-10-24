@@ -35,8 +35,8 @@ No behavior change except A0. A1 may change date labels to the formats in the sp
 
 ## Phase C: Visual
 
-- [~] **C1** Savanna and Midnight tokens in `theme.css`, `data-theme` handling, inline pre-render script to avoid a flash, per-scheme `theme-color` meta tags, manifest `theme_color` and `background_color` [G-01, G-06]. Keep `scope` and `start_url`.
-- [ ] **C2** Inter via `@fontsource-variable/inter`, fallback stack, confirm it is precached and works offline [G-08].
+- [x] **C1** Savanna and Midnight tokens in `theme.css`, `data-theme` handling, inline pre-render script to avoid a flash, per-scheme `theme-color` meta tags, manifest `theme_color` and `background_color` [G-01, G-06]. Keep `scope` and `start_url`.
+- [~] **C2** Inter via `@fontsource-variable/inter`, fallback stack, confirm it is precached and works offline [G-08].
 - [ ] **C3** Home layout: greeting, hero with HeroAmount and Ring, "Add spend" button, "Where it goes" breakdown, Coming up [H-01, H-02, H-03, H-05, H-06].
 - [ ] **C4** Spend polish: AmountDisplay alignment, chips (hidden scrollbar, fade, accent), keypad key shapes and pressed state, compact summary line, Recent day totals [S-02 to S-08].
 - [ ] **C5** Calendar polish: 44px controls, dots on every day with items, today ring, selected fill [C-01, C-02].
@@ -60,4 +60,4 @@ No behavior change except A0. A1 may change date labels to the formats in the sp
 
 ## Current task
 
-C1: Savanna and Midnight theme tokens and pre-rendered theme handling.
+C2: Inter font and offline precache.

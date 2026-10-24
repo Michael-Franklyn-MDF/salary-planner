@@ -3,7 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0071E3" />
+    <meta name="theme-color" content="#E9F0EA" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0B0D12" media="(prefers-color-scheme: dark)" />
+    <link rel="manifest" href="./manifest.json" />
+    <script>
+      (() => {
+        const dark = window.matchMedia('(prefers-color-scheme: dark)').matches
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light'
+      })()
+    </script>
     <title>Salary Planner</title>
   </head>
   <body>
