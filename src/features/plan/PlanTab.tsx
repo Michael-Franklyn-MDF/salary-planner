@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { ChevronRight } from 'lucide-react'
 import type { AppState, Debt, OneOffCost, RecurringExpense } from '@/domain/types'
 import { formatMoney, formatShortDate } from '@/lib/format'
 import { useAppState } from '@/state/useAppState'
@@ -67,8 +68,9 @@ function PlanGroup<T extends RecurringExpense | OneOffCost | Debt>({
 }) {
   return (
     <section aria-labelledby={`${kind}-heading`} className="space-y-2">
-      <h2 id={`${kind}-heading`} className="px-4 text-footnote font-medium uppercase tracking-wide text-muted">
-        {title}
+      <h2 id={`${kind}-heading`} aria-label={title} className="px-4 text-footnote font-medium uppercase tracking-wide text-muted">
+        <span>{title}</span>
+        <span className="ml-2 normal-case">{items.length} · {formatMoney(items.reduce((sum, item) => sum + item.amount, 0))}</span>
       </h2>
       <ListGroup>
         {items.map((item) => {
@@ -90,7 +92,7 @@ function PlanGroup<T extends RecurringExpense | OneOffCost | Debt>({
                       : <span className="text-accent">Add day</span>}
                 </span>
               </span>
-              <span className="ml-4 shrink-0 tabular-nums">{formatMoney(item.amount)}</span>
+              <span className="ml-4 flex shrink-0 items-center gap-2 tabular-nums">{formatMoney(item.amount)}<ChevronRight size={18} aria-hidden /></span>
             </button>
           )
         })}
@@ -207,7 +209,7 @@ export function PlanTab() {
         <ListGroup>
           <button type="button" className="flex min-h-16 w-full items-center justify-between px-4 text-left" onClick={() => openEditor({ kind: 'income' })}>
             <span className="text-body">Monthly take-home</span>
-            <span className="tabular-nums">{formatMoney(state.income)}</span>
+            <span className="flex items-center gap-2 tabular-nums">{formatMoney(state.income)}<ChevronRight size={18} aria-hidden /></span>
           </button>
         </ListGroup>
       </section>
@@ -219,10 +221,15 @@ export function PlanTab() {
       <section aria-labelledby="data-heading" className="space-y-2">
         <h2 id="data-heading" className="px-4 text-footnote font-medium uppercase tracking-wide text-muted">Data</h2>
         <ListGroup>
-          <button type="button" className="min-h-12 w-full border-b border-separator px-4 text-left text-accent" onClick={downloadBackup}>Export backup</button>
-          <label className="block min-h-12 cursor-pointer border-b border-separator px-4 leading-[48px] text-accent">
-            Import backup
+          <button type="button" className="flex min-h-16 w-full items-center justify-between border-b border-separator px-4 text-left" onClick={downloadBackup}>
+            <span><span className="block text-accent">Export backup</span><span className="block text-footnote text-muted">Save a copy of your data to this device.</span></span>
+            <ChevronRight size={18} aria-hidden />
+          </button>
+          <label className="flex min-h-16 cursor-pointer items-center justify-between border-b border-separator px-4">
+            <span><span className="block text-accent">Import backup</span><span className="block text-footnote text-muted">Replace your current data from a JSON file.</span></span>
+            <ChevronRight size={18} aria-hidden />
             <input
+              aria-label="Import backup"
               type="file"
               accept="application/json,.json"
               className="sr-only"
@@ -233,9 +240,13 @@ export function PlanTab() {
               }}
             />
           </label>
-          <button type="button" className="min-h-12 w-full px-4 text-left text-bad" onClick={() => setConfirmClear(true)}>Clear all data</button>
         </ListGroup>
         {importError && <p role="alert" className="px-4 text-footnote text-bad">{importError}</p>}
+      </section>
+      <section aria-label="Destructive actions">
+        <ListGroup>
+          <button type="button" className="min-h-12 w-full px-4 text-left text-bad" onClick={() => setConfirmClear(true)}>Clear all data</button>
+        </ListGroup>
       </section>
 
       <ConfirmDialog
