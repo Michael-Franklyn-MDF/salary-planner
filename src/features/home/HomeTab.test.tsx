@@ -46,7 +46,7 @@ describe('HomeTab', () => {
     render(<AppStateProvider initialState={state}><HomeTab /></AppStateProvider>)
     expect(screen.getByRole('heading', { name: 'Home' })).toBeInTheDocument()
     expect(screen.getByLabelText('Left to spend, KSh 65,000')).toBeInTheDocument()
-    expect(screen.getByText('Left to spend')).toBeInTheDocument()
+    expect(screen.getAllByText('Left to spend')).toHaveLength(2)
   })
 
   it('shows the first-run state and opens Plan', () => {
@@ -70,7 +70,7 @@ describe('HomeTab', () => {
     expect(screen.getByLabelText('Left to spend, KSh -10,000')).toHaveClass('text-bad')
   })
 
-  it('shows after commitments and summary cards', () => {
+  it('shows the where it goes breakdown', () => {
     render(<AppStateProvider initialState={state}><HomeTab /></AppStateProvider>)
     expect(screen.getByText('After commitments')).toBeInTheDocument()
     expect(screen.getByText('KSh 70,000')).toBeInTheDocument()

@@ -8,31 +8,32 @@ import { useColdLaunch, useReducedMotion } from '@/hooks/useColdLaunch'
 import { greetings } from '@/lib/greetings'
 import { useEffect, useState } from 'react'
 
-export function HomeTab({ onOpenCalendar, onOpenPlan, coldLaunch }: HomeTabProps = {}) {
+export function HomeTab({ onOpenSpend, onOpenCalendar, onOpenPlan, coldLaunch }: HomeTabProps = {}) {
   const detectedColdLaunch = useColdLaunch()
-  return <HomeTabContent coldLaunch={coldLaunch ?? detectedColdLaunch} onOpenCalendar={onOpenCalendar} onOpenPlan={onOpenPlan} />
+  return <HomeTabContent coldLaunch={coldLaunch ?? detectedColdLaunch} onOpenSpend={onOpenSpend} onOpenCalendar={onOpenCalendar} onOpenPlan={onOpenPlan} />
 }
 
 interface HomeTabContentProps extends HomeTabProps {
   coldLaunch: boolean
 }
 
-function HomeTabContent({ onOpenCalendar, onOpenPlan, coldLaunch }: HomeTabContentProps) {
+function HomeTabContent({ onOpenSpend, onOpenCalendar, onOpenPlan, coldLaunch }: HomeTabContentProps) {
   const { state } = useAppState()
   const [year, month, day] = today().split('-').map(Number)
   const rangeEnd = new Date(year, month - 1, day + 14)
   const rangeEndString = `${rangeEnd.getFullYear()}-${String(rangeEnd.getMonth() + 1).padStart(2, '0')}-${String(rangeEnd.getDate()).padStart(2, '0')}`
   const upcoming = dueItemsForRange(state, today(), rangeEndString).slice(0, 3)
-  return <HomeContent upcoming={upcoming} coldLaunch={coldLaunch} onOpenCalendar={onOpenCalendar} onOpenPlan={onOpenPlan} />
+  return <HomeContent upcoming={upcoming} coldLaunch={coldLaunch} onOpenSpend={onOpenSpend} onOpenCalendar={onOpenCalendar} onOpenPlan={onOpenPlan} />
 }
 
 interface HomeTabProps {
+  onOpenSpend?: () => void
   onOpenCalendar?: (date: string) => void
   onOpenPlan?: () => void
   coldLaunch?: boolean
 }
 
-function HomeContent({ onOpenCalendar, onOpenPlan, upcoming, coldLaunch }: HomeTabProps & { upcoming: Array<CalendarDueItem & { date: string }>; coldLaunch: boolean }) {
+function HomeContent({ onOpenSpend, onOpenCalendar, onOpenPlan, upcoming, coldLaunch }: HomeTabProps & { upcoming: Array<CalendarDueItem & { date: string }>; coldLaunch: boolean }) {
   const { state } = useAppState()
   const reducedMotion = useReducedMotion()
   const summary = calculateSummary(state, today())
@@ -68,14 +69,6 @@ function HomeContent({ onOpenCalendar, onOpenPlan, upcoming, coldLaunch }: HomeT
     frame = requestAnimationFrame(animate)
     return () => cancelAnimationFrame(frame)
   }, [shouldAnimate, summary.remainingToSpend])
-  const summaryCards: Array<[string, number]> = [
-    ['Income', summary.income],
-    ['Recurring', summary.recurringTotal],
-    ['Upcoming', summary.oneOffTotal],
-    ['Debts', summary.debtTotal],
-    ['Spent this month', summary.spentThisMonth],
-  ]
-
   return (
     <main id="home-panel" role="tabpanel" aria-labelledby="home-tab" className="mx-auto max-w-[480px] space-y-6 px-4 pb-32 pt-8">
       <h1 className="text-large-title font-bold tracking-tight">Home</h1>
@@ -95,6 +88,9 @@ function HomeContent({ onOpenCalendar, onOpenPlan, upcoming, coldLaunch }: HomeT
         </div>
         <p className="mt-2 text-footnote text-muted">after commitments and this month's spending</p>
       </section>
+      <button type="button" className="min-h-12 w-full rounded-xl bg-accent font-semibold text-white" onClick={onOpenSpend}>
+        Add spend
+      </button>
       {firstRun ? (
         <section className="rounded-2xl bg-surface p-6 text-center" aria-labelledby="first-run-heading">
           <h2 id="first-run-heading" className="text-title font-semibold">Start with your income</h2>
@@ -105,17 +101,21 @@ function HomeContent({ onOpenCalendar, onOpenPlan, upcoming, coldLaunch }: HomeT
         </section>
       ) : (
         <>
-      <div className="flex items-center justify-between rounded-xl bg-surface px-4 py-4">
-        <span className="text-body">After commitments</span>
-        <span className="text-headline font-semibold tabular-nums">{formatMoney(summary.remaining)}</span>
-      </div>
-      <section aria-labelledby="summary-heading" className="space-y-2">
-        <h2 id="summary-heading" className="px-1 text-footnote font-medium uppercase tracking-wide text-muted">Summary</h2>
-        <div className="grid grid-cols-2 gap-3">
-          {summaryCards.map(([label, amount], index) => (
-            <div key={label} className={`rounded-xl bg-surface p-4 ${index === summaryCards.length - 1 ? 'col-span-2' : ''}`}>
-              <p className="text-footnote text-muted">{label}</p>
-              <p className="mt-1 text-headline font-semibold tabular-nums">{formatMoney(amount)}</p>
+      <section aria-labelledby="where-it-goes-heading" className="space-y-2">
+        <h2 id="where-it-goes-heading" className="px-1 text-footnote font-medium uppercase tracking-wide text-muted">Where it goes</h2>
+        <div className="overflow-hidden rounded-xl bg-surface">
+          {([
+            ['Income', summary.income],
+            ['Recurring', -summary.recurringTotal],
+            ['Upcoming', -summary.oneOffTotal],
+            ['Debts', -summary.debtTotal],
+            ['After commitments', summary.remaining],
+            ['Spent this month', -summary.spentThisMonth],
+            ['Left to spend', summary.remainingToSpend],
+          ] as Array<[string, number]>).map(([label, amount]) => (
+            <div key={label} className={`flex min-h-12 items-center justify-between border-b border-separator px-4 last:border-b-0 ${label === 'After commitments' || label === 'Left to spend' ? 'font-semibold' : ''}`}>
+              <span>{label}</span>
+              <span className="tabular-nums">{formatMoney(amount)}</span>
             </div>
           ))}
         </div>
