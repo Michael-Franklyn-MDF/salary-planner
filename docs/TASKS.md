@@ -53,11 +53,11 @@ No behavior change except A0. A1 may change date labels to the formats in the sp
 
 ## Release
 
-- [ ] **R1** All automated checks pass and the manual phone checklist in `TESTING.md` passes.
+- [~] **R1** Automated checks pass; the manual phone checklist in `TESTING.md` remains owner-gated.
 - [ ] **R2** Owner exports a fresh backup from the installed app and keeps it safe. Do not commit it.
-- [ ] **R3** Merge `v2.1` into `main`, confirm the Pages deploy succeeds.
+- [~] **R3** `v2.1` is merged into `main` and pushed. The Pages build succeeded; the deploy job is waiting on the repository Pages environment.
 - [ ] **R4** On the phone: accept the update prompt, confirm data is intact, loads offline, theme and animation behave. Tag `v2.1`.
 
 ## Current task
 
-R1: Automated checks and manual release checklist. Automated checks pass; phone verification remains pending.
+R1-R4: Repository release work is complete through the successful Pages build. R1 manual phone checks, R2 backup export, R3 Pages environment approval, and R4 phone update verification/tagging remain outside terminal access.
