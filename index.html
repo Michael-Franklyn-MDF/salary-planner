@@ -9,8 +9,15 @@
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <script>
       (() => {
-        const dark = window.matchMedia('(prefers-color-scheme: dark)').matches
-        document.documentElement.dataset.theme = dark ? 'dark' : 'light'
+        try {
+          const raw = window.localStorage.getItem('salary-planner-prefs')
+          const preference = raw ? JSON.parse(raw).theme : 'system'
+          if (preference === 'light' || preference === 'dark') {
+            document.documentElement.dataset.theme = preference
+          }
+        } catch {
+          // System theme is the safe fallback before React loads.
+        }
       })()
     </script>
     <title>Salary Planner</title>

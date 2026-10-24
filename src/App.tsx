@@ -11,6 +11,7 @@ import { PlanTab } from './features/plan/PlanTab'
 import { useAppState } from './state/useAppState'
 import { UpdatePrompt } from './pwa/UpdatePrompt'
 import { useColdLaunch } from './hooks/useColdLaunch'
+import { SettingsSheet } from './features/settings/SettingsSheet'
 
 interface AppProps {
   update?: () => Promise<void>
@@ -26,6 +27,7 @@ function AppContent({ update }: AppProps) {
 
   return (
     <>
+      <SettingsSheet />
       {activeTab === 'spend' ? <SpendTab draftAmount={spendAmount} onDraftAmountChange={setSpendAmount} /> : activeTab === 'home' ? <HomeTab coldLaunch={coldLaunch} onOpenSpend={() => setActiveTab('spend')} onOpenCalendar={(date) => { setCalendarDate(date); setActiveTab('calendar') }} onOpenPlan={() => setActiveTab('plan')} /> : activeTab === 'calendar' ? <CalendarTab initialDate={calendarDate} onOpenPlan={() => setActiveTab('plan')} /> : <PlanTab />}
       {activeTab !== 'home' && <MiniPlayer amount={remainingToSpend} onOpenHome={() => setActiveTab('home')} />}
       <TabBar activeTab={activeTab} entering={coldLaunch} onTabChange={setActiveTab} />

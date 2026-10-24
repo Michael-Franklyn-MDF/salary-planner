@@ -27,4 +27,15 @@ describe('v2 app shell', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Open Plan' }))
     expect(screen.getByRole('heading', { name: 'Plan' })).toBeInTheDocument()
   })
+
+  it('opens settings and changes the appearance preference', () => {
+    render(<App />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Settings' }))
+    expect(screen.getByRole('heading', { name: 'Settings' })).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Dark' }))
+
+    expect(document.documentElement.dataset.theme).toBe('dark')
+    expect(window.localStorage.getItem('salary-planner-prefs')).toBe('{"theme":"dark"}')
+  })
 })
