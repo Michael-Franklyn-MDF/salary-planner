@@ -10,6 +10,8 @@ import { AppStateProvider } from './state/AppStateProvider'
 import { PlanTab } from './features/plan/PlanTab'
 import { useAppState } from './state/useAppState'
 import { UpdatePrompt } from './pwa/UpdatePrompt'
+import { useColdLaunch } from './hooks/useColdLaunch'
+import { SettingsSheet } from './features/settings/SettingsSheet'
 
 interface AppProps {
   update?: () => Promise<void>
@@ -18,14 +20,17 @@ interface AppProps {
 function AppContent({ update }: AppProps) {
   const [activeTab, setActiveTab] = useState<AppTab>('home')
   const [calendarDate, setCalendarDate] = useState<string>(today())
+  const [spendAmount, setSpendAmount] = useState('')
+  const coldLaunch = useColdLaunch()
   const { state } = useAppState()
   const remainingToSpend = calculateSummary(state, today()).remainingToSpend
 
   return (
     <>
-      {activeTab === 'spend' ? <SpendTab /> : activeTab === 'home' ? <HomeTab onOpenCalendar={(date) => { setCalendarDate(date); setActiveTab('calendar') }} /> : activeTab === 'calendar' ? <CalendarTab initialDate={calendarDate} onOpenPlan={() => setActiveTab('plan')} /> : <PlanTab />}
+      <SettingsSheet />
+      {activeTab === 'spend' ? <SpendTab draftAmount={spendAmount} onDraftAmountChange={setSpendAmount} /> : activeTab === 'home' ? <HomeTab coldLaunch={coldLaunch} onOpenSpend={() => setActiveTab('spend')} onOpenCalendar={(date) => { setCalendarDate(date); setActiveTab('calendar') }} onOpenPlan={() => setActiveTab('plan')} /> : activeTab === 'calendar' ? <CalendarTab initialDate={calendarDate} onOpenPlan={() => setActiveTab('plan')} /> : <PlanTab />}
       {activeTab !== 'home' && <MiniPlayer amount={remainingToSpend} onOpenHome={() => setActiveTab('home')} />}
-      <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
+      <TabBar activeTab={activeTab} entering={coldLaunch} onTabChange={setActiveTab} />
       {update && <UpdatePrompt onUpdate={update} />}
     </>
   )

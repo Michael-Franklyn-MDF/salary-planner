@@ -40,12 +40,21 @@ export interface DailySpend {
   note: string
 }
 
+export type PaidOccurrenceKind = 'recurring' | 'oneOff' | 'debt'
+
+export interface PaidOccurrence {
+  kind: PaidOccurrenceKind
+  itemId: Id
+  date: string
+}
+
 export interface AppState {
-  schemaVersion: 3
+  schemaVersion: number
   income: number
   recurring: RecurringExpense[]
   oneOffs: OneOffCost[]
   debts: Debt[]
   dailySpend: DailySpend[]
   categories: Category[]
+  paidOccurrences?: PaidOccurrence[]
 }

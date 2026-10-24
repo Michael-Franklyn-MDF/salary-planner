@@ -21,7 +21,7 @@ describe('storage', () => {
 
     expect(result).toEqual({
       ok: true,
-      state: expect.objectContaining({ schemaVersion: 3, income: 0 }),
+      state: expect.objectContaining({ schemaVersion: 4, income: 0 }),
     })
     expect(storage.getItem(PRE_MIGRATION_BACKUP_KEY)).toBeNull()
   })
@@ -53,7 +53,7 @@ describe('storage', () => {
 
   it('returns migration errors without overwriting the stored value', () => {
     const storage = new FakeStorage()
-    const futureState = JSON.stringify({ schemaVersion: 4 })
+    const futureState = JSON.stringify({ schemaVersion: 5 })
     storage.setItem(STORAGE_KEY, futureState)
 
     const result = loadState(storage)

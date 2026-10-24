@@ -1,7 +1,8 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { AppStateProvider } from '@/state/AppStateProvider'
 import type { AppState } from '@/domain/types'
+import { formatShortDate } from '@/lib/format'
 import { HomeTab } from './HomeTab'
 
 const state: AppState = {
@@ -15,20 +16,61 @@ const state: AppState = {
 }
 
 describe('HomeTab', () => {
+  it('swaps the greeting once on a cold launch', async () => {
+    vi.useFakeTimers()
+    try {
+      render(<AppStateProvider initialState={state}><HomeTab coldLaunch /></AppStateProvider>)
+
+      expect(screen.getByText('Hello, Michael')).toBeInTheDocument()
+      act(() => vi.advanceTimersByTime(250))
+      expect(screen.getByText('Hola, Michael')).toBeInTheDocument()
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('does not swap the greeting on a warm return', () => {
+    vi.useFakeTimers()
+    try {
+      render(<AppStateProvider initialState={state}><HomeTab coldLaunch={false} /></AppStateProvider>)
+
+      act(() => vi.advanceTimersByTime(250))
+      expect(screen.getByText('Hello, Michael')).toBeInTheDocument()
+      expect(screen.queryByText('Hola, Michael')).not.toBeInTheDocument()
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
   it('shows left to spend in the positive colour state', () => {
     render(<AppStateProvider initialState={state}><HomeTab /></AppStateProvider>)
     expect(screen.getByRole('heading', { name: 'Home' })).toBeInTheDocument()
     expect(screen.getByLabelText('Left to spend, KSh 65,000')).toBeInTheDocument()
-    expect(screen.getByText('Left to spend')).toBeInTheDocument()
+    expect(screen.getAllByText('Left to spend')).toHaveLength(2)
+  })
+
+  it('shows the first-run state and opens Plan', () => {
+    const onOpenPlan = vi.fn()
+    render(
+      <AppStateProvider initialState={{ ...state, income: 0, recurring: [], dailySpend: [] }}>
+        <HomeTab onOpenPlan={onOpenPlan} />
+      </AppStateProvider>,
+    )
+
+    expect(screen.getByLabelText('Left to spend, KSh 0')).toHaveClass('text-foreground')
+    expect(screen.getByRole('heading', { name: 'Start with your income' })).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: 'Summary' })).not.toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Open Plan' }))
+    expect(onOpenPlan).toHaveBeenCalledOnce()
   })
 
   it('shows the overspent caption and bad colour state', () => {
     render(<AppStateProvider initialState={{ ...state, dailySpend: [{ ...state.dailySpend[0], amount: 80000 }] }}><HomeTab /></AppStateProvider>)
     expect(screen.getByText('Over by this month')).toBeInTheDocument()
-    expect(screen.getByLabelText('Left to spend, KSh -10,000')).toHaveClass('text-[color:var(--bad)]')
+    expect(screen.getByLabelText('Left to spend, KSh -10,000')).toHaveClass('text-bad')
   })
 
-  it('shows after commitments and summary cards', () => {
+  it('shows the where it goes breakdown', () => {
     render(<AppStateProvider initialState={state}><HomeTab /></AppStateProvider>)
     expect(screen.getByText('After commitments')).toBeInTheDocument()
     expect(screen.getByText('KSh 70,000')).toBeInTheDocument()
@@ -49,6 +91,7 @@ describe('HomeTab', () => {
         <HomeTab onOpenCalendar={onOpenCalendar} />
       </AppStateProvider>,
     )
+    expect(screen.getByRole('button', { name: /Insurance/ })).toHaveTextContent(formatShortDate(dueDate))
     fireEvent.click(screen.getByRole('button', { name: /Insurance/ }))
     expect(onOpenCalendar).toHaveBeenCalledWith(dueDate)
   })

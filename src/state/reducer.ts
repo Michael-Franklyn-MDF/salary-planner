@@ -4,6 +4,7 @@ import type {
   DailySpend,
   Debt,
   OneOffCost,
+  PaidOccurrence,
   RecurringExpense,
 } from '@/domain/types'
 import { migrateState } from '@/domain/migrate'
@@ -24,6 +25,7 @@ export type AppAction =
   | { type: 'addCategory'; item: Category }
   | { type: 'updateCategory'; item: Category }
   | { type: 'deleteCategory'; id: string }
+  | { type: 'markPaid'; occurrence: PaidOccurrence }
   | { type: 'setIncome'; income: number }
   | { type: 'replaceAll'; state: AppState }
   | { type: 'clear' }
@@ -74,6 +76,18 @@ export function appReducer(state: AppState, action: AppAction): AppState {
           ? state.dailySpend
           : state.dailySpend.map((item) => item.category === action.id ? { ...item, category: 'cat-other' } : item),
       }
+    case 'markPaid': {
+      const paidOccurrences = state.paidOccurrences ?? []
+      const exists = paidOccurrences.some((item) => item.kind === action.occurrence.kind
+        && item.itemId === action.occurrence.itemId
+        && item.date === action.occurrence.date)
+      return {
+        ...state,
+        paidOccurrences: exists
+          ? paidOccurrences
+          : [...paidOccurrences, action.occurrence],
+      }
+    }
     case 'setIncome':
       return { ...state, income: action.income }
     case 'replaceAll':

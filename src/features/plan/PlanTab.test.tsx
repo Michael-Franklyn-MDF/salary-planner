@@ -25,12 +25,24 @@ function renderPlan(initialState = state) {
 }
 
 describe('PlanTab', () => {
-  it('shows grouped lists and a No date tag', () => {
+  it('shows grouped lists and an Add day prompt for recurring items without a day', () => {
     renderPlan()
 
     expect(screen.getByRole('heading', { name: 'Plan' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Recurring expenses' })).toBeInTheDocument()
+    expect(screen.getByText('Add day')).toBeInTheDocument()
+  })
+
+  it('keeps No date for one-off costs without a date', () => {
+    renderPlan({ ...state, recurring: [], oneOffs: [{ id: 'one-off-1', name: 'Insurance', amount: 1200, date: null, note: '' }] })
+
     expect(screen.getByText('No date')).toBeInTheDocument()
+  })
+
+  it('shows one-off dates in the shared short date format', () => {
+    renderPlan({ ...state, oneOffs: [{ id: 'one-off-1', name: 'Insurance', amount: 1200, date: '2026-11-03', note: '' }] })
+
+    expect(screen.getByRole('button', { name: /Insurance/ })).toHaveTextContent('Tue 3 Nov')
   })
 
   it('adds a recurring expense from the bottom sheet', () => {

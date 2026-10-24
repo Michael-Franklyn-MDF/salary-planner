@@ -8,13 +8,13 @@ interface KeypadProps {
 
 export function Keypad({ onKeyPress }: KeypadProps) {
   return (
-    <div aria-label="Amount keypad" className="grid grid-cols-3 gap-1">
+    <div role="group" aria-label="Amount keypad" className="spend-keypad grid grid-cols-3 gap-1">
       {keys.map((key) => (
         <button
           key={key}
           type="button"
           aria-label={key === '.' ? 'decimal point' : key === 'backspace' ? 'Backspace' : key}
-          className="flex h-16 items-center justify-center rounded-xl text-[32px] leading-none transition-opacity active:opacity-50 motion-reduce:transition-none"
+          className="flex h-16 items-center justify-center rounded-2xl bg-surface text-keypad transition-transform active:scale-95 active:opacity-70 motion-reduce:transition-none"
           onClick={() => onKeyPress(key)}
         >
           {key === 'backspace' ? <Delete size={28} strokeWidth={1.8} aria-hidden /> : key}

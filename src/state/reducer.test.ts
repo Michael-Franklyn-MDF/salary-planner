@@ -21,6 +21,7 @@ const initialState: AppState = {
     { id: 'cat-food', name: 'Food' },
     { id: 'cat-other', name: 'Other' },
   ],
+  paidOccurrences: [],
 }
 
 describe('appReducer', () => {
@@ -89,7 +90,7 @@ describe('appReducer', () => {
     expect(incomeChanged.income).toBe(120000)
     expect(replaced).toBe(replacement)
     expect(cleared).toEqual({
-      schemaVersion: 3,
+      schemaVersion: 4,
       income: 0,
       recurring: [],
       oneOffs: [],
@@ -103,6 +104,17 @@ describe('appReducer', () => {
         { id: 'cat-entertainment', name: 'Entertainment' },
         { id: 'cat-other', name: 'Other' },
       ],
+      paidOccurrences: [],
     })
+
+  })
+
+  it('marks a due occurrence paid once', () => {
+    const occurrence = { kind: 'recurring' as const, itemId: 'recurring-1', date: '2026-10-05' }
+    const marked = appReducer(initialState, { type: 'markPaid', occurrence })
+    const markedAgain = appReducer(marked, { type: 'markPaid', occurrence })
+
+    expect(marked.paidOccurrences).toEqual([occurrence])
+    expect(markedAgain.paidOccurrences).toEqual([occurrence])
   })
 })

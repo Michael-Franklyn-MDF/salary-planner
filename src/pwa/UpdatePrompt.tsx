@@ -19,12 +19,12 @@ export function UpdatePrompt({ onUpdate }: UpdatePromptProps) {
   return (
     <aside
       role="status"
-      className="fixed inset-x-4 bottom-[calc(108px+env(safe-area-inset-bottom))] z-50 mx-auto flex max-w-[448px] items-center justify-between gap-4 rounded-2xl bg-[color:var(--surface)] p-4 shadow-lg ring-1 ring-[color:var(--separator)]"
+      className="fixed inset-x-4 bottom-[calc(108px+env(safe-area-inset-bottom))] z-50 mx-auto flex max-w-[448px] items-center justify-between gap-4 rounded-2xl bg-surface p-4 shadow-lg ring-1 ring-separator"
     >
-      <p className="text-[15px] leading-5">A new version is ready.</p>
+      <p className="text-subhead">A new version is ready.</p>
       <button
         type="button"
-        className="min-h-11 shrink-0 rounded-xl bg-[color:var(--accent)] px-4 font-semibold text-white"
+        className="min-h-11 shrink-0 rounded-xl bg-accent px-4 font-semibold text-accent-foreground"
         onClick={() => void onUpdate()}
       >
         Update

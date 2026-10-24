@@ -12,6 +12,20 @@ function StateProbe() {
 }
 
 describe('SpendTab', () => {
+  it('keeps the compact entry controls in the short-screen layout', () => {
+    render(
+      <AppStateProvider>
+        <SpendTab />
+      </AppStateProvider>,
+    )
+
+    expect(screen.getByRole('tabpanel')).toHaveClass('spend-screen')
+    expect(screen.getByRole('status')).toHaveClass('spend-amount')
+    expect(screen.getByRole('group', { name: 'Amount keypad' })).toHaveClass('spend-keypad')
+    expect(screen.getByRole('group', { name: 'Amount keypad' }).querySelectorAll('button')).toHaveLength(12)
+    expect(screen.getByRole('button', { name: 'Add' })).toBeVisible()
+  })
+
   it('blocks a second decimal point and a third decimal place', () => {
     render(
       <AppStateProvider>
@@ -107,12 +121,12 @@ describe('SpendTab', () => {
       </AppStateProvider>,
     )
 
-    expect(screen.getByText('Monday, 12 Oct')).toBeInTheDocument()
-    expect(screen.getByText('Saturday, 10 Oct')).toBeInTheDocument()
+    expect(screen.getByText('Mon 12 Oct')).toBeInTheDocument()
+    expect(screen.getByText('Sat 10 Oct')).toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: /OtherTeaKSh 8/ }))
     fireEvent.change(screen.getByLabelText('Edit amount'), { target: { value: '9' } })
     fireEvent.click(screen.getByRole('button', { name: 'Save' }))
-    expect(screen.getAllByText('KSh 9')).toHaveLength(2)
+    expect(screen.getAllByText('KSh 9')).toHaveLength(1)
 
     fireEvent.click(screen.getByRole('button', { name: /OtherTeaKSh 9/ }))
     fireEvent.click(screen.getByRole('button', { name: 'Delete' }))

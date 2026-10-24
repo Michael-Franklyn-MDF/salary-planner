@@ -3,7 +3,7 @@ import type { AppState } from '@/domain/types'
 import { exportBackup, importBackup } from './backup'
 
 const state: AppState = {
-  schemaVersion: 3,
+  schemaVersion: 4,
   income: 100000,
   recurring: [
     { id: 'recurring-1', name: 'Rent', amount: 30000, dayOfMonth: 5, note: '' },
@@ -12,10 +12,11 @@ const state: AppState = {
   debts: [],
   dailySpend: [],
   categories: [{ id: 'cat-other', name: 'Other' }],
+  paidOccurrences: [],
 }
 
 describe('backup', () => {
-  it('exports a v3 state as a JSON blob', async () => {
+  it('exports a v4 state as a JSON blob', async () => {
     const backup = exportBackup(state)
 
     expect(backup.type).toBe('application/json')
@@ -29,7 +30,7 @@ describe('backup', () => {
     })]))
 
     expect(imported).toMatchObject({
-      schemaVersion: 3,
+      schemaVersion: 4,
       income: 100000,
       recurring: [{ name: 'Rent', amount: 30000, dayOfMonth: 5 }],
     })
@@ -45,14 +46,14 @@ describe('backup', () => {
     })]))
 
     expect(imported).toMatchObject({
-      schemaVersion: 3,
+      schemaVersion: 4,
       recurring: [{ name: 'Rent', dayOfMonth: 'last' }],
       dailySpend: [{ id: 'spend-1', amount: 250, category: 'cat-food' }],
       categories: [{ id: 'cat-food', name: 'Food' }, { id: 'cat-other', name: 'Other' }],
     })
   })
 
-  it('imports a v3 backup without changing it', async () => {
+  it('imports a v4 backup without changing it', async () => {
     await expect(importBackup(exportBackup(state))).resolves.toEqual(state)
   })
 
@@ -62,7 +63,7 @@ describe('backup', () => {
   })
 
   it('rejects a backup with an unsupported schema version', async () => {
-    await expect(importBackup(new Blob([JSON.stringify({ schemaVersion: 4 })])))
-      .rejects.toThrow('Unsupported schema version: 4')
+    await expect(importBackup(new Blob([JSON.stringify({ schemaVersion: 5 })])))
+      .rejects.toThrow('Unsupported schema version: 5')
   })
 })

@@ -10,7 +10,7 @@ describe('migrateState', () => {
       debt: [{ name: 'Loan', amount: 20000, due: 'when Dad pays' }],
     })
 
-    expect(state.schemaVersion).toBe(3)
+    expect(state.schemaVersion).toBe(4)
     expect(state.recurring[0]).toMatchObject({ name: 'Rent', amount: 30000, dayOfMonth: 5, note: '' })
     expect(state.oneOffs[0]).toMatchObject({ name: 'School', amount: 10000, date: '2026-11-03', note: '' })
     expect(state.debts[0]).toMatchObject({ name: 'Loan', amount: 20000, dayOfMonth: null, note: 'when Dad pays' })
@@ -58,7 +58,7 @@ describe('migrateState', () => {
   it('returns safe defaults for garbage input', () => {
     for (const input of [null, 'invalid', []]) {
       expect(migrateState(input)).toMatchObject({
-        schemaVersion: 3,
+        schemaVersion: 4,
         income: 0,
         recurring: [],
         oneOffs: [],
@@ -73,7 +73,20 @@ describe('migrateState', () => {
     expect(migrateState(state)).toEqual(state)
   })
 
+  it('migrates paid occurrences from v3 to v4', () => {
+    const state = migrateState({
+      schemaVersion: 3,
+      recurring: [{ id: 'rent', name: 'Rent', amount: 1, dayOfMonth: 1, note: '' }],
+      paidOccurrences: [{ kind: 'recurring', itemId: 'rent', date: '2026-10-01' }],
+    })
+
+    expect(state.schemaVersion).toBe(4)
+    expect(state.paidOccurrences).toEqual([
+      { kind: 'recurring', itemId: 'rent', date: '2026-10-01' },
+    ])
+  })
+
   it('rejects a future schema', () => {
-    expect(() => migrateState({ schemaVersion: 4 })).toThrow(UnsupportedSchemaError)
+    expect(() => migrateState({ schemaVersion: 5 })).toThrow(UnsupportedSchemaError)
   })
 })

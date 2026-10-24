@@ -2,6 +2,8 @@
 
 Salary Planner is a private, single-user budgeting PWA. It runs entirely in the browser and stores data locally under `salary-planner-v1`.
 
+The v2.1 refactor is developed on the `v2.1` branch. It keeps the existing v1 storage key and adds tested local persistence, shared UI primitives, semantic design tokens, and a preserved Spend draft when switching tabs.
+
 ## Development
 
 ```sh
@@ -17,6 +19,8 @@ npm run lint
 npm run typecheck
 npm run build
 ```
+
+The repository currently has no application runtime dependencies on the shadcn CLI; it remains available as a development dependency for UI generation.
 
 The production app is deployed to GitHub Pages from `main` by `.github/workflows/deploy.yml`. Set the repository Pages source to **GitHub Actions** before the first release deployment.
 

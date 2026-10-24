@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { dueItemsForDate, dueItemsForRange } from './calendar'
+import { dueItemsForDate, dueItemsForRange, isPaidOccurrence } from './calendar'
 import type { AppState } from './types'
 
 const baseState: AppState = {
@@ -77,5 +77,16 @@ describe('calendar logic', () => {
     const result = dueItemsForRange(state, '2026-10-31', '2026-11-03')
     expect(result.map((entry) => entry.date)).toEqual(['2026-11-01', '2026-11-03'])
     expect(result.map((entry) => entry.item.name)).toEqual(['Rent', 'Cost'])
+  })
+
+  it('checks paid status for one occurrence only', () => {
+    const item = dueItemsForDate({
+      ...baseState,
+      recurring: [{ id: 'rent', name: 'Rent', amount: 1, dayOfMonth: 5, note: '' }],
+    }, '2026-10-05')[0]
+    expect(item).toBeDefined()
+    const paidState = { ...baseState, paidOccurrences: [{ kind: item.kind, itemId: item.item.id, date: '2026-10-05' }] }
+    expect(isPaidOccurrence(paidState, item, '2026-10-05')).toBe(true)
+    expect(isPaidOccurrence(paidState, item, '2026-11-05')).toBe(false)
   })
 })

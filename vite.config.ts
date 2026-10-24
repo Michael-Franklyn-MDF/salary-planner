@@ -14,6 +14,9 @@ export default defineConfig({
       registerType: 'prompt',
       filename: 'sw.js',
       manifestFilename: 'manifest.json',
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,woff2,svg,png}'],
+      },
       manifest: {
         name: 'Salary Planner',
         short_name: 'Salary Planner',
@@ -21,8 +24,8 @@ export default defineConfig({
         start_url: './index.html',
         scope: './',
         display: 'standalone',
-        theme_color: '#0071E3',
-        background_color: '#F2F2F7',
+        theme_color: '#E9F0EA',
+        background_color: '#E9F0EA',
         lang: 'en',
         icons: [
           {
