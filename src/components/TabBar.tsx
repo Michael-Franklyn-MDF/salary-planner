@@ -37,9 +37,9 @@ export function TabBar({ activeTab, onTabChange, entering = false }: TabBarProps
   return (
     <nav
       aria-label="Primary navigation"
-      className={`fixed inset-x-0 bottom-0 z-40 border-t border-separator bg-bar pb-[env(safe-area-inset-bottom)] shadow-[0_-1px_0_rgba(0,0,0,0.04)] backdrop-blur-xl ${entering ? 'animate-bar-enter' : ''}`}
+      className={`wide-tab-bar fixed inset-x-0 bottom-0 z-40 border-t border-separator bg-bar pb-[env(safe-area-inset-bottom)] shadow-[0_-1px_0_rgba(0,0,0,0.04)] backdrop-blur-xl ${entering ? 'animate-bar-enter' : ''}`}
     >
-      <div className="mx-auto flex h-[49px] w-full max-w-[480px] items-stretch justify-around" role="tablist">
+      <div className="wide-tab-bar-content mx-auto flex h-[49px] w-full max-w-[480px] items-stretch justify-around" role="tablist">
         {tabs.map(({ id, label, icon: Icon }, index) => {
           const selected = activeTab === id
           return (

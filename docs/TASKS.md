@@ -48,7 +48,7 @@ No behavior change except A0. A1 may change date labels to the formats in the sp
 ## Phase D: Later
 
 - [x] **D1** Settings button (top right) and sheet with Appearance: System, Light, Dark. Choice stored under `salary-planner-prefs` [B-05].
-- [ ] **D2** Wide-screen refinements.
+- [x] **D2** Wide-screen refinements.
 - [ ] Greeting languages in settings, more languages in the list.
 
 ## Release
@@ -60,4 +60,4 @@ No behavior change except A0. A1 may change date labels to the formats in the sp
 
 ## Current task
 
-D2: Wide-screen refinements.
+R1: Automated checks and manual release checklist.
