@@ -38,9 +38,9 @@ export function AppStateProvider({ children, initialState }: AppStateProviderPro
   }
 
   return (
-    <AppStateContext.Provider value={{ state, dispatch }}>
+    <AppStateContext.Provider value={{ state, dispatch, saveFailed, retrySave: () => setSaveFailed(!saveState(state).ok) }}>
       {children}
-      {saveFailed && <p role="alert">Could not save your changes. Your device storage may be full.</p>}
+      {saveFailed && <div className="ob-notice" role="alert"><div><strong>Could not save your changes.</strong><p>Your draft is still in this session. Free device storage and retry before closing Obol.</p></div><button onClick={() => setSaveFailed(!saveState(state).ok)}>Retry save</button></div>}
     </AppStateContext.Provider>
   )
 }
@@ -57,10 +57,10 @@ function StorageErrorScreen({ raw }: { raw: string | null }) {
   }
 
   return (
-    <main role="alert">
-      <h1>Could not load your data</h1>
-      <p>Your saved data is unchanged. Download a copy before trying anything else.</p>
-      <button type="button" onClick={downloadRawData}>Download raw data</button>
-    </main>
+    <main className="ob-app ob-page" role="alert">
+      <p className="ob-eyebrow">DATA RECOVERY</p><h1>We can’t open your data</h1><h2>Could not load your data</h2>
+      <p>Your saved data is unchanged. Download a copy before trying anything else. Do not treat an unavailable balance as KES 0.</p>
+      <button className="ob-action secondary" type="button" onClick={downloadRawData}>Download raw data</button>
+    <button className="ob-action" onClick={() => window.location.reload()}>Retry opening data</button><p>Avoid clearing app storage while you troubleshoot. Keep a copy of the raw data.</p></main>
   )
 }

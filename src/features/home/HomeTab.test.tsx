@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { AppStateProvider } from '@/state/AppStateProvider'
 import type { AppState } from '@/domain/types'
 import { formatShortDate } from '@/lib/format'
+import { today } from '@/domain/dates'
 import { HomeTab } from './HomeTab'
 
 const state: AppState = {
@@ -11,7 +12,7 @@ const state: AppState = {
   recurring: [{ id: 'r', name: 'Rent', amount: 30000, dayOfMonth: 1, note: '' }],
   oneOffs: [],
   debts: [],
-  dailySpend: [{ id: 's', amount: 5000, category: 'cat-other', date: '2026-10-13', note: '' }],
+  dailySpend: [{ id: 's', amount: 5000, category: 'cat-other', date: today(), note: '' }],
   categories: [{ id: 'cat-other', name: 'Other' }],
 }
 

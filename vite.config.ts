@@ -18,14 +18,14 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,woff2,svg,png}'],
       },
       manifest: {
-        name: 'Salary Planner',
-        short_name: 'Salary Planner',
+        name: 'Obol',
+        short_name: 'Obol',
         description: 'A calm, private budget planner for your salary.',
         start_url: './index.html',
         scope: './',
         display: 'standalone',
-        theme_color: '#E9F0EA',
-        background_color: '#E9F0EA',
+        theme_color: '#F2F5F7',
+        background_color: '#F2F5F7',
         lang: 'en',
         icons: [
           {

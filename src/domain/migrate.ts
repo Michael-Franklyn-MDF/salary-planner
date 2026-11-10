@@ -1,3 +1,4 @@
+import { normalizeObol } from './obol'
 import { isValidDateString } from './dates'
 import type {
   AppState,
@@ -178,6 +179,7 @@ export function migrateState(raw: unknown): AppState {
     return {
       schemaVersion: CURRENT_SCHEMA_VERSION,
       income: safeAmount(source.income),
+      ...(source.obol ? { obol: normalizeObol(source.obol) } : {}),
       recurring: Array.isArray(recurringSource) ? recurringSource.map(normalizeRecurring) : [],
       oneOffs: Array.isArray(oneOffSource) ? oneOffSource.map(normalizeOneOff) : [],
       debts: Array.isArray(debtSource) ? debtSource.map(normalizeDebt) : [],

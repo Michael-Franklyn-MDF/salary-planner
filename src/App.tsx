@@ -1,47 +1,8 @@
-import { useState } from 'react'
-import { calculateSummary } from './domain/calc'
-import { today } from './domain/dates'
-import { MiniPlayer } from './components/MiniPlayer'
-import { TabBar, type AppTab } from './components/TabBar'
-import { SpendTab } from './features/spend/SpendTab'
-import { HomeTab } from './features/home/HomeTab'
-import { CalendarTab } from './features/calendar/CalendarTab'
 import { AppStateProvider } from './state/AppStateProvider'
-import { PlanTab } from './features/plan/PlanTab'
-import { useAppState } from './state/useAppState'
+import ObolApp from './features/obol/ObolApp'
 import { UpdatePrompt } from './pwa/UpdatePrompt'
-import { useColdLaunch } from './hooks/useColdLaunch'
-import { SettingsSheet } from './features/settings/SettingsSheet'
-
-interface AppProps {
-  update?: () => Promise<void>
+import '@fontsource/lora/400.css'
+import './features/obol/obol.css'
+export default function App({update}:{update?:()=>Promise<void>}) {
+ return <AppStateProvider><ObolApp/>{update&&<UpdatePrompt onUpdate={update}/>}</AppStateProvider>
 }
-
-function AppContent({ update }: AppProps) {
-  const [activeTab, setActiveTab] = useState<AppTab>('home')
-  const [calendarDate, setCalendarDate] = useState<string>(today())
-  const [spendAmount, setSpendAmount] = useState('')
-  const coldLaunch = useColdLaunch()
-  const { state } = useAppState()
-  const remainingToSpend = calculateSummary(state, today()).remainingToSpend
-
-  return (
-    <>
-      <SettingsSheet />
-      {activeTab === 'spend' ? <SpendTab draftAmount={spendAmount} onDraftAmountChange={setSpendAmount} /> : activeTab === 'home' ? <HomeTab coldLaunch={coldLaunch} onOpenSpend={() => setActiveTab('spend')} onOpenCalendar={(date) => { setCalendarDate(date); setActiveTab('calendar') }} onOpenPlan={() => setActiveTab('plan')} /> : activeTab === 'calendar' ? <CalendarTab initialDate={calendarDate} onOpenPlan={() => setActiveTab('plan')} /> : <PlanTab />}
-      {activeTab !== 'home' && <MiniPlayer amount={remainingToSpend} onOpenHome={() => setActiveTab('home')} />}
-      <TabBar activeTab={activeTab} entering={coldLaunch} onTabChange={setActiveTab} />
-      {update && <UpdatePrompt onUpdate={update} />}
-    </>
-  )
-}
-
-function App({ update }: AppProps) {
-  return (
-    <AppStateProvider>
-      <AppContent update={update} />
-    </AppStateProvider>
-  )
-}
-
-export default App

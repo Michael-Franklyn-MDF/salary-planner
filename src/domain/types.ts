@@ -1,3 +1,4 @@
+import type { ObolState } from './obol'
 export type Id = string
 
 export type DayOfMonth = number | 'last'
@@ -49,6 +50,7 @@ export interface PaidOccurrence {
 }
 
 export interface AppState {
+  obol?: ObolState
   schemaVersion: number
   income: number
   recurring: RecurringExpense[]

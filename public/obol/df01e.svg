@@ -1,0 +1,8 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Calendar symbol">
+<path id="Calendar binding" d="M7.3326 1.8326V5.49927" stroke-width="1.83" stroke-linecap="round" stroke="#102C46"/>
+<path id="Calendar binding_2" d="M14.6674 1.8326V5.49927" stroke-width="1.83" stroke-linecap="round" stroke="#102C46"/>
+<path id="Calendar outline" d="M4.58333 3.6674H17.4167C18.4292 3.6674 19.25 4.48821 19.25 5.50073V18.3341C19.25 19.3466 18.4292 20.1674 17.4167 20.1674H4.58333C3.57081 20.1674 2.75 19.3466 2.75 18.3341V5.50073C2.75 4.48821 3.57081 3.6674 4.58333 3.6674Z" stroke-width="1.83" stroke-linecap="round" stroke="#102C46"/>
+<path id="Calendar divider" d="M2.75 9.1674H19.25" stroke-width="1.83" stroke-linecap="round" stroke="#102C46"/>
+</g>
+</svg>
