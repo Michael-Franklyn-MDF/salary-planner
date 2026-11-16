@@ -14,6 +14,13 @@ class FakeStorage {
 }
 
 describe('storage', () => {
+  it.each(['null', '[]', '42', '"invalid"'])('preserves structurally invalid saved JSON: %s', (raw) => {
+    const storage = new FakeStorage()
+    storage.setItem(STORAGE_KEY, raw)
+    expect(loadState(storage)).toMatchObject({ ok: false, raw })
+    expect(storage.getItem(STORAGE_KEY)).toBe(raw)
+  })
+
   it('loads missing data as a default state', () => {
     const storage = new FakeStorage()
 

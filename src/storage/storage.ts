@@ -46,6 +46,9 @@ export function loadState(storage: StorageLike = defaultStorage()): LoadResult {
     }
 
     const parsed: unknown = JSON.parse(raw)
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+      throw new Error('Saved data must contain a JSON object')
+    }
     return { ok: true, state: migrateState(parsed) }
   } catch (error) {
     return { ok: false, error: asError(error), raw }
